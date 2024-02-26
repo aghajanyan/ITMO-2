@@ -3,6 +3,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+class Population:
+    female = 0
+    male = 0
+
+    def __init__(self, female, male):
+        self.female = female
+        self.male = male
+
+    def SetMale(self, newmale):
+        self.male = newmale
+
+    def SetFemale(self, newfemale):
+        self.female = newfemale
+
+    def total(self):
+        return self.male + self.female
+
+
 class DemForecasting:
     @staticmethod
     def ExtAvgRiseAbs(olddata, cycles):
@@ -25,15 +43,26 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
     @staticmethod
-    def ComponentMethod(oldata, cycles):
+    def ComponentMethod(startdata, cycles): 
+        #инициализация
+        pop = []
+        i = 0
+        while i < len(startdata) - 2:
+            pop.append(Population(startdata[i+1], startdata[i+2]))
+            i+=3
 
-        return "hello"
+
+
+        return '123'
+
+
+
+
 
 
 data = pd.read_excel("data0.xlsx", sheet_name=0)
 
-
-#подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
+# подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
 districtdata = []
 year = []
 for j in range(1, data.shape[1]):
@@ -42,7 +71,7 @@ for j in range(1, data.shape[1]):
 
 n = 5
 DemForecasting.ExtAvgRise(districtdata, n)
-#DemForecasting.ExtAvgRiseAbs(districtdata, n)
+# DemForecasting.ExtAvgRiseAbs(districtdata, n)
 
 # подготовка данных для метода передвижки (половозрастной столбец за 23)
 fulldata23 = []
@@ -57,7 +86,8 @@ for i in range(n):
 
 plt.plot(year, districtdata, '.', color='black', markersize=7)
 plt.plot(year[:len(districtdata) - n], districtdata[:len(districtdata) - n], color='blue', label='РОССТАТ')
-plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red', label='Прогноз экстрапол.')
+plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red',
+         label='Прогноз экстрапол.')
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
