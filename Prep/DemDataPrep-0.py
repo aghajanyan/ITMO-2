@@ -9,7 +9,7 @@ class Population:
     malemortality = 0   # возрастной коэф. годовой смертности
     femalemortality = 0
     cohortname = "null"
-    fertilityrate = 0   # возрастной коэф. рождаемости
+    birthrate = 0   # возрастной коэф. рождаемости
 
     def __init__(self, cohortname, female, male):
         self.cohortname = cohortname
@@ -32,7 +32,7 @@ class Population:
 
     # предполагаемое количество детей на заданный интервал
     def babies(self, interval):
-        return ((self.fertilityrate / self.female) * self.female) * interval
+        return ((self.birthrate / self.female) * self.female) * interval
 
 
 class DemForecasting:
