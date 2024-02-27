@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 
 
 class Population:
-    female = 0
+    female = 0  # количество в возрасте
     male = 0
-    malemortality = 0
+    malemortality = 0   # возрастной коэф. годовой смертности
     femalemortality = 0
     cohortname = "null"
+    fertilityrate = 0   # возрастной коэф. рождаемости
 
     def __init__(self, cohortname, female, male):
         self.cohortname = cohortname
@@ -21,11 +22,17 @@ class Population:
     def SetFemale(self, newfemale):
         self.female = newfemale
 
-    def total(self):  # общее количество в когороте
+    # общее количество в когороте
+    def total(self):
         return self.male + self.female
 
-    def future(self, cycle):  # выживаемость к следующему циклу
-        return self.female * pow(self.femalemortality, cycle), self.male * pow(self.malemortality, cycle)
+    # выживаемость к следующему возрастному интервалу
+    def future(self, interval):
+        return self.female * pow(self.femalemortality, interval), self.male * pow(self.malemortality, interval)
+
+    # предполагаемое количество детей на заданный интервал
+    def babies(self, interval):
+        return ((self.fertilityrate / self.female) * self.female) * interval
 
 
 class DemForecasting:
@@ -60,15 +67,16 @@ class DemForecasting:
 
         # получение коэффициентов смертности
         mr = pd.read_excel("mr.xlsx")
-        x = 0.04    # темп роста смертности для когорот 75 и старше
+        x = 0.04  # темп роста смертности для когорот 75 и старше
         for i in range(len(pop)):
             if i < mr.shape[0] - 1:
                 pop[i].malemortality = mr.iloc[i + 1, 3]
                 pop[i].femalemortality = mr.iloc[i + 1, 4]
             else:
-                pop[i].malemortality = mr.iloc[mr.shape[0]-1, 3] - x
-                pop[i].femalemortality = mr.iloc[mr.shape[0]-1, 4] - x
-                x+= 0.04
+                pop[i].malemortality = mr.iloc[mr.shape[0] - 1, 3] - x
+                pop[i].femalemortality = mr.iloc[mr.shape[0] - 1, 4] - x
+                x += 0.04
+
         return '123'
 
 
