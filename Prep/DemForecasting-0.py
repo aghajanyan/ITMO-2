@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 class Population:
     female = 0  # количество в возрасте
     male = 0
-    malemortality = 0   # возрастной коэф. годовой смертности
+    malemortality = 0  # возрастной коэф. годовой смертности
     femalemortality = 0
     cohortname = "null"
-    birthrate = 0   # возрастной коэф. рождаемости
+    birthrate = 0  # возрастной коэф. рождаемости
 
     def __init__(self, cohortname, female, male):
         self.cohortname = cohortname
@@ -37,35 +37,35 @@ class Population:
 
 class DemForecasting:
     @staticmethod
-    def ExtAvgRiseAbs(olddata, cycles):
+    def ExtAvgRiseAbs(olddata, interval):
         inc = 0
         for i in range(1, len(olddata)):
             inc += olddata[i] - olddata[i - 1]
 
         inc = inc / len(olddata)
-        for i in range(cycles):
+        for i in range(interval):
             olddata.append(olddata[len(olddata) - 1] + inc)
 
     @staticmethod
-    def ExtAvgRise(olddata, cycles):
+    def ExtAvgRise(olddata, interval):
         inc = 0
         for i in range(1, len(olddata)):
             inc += (olddata[i] / olddata[i - 1]) - 1
 
         inc = inc / len(olddata)
-        for i in range(cycles):
+        for i in range(interval):
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
     @staticmethod
-    def ComponentMethod(startdata, cycles):
-        # инициализация
+    def ComponentMethod(startdata, interval, iterations):
+        # инициализация популяции
         pop = []
         i = 0
         while i < len(startdata) - 3:
             pop.append(Population(startdata[i], startdata[i + 2], startdata[i + 3]))
             i += 4
 
-        # получение коэффициентов смертности
+        # получение коэф. смертности
         mr = pd.read_excel("mr.xlsx")
         x = 0.04  # темп роста смертности для когорот 75 и старше
         for i in range(len(pop)):
@@ -76,6 +76,17 @@ class DemForecasting:
                 pop[i].malemortality = mr.iloc[mr.shape[0] - 1, 3] - x
                 pop[i].femalemortality = mr.iloc[mr.shape[0] - 1, 4] - x
                 x += 0.04
+
+        # получение коэф. рождаемости
+
+        for k in range(iterations): # цикл прогнозных итераций
+            # возрастная передвижка
+            for i in reversed(range(len(pop))):
+                if i == len(pop) - 1:  # последняя когорта (100 и более) умирает
+                    pop[i].female = 0
+                    pop[i].male = 0
+                else:
+                    pop[i + 1].female, pop[i + 1].male = pop[i].future(interval)
 
         return '123'
 
@@ -93,7 +104,7 @@ n = 5
 DemForecasting.ExtAvgRise(districtdata, n)
 # DemForecasting.ExtAvgRiseAbs(districtdata, n)
 
-# подготовка данных для метода передвижки (половозрастной столбец за 23)
+# подготовка данных для метода передвижки (половозрастной столбец за 23 год)
 fulldata23 = []
 m = 3
 for i in range(9, data.shape[0]):
