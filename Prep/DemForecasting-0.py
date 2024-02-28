@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class Population:
-    female = 0  # количество в возрасте
+    female = 0  # количество в когорте
     male = 0
     malemortality = 0  # возрастной коэф. годовой смертности
     femalemortality = 0
@@ -37,27 +37,7 @@ class Population:
 
 class DemForecasting:
     @staticmethod
-    def ExtAvgRiseAbs(olddata, interval):
-        inc = 0
-        for i in range(1, len(olddata)):
-            inc += olddata[i] - olddata[i - 1]
-
-        inc = inc / len(olddata)
-        for i in range(interval):
-            olddata.append(olddata[len(olddata) - 1] + inc)
-
-    @staticmethod
-    def ExtAvgRise(olddata, interval):
-        inc = 0
-        for i in range(1, len(olddata)):
-            inc += (olddata[i] / olddata[i - 1]) - 1
-
-        inc = inc / len(olddata)
-        for i in range(interval):
-            olddata.append(olddata[len(olddata) - 1] * (inc + 1))
-
-    @staticmethod
-    def ComponentMethod(startdata, interval, iterations):
+    def ComponentMethod(startdata, interval, iterations):   # метод передвижки
         # инициализация популяции
         pop = []
         i = 0
@@ -78,8 +58,19 @@ class DemForecasting:
                 x += 0.04
 
         # получение коэф. рождаемости
+        br = pd.read_excel("br.xlsx")
+        m = 0
+        x = 0
+        while m < br.shape[0]:
+            while x < len(pop):
+                if br.iloc[m, 0] == pop[x].cohortname:
+                    pop[x].birthrate = br.iloc[m, 1]
+                    x+=1
+                    break
+                else:
+                    x+=1
 
-        for k in range(iterations): # цикл прогнозных итераций
+        for k in range(iterations):  # цикл прогнозных итераций
             # возрастная передвижка
             for i in reversed(range(len(pop))):
                 if i == len(pop) - 1:  # последняя когорта (100 и более) умирает
@@ -89,6 +80,26 @@ class DemForecasting:
                     pop[i + 1].female, pop[i + 1].male = pop[i].future(interval)
 
         return '123'
+    @staticmethod
+    def ExtAvgRiseAbs(olddata, interval):
+        inc = 0
+        for i in range(1, len(olddata)):
+            inc += olddata[i] - olddata[i - 1]
+
+        inc = inc / len(olddata)
+        for i in range(interval):
+            olddata.append(olddata[len(olddata) - 1] + inc)
+
+    @staticmethod
+    def ExtAvgRise(olddata, interval):
+        inc = 0
+        for i in range(1, len(olddata)):
+            inc += (olddata[i] / olddata[i - 1]) - 1
+
+        inc = inc / len(olddata)
+        for i in range(interval):
+            olddata.append(olddata[len(olddata) - 1] * (inc + 1))
+
 
 
 data = pd.read_excel("data0.xlsx", sheet_name=0)
@@ -115,7 +126,7 @@ for i in range(9, data.shape[0]):
         fulldata23.append(data.iloc[i, data.shape[1] - 1])
         m += 1
 
-DemForecasting.ComponentMethod(fulldata23, 1)
+DemForecasting.ComponentMethod(fulldata23, 5, 1)
 
 for i in range(n):
     year.append(year[len(year) - 1] + 1)
