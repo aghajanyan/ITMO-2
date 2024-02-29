@@ -10,17 +10,12 @@ class Population:
     femalemortality = 0
     cohortname = "null"
     birthrate = 0  # возрастной коэф. рождаемости
+    
 
     def __init__(self, cohortname, female, male):
         self.cohortname = cohortname
         self.female = female
         self.male = male
-
-    def SetMale(self, newmale):
-        self.male = newmale
-
-    def SetFemale(self, newfemale):
-        self.female = newfemale
 
     # общее количество в когороте
     def total(self):
@@ -28,7 +23,7 @@ class Population:
 
     # выживаемость к следующему возрастному интервалу
     def future(self, interval):
-        return self.female * pow(self.femalemortality, interval), self.male * pow(self.malemortality, interval)
+        return int(self.female * pow(self.femalemortality, interval)), int(self.male * pow(self.malemortality, interval))
 
     # предполагаемое количество детей на заданный интервал
     def babies(self, interval):
@@ -46,7 +41,7 @@ class DemForecasting:
             i += 4
 
         # получение коэф. смертности
-        mr = pd.read_excel("mr.xlsx")
+        mr = pd.read_excel("morrate.xlsx")
         x = 0.04  # темп роста смертности для когорот 75 и старше
         for i in range(len(pop)):
             if i < mr.shape[0] - 1:
@@ -58,7 +53,7 @@ class DemForecasting:
                 x += 0.04
 
         # получение коэф. рождаемости
-        br = pd.read_excel("br.xlsx")
+        br = pd.read_excel("birthrate.xlsx")
         m = 0
         x = 0
         while m < br.shape[0]:
@@ -66,9 +61,12 @@ class DemForecasting:
                 if br.iloc[m, 0] == pop[x].cohortname:
                     pop[x].birthrate = br.iloc[m, 1]
                     x+=1
+                    m+=1
                     break
                 else:
                     x+=1
+
+        # получение коэф. миграции + миграционное сальдо
 
         for k in range(iterations):  # цикл прогнозных итераций
             # возрастная передвижка
@@ -79,7 +77,21 @@ class DemForecasting:
                 else:
                     pop[i + 1].female, pop[i + 1].male = pop[i].future(interval)
 
-        return '123'
+            # расчет количества новорожденных
+            allbabies = 0
+            for i in range(3, 10):
+                allbabies += pop[i].babies(interval)
+
+            pop[0].female = int(allbabies * 0.49)
+            pop[0].male = int(allbabies * 0.51)
+
+        # расчет общей численности
+        popsize = 0
+        for i in range(len(pop)):
+            popsize += pop[i].total()
+
+        return popsize
+
     @staticmethod
     def ExtAvgRiseAbs(olddata, interval):
         inc = 0
@@ -126,15 +138,15 @@ for i in range(9, data.shape[0]):
         fulldata23.append(data.iloc[i, data.shape[1] - 1])
         m += 1
 
-DemForecasting.ComponentMethod(fulldata23, 5, 1)
+popsize = DemForecasting.ComponentMethod(fulldata23, 5, 1)
 
 for i in range(n):
     year.append(year[len(year) - 1] + 1)
 
 plt.plot(year, districtdata, '.', color='black', markersize=7)
 plt.plot(year[:len(districtdata) - n], districtdata[:len(districtdata) - n], color='blue', label='РОССТАТ')
-plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red',
-         label='Прогноз экстрапол.')
+plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red', label='Прогноз экстрапол.')
+plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize), '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
