@@ -78,6 +78,7 @@ class DemForecasting:
             pop[i].migrate = mr.iloc[i, 1]
 
         # цикл прогнозных итераций
+        popsize = []
         for k in range(iterations):
             for i in reversed(range(len(pop))):
                 if i == len(pop) - 1:  # последняя когорта (100 и более) умирает
@@ -107,10 +108,11 @@ class DemForecasting:
                 for i in range(len(pop)):
                     pop[i].migration(allmig)
 
-        # расчет общей численности с миграцией
-        popsize = 0
-        for i in range(len(pop)):
-            popsize += pop[i].total()
+            # расчет общей численности
+            allpop = 0
+            for i in range(len(pop)):
+                allpop += pop[i].total()
+            popsize.append(allpop)
 
         return popsize
 
@@ -143,7 +145,7 @@ districtdata = []
 year = []
 for j in range(1, data.shape[1]):
     districtdata.append(data.iloc[1, j])
-    year.append(data.iloc[0, j])
+    year.append(int(data.iloc[0, j]))
 
 n = 5
 DemForecasting.ExtAvgRise(districtdata, n)
@@ -161,18 +163,43 @@ for i in range(9, data.shape[0]):
         m += 1
 
 popsize = []
-popsize.append(DemForecasting.ComponentMethod(fulldata23, 5, 1, region, False))
-popsize.append(DemForecasting.ComponentMethod(fulldata23, 5, 1, region, True))
+popsizemig = []
+iterations = 1
+interval = 5
+popsize = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
+popsizemig = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
 
-
-for i in range(n):
+for i in range(iterations * interval):
     year.append(year[len(year) - 1] + 1)
 
+for i in range(len(year) - len(districtdata)):
+    districtdata.append(None)
+
+interval = interval * iterations
 plt.plot(year, districtdata, '.', color='black', markersize=7)
-plt.plot(year[:len(districtdata) - n], districtdata[:len(districtdata) - n], color='blue', label='РОССТАТ')
-plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red', label='Прогноз экстрапол.')
-plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize[0]), '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
-plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize[1]), '-ok', color='purple', label='Прогноз метод передвиж. (c миграцией)')
+plt.plot(year[:len(districtdata) - interval], districtdata[:len(districtdata) - interval], color='blue',
+         label='РОССТАТ')
+plt.plot(year[len(districtdata) - interval - 1:], districtdata[len(districtdata) - interval - 1:], color='red',
+         label='Прогноз экстрапол.')
+
+newdata = []
+newdatamig = []
+for i in range(len(popsize) + 1):
+    if i == 0:
+        newdata.append(districtdata[len(districtdata) - interval - 1])
+        newdatamig.append(districtdata[len(districtdata) - interval - 1])
+    else:
+        newdata.append(popsize[i - 1])
+        newdatamig.append(popsizemig[i - 1])
+
+newX = []
+for i in range(iterations + 1):
+    newX.append(year[len(year) - interval - 1])
+    interval-=5
+
+plt.plot(newX, newdata, '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
+plt.plot(newX, newdatamig, '-ok', color='purple', label='Прогноз метод передвиж. (c миграцией)')
+
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
