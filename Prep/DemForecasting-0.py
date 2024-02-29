@@ -10,7 +10,7 @@ class Population:
     femalemortality = 0
     cohortname = "null"
     birthrate = 0  # возрастной коэф. рождаемости
-    
+    migrate = 0  # возрастной коэф. прибывших/выбывших
 
     def __init__(self, cohortname, female, male):
         self.cohortname = cohortname
@@ -23,16 +23,21 @@ class Population:
 
     # выживаемость к следующему возрастному интервалу
     def future(self, interval):
-        return int(self.female * pow(self.femalemortality, interval)), int(self.male * pow(self.malemortality, interval))
+        return int(self.female * pow(self.femalemortality, interval)), int(
+            self.male * pow(self.malemortality, interval))
 
     # предполагаемое количество детей на заданный интервал
     def babies(self, interval):
         return ((self.birthrate / self.female) * self.female) * interval
 
+    # предполагаемое распределение мигрантов по возрастам и полу
+    def migration(self, migrants, interval):
+        self.male += int(((migrants * self.migrate) * interval) * 0.47)
+        self.female += int(((migrants * self.migrate) * interval) * 0.53)
 
 class DemForecasting:
     @staticmethod
-    def ComponentMethod(startdata, interval, iterations):   # метод передвижки
+    def ComponentMethod(startdata, interval, iterations):  # метод передвижки
         # инициализация популяции
         pop = []
         i = 0
@@ -60,11 +65,11 @@ class DemForecasting:
             while x < len(pop):
                 if br.iloc[m, 0] == pop[x].cohortname:
                     pop[x].birthrate = br.iloc[m, 1]
-                    x+=1
-                    m+=1
+                    x += 1
+                    m += 1
                     break
                 else:
-                    x+=1
+                    x += 1
 
         # получение коэф. миграции + миграционное сальдо
 
@@ -113,7 +118,6 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 
-
 data = pd.read_excel("data0.xlsx", sheet_name=0)
 
 # подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
@@ -145,8 +149,10 @@ for i in range(n):
 
 plt.plot(year, districtdata, '.', color='black', markersize=7)
 plt.plot(year[:len(districtdata) - n], districtdata[:len(districtdata) - n], color='blue', label='РОССТАТ')
-plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red', label='Прогноз экстрапол.')
-plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize), '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
+plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red',
+         label='Прогноз экстрапол.')
+plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize), '-ok', color='orange',
+         label='Прогноз метод передвиж. (без миграции)')
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
