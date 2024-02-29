@@ -31,13 +31,14 @@ class Population:
         return ((self.birthrate / self.female) * self.female) * interval
 
     # предполагаемое распределение мигрантов по возрастам и полу
-    def migration(self, migrants, interval):
-        self.male += int(((migrants * self.migrate) * interval) * 0.47)
-        self.female += int(((migrants * self.migrate) * interval) * 0.53)
+    def migration(self, migrants):
+        self.male += int((migrants * self.migrate) * 0.47)
+        self.female += int((migrants * self.migrate) * 0.53)
+
 
 class DemForecasting:
     @staticmethod
-    def ComponentMethod(startdata, interval, iterations):  # метод передвижки
+    def ComponentMethod(startdata, interval, iterations, region, migON):  # метод передвижки
         # инициализация популяции
         pop = []
         i = 0
@@ -71,10 +72,13 @@ class DemForecasting:
                 else:
                     x += 1
 
-        # получение коэф. миграции + миграционное сальдо
+        # получение коэф. миграции
+        mr = pd.read_excel("migbyage.xlsx")
+        for i in range(len(pop)):
+            pop[i].migrate = mr.iloc[i, 1]
 
-        for k in range(iterations):  # цикл прогнозных итераций
-            # возрастная передвижка
+        # цикл прогнозных итераций
+        for k in range(iterations):
             for i in reversed(range(len(pop))):
                 if i == len(pop) - 1:  # последняя когорта (100 и более) умирает
                     pop[i].female = 0
@@ -90,7 +94,20 @@ class DemForecasting:
             pop[0].female = int(allbabies * 0.49)
             pop[0].male = int(allbabies * 0.51)
 
-        # расчет общей численности
+            # расчет количества мигрантов
+            if migON == True:
+                datasaldo = pd.read_excel("migsaldo.xlsx")
+                migsaldo = datasaldo.iloc[region, 6]
+                currentmigrants = datasaldo.iloc[region, 5]
+                allmig = 0
+                for i in range(interval):
+                    currentmigrants = currentmigrants + migsaldo
+                    allmig += currentmigrants
+
+                for i in range(len(pop)):
+                    pop[i].migration(allmig)
+
+        # расчет общей численности с миграцией
         popsize = 0
         for i in range(len(pop)):
             popsize += pop[i].total()
@@ -118,7 +135,8 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 
-data = pd.read_excel("data0.xlsx", sheet_name=0)
+region = 0
+data = pd.read_excel("data0.xlsx", sheet_name=region)
 
 # подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
 districtdata = []
@@ -142,17 +160,19 @@ for i in range(9, data.shape[0]):
         fulldata23.append(data.iloc[i, data.shape[1] - 1])
         m += 1
 
-popsize = DemForecasting.ComponentMethod(fulldata23, 5, 1)
+popsize = []
+popsize.append(DemForecasting.ComponentMethod(fulldata23, 5, 1, region, False))
+popsize.append(DemForecasting.ComponentMethod(fulldata23, 5, 1, region, True))
+
 
 for i in range(n):
     year.append(year[len(year) - 1] + 1)
 
 plt.plot(year, districtdata, '.', color='black', markersize=7)
 plt.plot(year[:len(districtdata) - n], districtdata[:len(districtdata) - n], color='blue', label='РОССТАТ')
-plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red',
-         label='Прогноз экстрапол.')
-plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize), '-ok', color='orange',
-         label='Прогноз метод передвиж. (без миграции)')
+plt.plot(year[len(districtdata) - n - 1:], districtdata[len(districtdata) - n - 1:], color='red', label='Прогноз экстрапол.')
+plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize[0]), '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
+plt.plot((2023, 2028), (districtdata[len(districtdata) - n - 1], popsize[1]), '-ok', color='purple', label='Прогноз метод передвиж. (c миграцией)')
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
