@@ -79,6 +79,7 @@ class DemForecasting:
 
         # цикл прогнозных итераций
         popsize = []
+        currentmigrants = 0
         for k in range(iterations):
             for i in reversed(range(len(pop))):
                 if i == len(pop) - 1:  # последняя когорта (100 и более) умирает
@@ -99,7 +100,9 @@ class DemForecasting:
             if migON == True:
                 datasaldo = pd.read_excel("migsaldo.xlsx")
                 migsaldo = datasaldo.iloc[region, 6]
-                currentmigrants = datasaldo.iloc[region, 5]
+                if k == 0:
+                    currentmigrants = datasaldo.iloc[region, 5]
+
                 allmig = 0
                 for i in range(interval):
                     currentmigrants = currentmigrants + migsaldo
@@ -136,8 +139,10 @@ class DemForecasting:
         for i in range(interval):
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
+# !!ПАРАМЕТРЫ ПРОГНОЗА!!
+region = 2  # номер региона (номер листа эксель (от 0 до 17))
+iterations = 1  # количество прогнозных итераций
 
-region = 0
 data = pd.read_excel("data0.xlsx", sheet_name=region)
 
 # подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
@@ -164,8 +169,7 @@ for i in range(9, data.shape[0]):
 
 popsize = []
 popsizemig = []
-iterations = 1
-interval = 5
+interval = 5    # шаг прогноза (пока не трогать!!)
 popsize = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
 popsizemig = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
 
@@ -175,6 +179,7 @@ for i in range(iterations * interval):
 for i in range(len(year) - len(districtdata)):
     districtdata.append(None)
 
+# вывод полученных результатов
 interval = interval * iterations
 plt.plot(year, districtdata, '.', color='black', markersize=7)
 plt.plot(year[:len(districtdata) - interval], districtdata[:len(districtdata) - interval], color='blue',
