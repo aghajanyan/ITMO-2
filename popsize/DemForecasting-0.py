@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 
 
 class Population:
@@ -117,7 +118,7 @@ class DemForecasting:
                 allpop += pop[i].total()
             popsize.append(allpop)
 
-        return popsize
+        return popsize, pop
 
     @staticmethod
     def ExtAvgRiseAbs(olddata, interval):
@@ -140,7 +141,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-region = 2  # номер региона (номер листа эксель (от 0 до 17))
+region = 0 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 1  # количество прогнозных итераций
 
 data = pd.read_excel("data0.xlsx", sheet_name=region)
@@ -169,9 +170,16 @@ for i in range(9, data.shape[0]):
 
 popsize = []
 popsizemig = []
+pop = []
 interval = 5    # шаг прогноза (пока не трогать!!)
-popsize = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
-popsizemig = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
+popsize, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
+popsizemig, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
+
+# запись данных в csv файл
+with open("" +data.columns[0]+".csv", 'w', newline='\n') as csv_file:
+    wr = csv.writer(csv_file, delimiter=',')
+    for a in pop:
+        wr.writerow(list([a.cohortname, a.female, a.male]))
 
 for i in range(iterations * interval):
     year.append(year[len(year) - 1] + 1)
