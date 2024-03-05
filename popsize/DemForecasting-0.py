@@ -142,7 +142,7 @@ class DemForecasting:
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
 region = 0 # номер региона (номер листа эксель (от 0 до 17))
-iterations = 1  # количество прогнозных итераций
+iterations = 1  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=region)
 
@@ -175,9 +175,11 @@ interval = 5    # шаг прогноза (пока не трогать!!)
 popsize, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
 popsizemig, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
 
+h = ['Cohort', 'Female', 'Male']
 # запись данных в csv файл
 with open("" +data.columns[0]+".csv", 'w', newline='\n') as csv_file:
     wr = csv.writer(csv_file, delimiter=',')
+    wr.writerow(h)
     for a in pop:
         wr.writerow(list([a.cohortname, a.female, a.male]))
 
