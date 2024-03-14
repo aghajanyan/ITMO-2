@@ -39,13 +39,21 @@ class Population:
 
 class DemForecasting:
     @staticmethod
-    def ComponentMethod(startdata, interval, iterations, region, migON):  # метод передвижки
+    def ComponentMethod(startdata, interval, iterations, regionid, regionname, migON):  # метод передвижки
         # инициализация популяции
         pop = []
         i = 0
         while i < len(startdata) - 3:
             pop.append(Population(startdata[i], startdata[i + 2], startdata[i + 3]))
             i += 4
+
+        # вывод стартовой половозрастной структуры (2023 год)
+        h = ['Cohort', 'Female', 'Male']
+        with open("" + regionname + " 2023.csv", 'w', newline='\n') as csv_file:
+            wr = csv.writer(csv_file, delimiter=',')
+            wr.writerow(h)
+            for b in pop:
+                wr.writerow(list([b.cohortname, int(b.female), int(b.male)]))
 
         # получение коэф. смертности
         mr = pd.read_excel("morrate.xlsx")
@@ -100,9 +108,9 @@ class DemForecasting:
             # расчет количества мигрантов
             if migON == True:
                 datasaldo = pd.read_excel("migsaldo.xlsx")
-                migsaldo = datasaldo.iloc[region, 6]
+                migsaldo = datasaldo.iloc[regionid, 6]
                 if k == 0:
-                    currentmigrants = datasaldo.iloc[region, 5]
+                    currentmigrants = datasaldo.iloc[regionid, 5]
 
                 allmig = 0
                 for i in range(interval):
@@ -141,10 +149,11 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-region = 6 # номер региона (номер листа эксель (от 0 до 17))
-iterations = 1  # количество прогнозных итераций (шаг 5 лет)
+regionid = 3 # номер региона (номер листа эксель (от 0 до 17))
+iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
-data = pd.read_excel("data0.xlsx", sheet_name=region)
+data = pd.read_excel("data0.xlsx", sheet_name=regionid)
+regionname = data.columns[0]
 
 # подготовка данных для методов экстраполяции (среднрй темп роста общей численности)
 districtdata = []
@@ -171,23 +180,24 @@ for i in range(9, data.shape[0]):
 popsize = []
 popsizemig = []
 pop = []
+popmig = []
 interval = 5    # шаг прогноза (пока не трогать!!)
-popsize, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, False)
-popsizemig, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, region, True)
-
-h = ['Cohort', 'Female', 'Male']
-# запись данных в csv файл
-with open(""+data.columns[0]+".csv", 'w', newline='\n') as csv_file:
-    wr = csv.writer(csv_file, delimiter=',')
-    wr.writerow(h)
-    for a in pop:
-        wr.writerow(list([a.cohortname, a.female, a.male]))
+popsize, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, False)
+popsizemig, popmig = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, True)
 
 for i in range(iterations * interval):
     year.append(year[len(year) - 1] + 1)
 
 for i in range(len(year) - len(districtdata)):
     districtdata.append(None)
+
+h = ['Cohort', 'Female', 'Male']
+# запись данных в csv файл
+with open(""+regionname+" "+ str(year[len(year) - 1]) +".csv", 'w', newline='\n') as csv_file:
+    wr = csv.writer(csv_file, delimiter=',')
+    wr.writerow(h)
+    for a in popmig:
+        wr.writerow(list([a.cohortname, a.female, a.male]))
 
 # вывод полученных результатов
 interval = interval * iterations
@@ -218,5 +228,5 @@ plt.plot(newX, newdatamig, '-ok', color='purple', label='Прогноз мето
 plt.legend(loc='upper left')
 plt.xlabel("Год")
 plt.ylabel("Численность населения")
-plt.title(data.columns[0])
+plt.title(regionname)
 plt.show()
