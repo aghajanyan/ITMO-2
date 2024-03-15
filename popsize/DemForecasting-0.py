@@ -29,7 +29,7 @@ class Population:
 
     # предполагаемое количество детей на заданный интервал
     def babies(self, interval):
-        return ((self.birthrate / self.female) * self.female) * interval
+        return (self.birthrate * self.female) * interval
 
     # предполагаемое распределение мигрантов по возрастам и полу
     def migration(self, migrants):
@@ -74,7 +74,7 @@ class DemForecasting:
         while m < br.shape[0]:
             while x < len(pop):
                 if br.iloc[m, 0] == pop[x].cohortname:
-                    pop[x].birthrate = br.iloc[m, 1]
+                    pop[x].birthrate = br.iloc[m, 2]
                     x += 1
                     m += 1
                     break
