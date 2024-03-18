@@ -108,7 +108,13 @@ class DemForecasting:
             # расчет количества мигрантов
             if migON == True:
                 datasaldo = pd.read_excel("migsaldo.xlsx")
-                migsaldo = datasaldo.iloc[regionid, 6]
+                # вычисление среднего приращения миграционного сальдо
+                migsaldo = 0.0
+                for j in range(1, datasaldo.shape[1] - 1):
+                    migsaldo += datasaldo.iloc[regionid, j + 1] - datasaldo.iloc[regionid, j]
+
+                migsaldo = migsaldo / (datasaldo.shape[1] - 2)
+
                 if k == 0:
                     currentmigrants = datasaldo.iloc[regionid, 5]
 
@@ -149,7 +155,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-regionid = 3 # номер региона (номер листа эксель (от 0 до 17))
+regionid = 0 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=regionid)
