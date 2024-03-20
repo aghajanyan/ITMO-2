@@ -68,13 +68,13 @@ class DemForecasting:
                 x += 0.04
 
         # получение коэф. рождаемости
-        br = pd.read_excel("birthrate.xlsx")
+        br = pd.read_excel("birthrateRU.xlsx")
         m = 0
         x = 0
         while m < br.shape[0]:
             while x < len(pop):
                 if br.iloc[m, 0] == pop[x].cohortname:
-                    pop[x].birthrate = br.iloc[m, 2]
+                    pop[x].birthrate = br.iloc[m, 1] / 1000
                     x += 1
                     m += 1
                     break
