@@ -39,7 +39,7 @@ class Population:
 
 class DemForecasting:
     @staticmethod
-    def ComponentMethod(startdata, interval, iterations, regionid, regionname, migON):  # метод передвижки
+    def ComponentMethod(startdata, interval, iterations, regionid, regionname, inputfile, migON):  # метод передвижки
         # инициализация популяции
         pop = []
         i = 0
@@ -68,7 +68,7 @@ class DemForecasting:
                 x += 0.04
 
         # получение коэф. рождаемости
-        br = pd.read_excel("birthrateRU.xlsx")
+        br = pd.read_excel("birthrate"+ inputfile +".xlsx")
         m = 0
         x = 0
         while m < br.shape[0]:
@@ -155,7 +155,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-regionid = 0 # номер региона (номер листа эксель (от 0 до 17))
+regionid = 8 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=regionid)
@@ -183,13 +183,16 @@ for i in range(9, data.shape[0]):
         fulldata23.append(data.iloc[i, data.shape[1] - 1])
         m += 1
 
-popsize = []
-popsizemig = []
-pop = []
-popmig = []
+popsizeRU, popsizeLO = [], []
+popsizemigRU, popsizemigLO = [], []
+popLO, popRU = [], []
+popmigRU, popmigLO = [], []
 interval = 5    # шаг прогноза (пока не трогать!!)
-popsize, pop = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, False)
-popsizemig, popmig = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, True)
+popsizeRU, popRU = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "RU", False)
+popsizeLO, popLO = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "LO", False)
+popsizemigRU, popmigRU = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "RU", True)
+popsizemigLO, popmigLO = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "LO", True)
+
 
 for i in range(iterations * interval):
     year.append(year[len(year) - 1] + 1)
@@ -202,7 +205,7 @@ h = ['Cohort', 'Female', 'Male']
 with open(""+regionname+" "+ str(year[len(year) - 1]) +".csv", 'w', newline='\n') as csv_file:
     wr = csv.writer(csv_file, delimiter=',')
     wr.writerow(h)
-    for a in popmig:
+    for a in popmigLO:
         wr.writerow(list([a.cohortname, a.female, a.male]))
 
 # вывод полученных результатов
@@ -213,23 +216,30 @@ plt.plot(year[:len(districtdata) - interval], districtdata[:len(districtdata) - 
 plt.plot(year[len(districtdata) - interval - 1:], districtdata[len(districtdata) - interval - 1:], color='red',
          label='Прогноз экстрапол.')
 
-newdata = []
-newdatamig = []
-for i in range(len(popsize) + 1):
+newdataRU, newdataLO = [], []
+newdatamigRU, newdatamigLO = [], []
+
+for i in range(len(popsizeRU) + 1):
     if i == 0:
-        newdata.append(districtdata[len(districtdata) - interval - 1])
-        newdatamig.append(districtdata[len(districtdata) - interval - 1])
+        newdataRU.append(districtdata[len(districtdata) - interval - 1])
+        newdataLO.append(districtdata[len(districtdata) - interval - 1])
+        newdatamigRU.append(districtdata[len(districtdata) - interval - 1])
+        newdatamigLO.append(districtdata[len(districtdata) - interval - 1])
     else:
-        newdata.append(popsize[i - 1])
-        newdatamig.append(popsizemig[i - 1])
+        newdataRU.append(popsizeRU[i - 1])
+        newdataLO.append(popsizeLO[i - 1])
+        newdatamigRU.append(popsizemigRU[i - 1])
+        newdatamigLO.append(popsizemigLO[i - 1])
 
 newX = []
 for i in range(iterations + 1):
     newX.append(year[len(year) - interval - 1])
     interval-=5
 
-plt.plot(newX, newdata, '-ok', color='orange', label='Прогноз метод передвиж. (без миграции)')
-plt.plot(newX, newdatamig, '-ok', color='purple', label='Прогноз метод передвиж. (c миграцией)')
+plt.plot(newX, newdataRU, '-ok', color='orange', label='Прогноз метод передвиж. РФ (без миграции)')
+plt.plot(newX, newdataLO, '-ok', color='black', label='Прогноз метод передвиж. ЛО (без миграции)')
+plt.plot(newX, newdatamigRU, '-ok', color='purple', label='Прогноз метод передвиж. РФ (c миграцией)')
+plt.plot(newX, newdatamigLO, '-ok', color='grey', label='Прогноз метод передвиж. ЛО (c миграцией)')
 
 plt.legend(loc='upper left')
 plt.xlabel("Год")
