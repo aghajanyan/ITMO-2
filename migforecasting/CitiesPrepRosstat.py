@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import unidecode
+import csv
 
 
 class City:
@@ -48,10 +49,6 @@ class City:
 
 data = pd.read_excel("d0.xlsx")
 
-saldo = data.iloc[13, 1]
-saldo = ''.join(saldo.split())
-print(int(saldo))
-
 # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
 for i in range(0, data.shape[0]):
     for j in range(0, data.shape[1]):
@@ -80,4 +77,13 @@ for m in range(1, data.shape[1]):
                          data.iloc[45, m], data.iloc[52, m], data.iloc[55, m], factorycap, data.iloc[63, m],
                          data.iloc[64, m], data.iloc[65, m], data.iloc[72, m], data.iloc[74, m], data.iloc[13, m]))
 
-print('Done')
+# запись в csv
+titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea', 'beforeschool', 'docsperpop',
+          'bedsperpop', 'cliniccap', 'invests', 'funds', 'companies', 'factoriescap', 'conscap', 'consnewareas',
+          'consnewapt', 'retailturnover', 'foodservturnover', 'saldo']
+
+with open("1.csv", 'w', newline='\n') as csv_file:
+    wr = csv.writer(csv_file, delimiter=',')
+    wr.writerow(titles)
+    for a in examples:
+        wr.writerow(list(a))
