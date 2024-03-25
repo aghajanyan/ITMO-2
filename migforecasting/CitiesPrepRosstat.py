@@ -46,36 +46,45 @@ class City:
                      self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
                      self.foodservturnover, self.saldo])
 
-
-data = pd.read_excel("d0.xlsx")
-
-# нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-for i in range(0, data.shape[0]):
-    for j in range(0, data.shape[1]):
-        try:
-            data.iloc[i, j] = ''.join(data.iloc[i, j].split())
-            data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
-        except AttributeError:
-            data.iloc[i, j] = data.iloc[i, j]
-
 examples = []
-cityname = data.iloc[1, 1]
-for m in range(1, data.shape[1]):
-    # вычисление суммы промышленного оборота (+ корр. строки в эксель)
-    factorycap = 0
-    for i in range(58, 62):
-        try:
-            factorycap += float(data.iloc[i, m])
-        except (ValueError, TypeError):
-            factorycap += 0
+for dis in range(19):
+    data = pd.read_excel("cities19-21/d2.xlsx")
 
-    if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
-        cityname = data.iloc[1, m]
+    x = 0  # для моногородних файлов
+    if data.shape[1] == 4:
+        x = -2  # для одногородних файлов
 
-    examples.append(City(cityname, data.iloc[4, m], data.iloc[15, m], data.iloc[17, m], data.iloc[19, m],
-                         data.iloc[22, m], data.iloc[23, m], data.iloc[27, m], data.iloc[34, m], data.iloc[38, m],
-                         data.iloc[45, m], data.iloc[52, m], data.iloc[55, m], factorycap, data.iloc[63, m],
-                         data.iloc[64, m], data.iloc[65, m], data.iloc[72, m], data.iloc[74, m], data.iloc[13, m]))
+    # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
+    for i in range(0, data.shape[0]):
+        for j in range(0, data.shape[1]):
+            try:
+                data.iloc[i, j] = ''.join(data.iloc[i, j].split())
+                data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
+            except AttributeError:
+                data.iloc[i, j] = data.iloc[i, j]
+
+    if x == -2:
+        cityname = data.iloc[0, 0]
+    else:
+        cityname = data.iloc[1, 1]
+
+    for m in range(1, data.shape[1]):
+        # вычисление суммы промышленного оборота (+ корр. строки в эксель)
+        factorycap = 0
+        for i in range(58 + x, 62 + x):
+            try:
+                factorycap += float(data.iloc[i, m])
+            except (ValueError, TypeError):
+                factorycap += 0
+
+        if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
+            cityname = data.iloc[1, m]
+
+        examples.append(City(cityname, data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
+                             data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
+                             data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
+                             data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
+                             data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
 
 # запись в csv
 titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea', 'beforeschool', 'docsperpop',
