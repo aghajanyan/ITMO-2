@@ -48,11 +48,11 @@ class City:
 
 examples = []
 for dis in range(19):
-    data = pd.read_excel("cities19-21/d2.xlsx")
+    data = pd.read_excel("cities19-21/d10.xlsx")
 
-    x = 0  # для моногородних файлов
+    x = 0  # несколько городов в файле
     if data.shape[1] == 4:
-        x = -2  # для одногородних файлов
+        x = -2  # для моногородних файлов
 
     # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
     for i in range(0, data.shape[0]):
