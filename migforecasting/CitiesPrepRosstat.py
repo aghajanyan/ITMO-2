@@ -49,7 +49,7 @@ class City:
 examples = []
 for dis in range(8):
     files = next(os.walk("cities19-21/"+ str(dis) +""))
-    for f in range(len(files)):
+    for f in range(len(files[2])):
         data = pd.read_excel("cities19-21/"+ str(dis) +"/d"+ str(f + 1) +".xlsx")
 
         x = 0  # несколько городов в файле
