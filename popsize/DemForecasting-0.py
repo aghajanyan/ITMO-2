@@ -155,7 +155,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-regionid = 3 # номер региона (номер листа эксель (от 0 до 17))
+regionid = 0 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=regionid)
