@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
+import seaborn
+
 
 class Population:
     female = 0  # количество в когорте
@@ -155,7 +157,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-regionid = 0 # номер региона (номер листа эксель (от 0 до 17))
+regionid = 1 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=regionid)
@@ -246,3 +248,74 @@ plt.xlabel("Год")
 plt.ylabel("Численность населения")
 plt.title(regionname)
 plt.show()
+
+# демографические пирамиды
+oldpop = []
+i = 0
+while i < len(fulldata23) - 3:
+    oldpop.append(Population(fulldata23[i], fulldata23[i + 2], fulldata23[i + 3]))
+    i += 4
+
+cohorts = []
+maleold, malenew = [], []
+femaleold, femalenew = [], []
+dataplotold, dataplotnew = {'Age': [], 'Male': [], 'Female': []}, {'Age': [], 'Male': [], 'Female': []}
+for a in oldpop:
+    cohorts.append(a.cohortname)
+    femaleold.append(a.female)
+    maleold.append(a.male * -1)
+
+dataplotold['Age'] = cohorts
+dataplotold['Male'] = maleold
+dataplotold['Female'] = femaleold
+dataplotold = pd.DataFrame(dataplotold)
+
+for a in popmigLO:
+    femalenew.append(a.female)
+    malenew.append(a.male * -1)
+
+dataplotnew['Age'] = cohorts
+dataplotnew['Male'] = malenew
+dataplotnew['Female'] = femalenew
+dataplotnew = pd.DataFrame(dataplotnew)
+
+ages = ['100-', '95-99', '90-94', '85-89', '80-84', '75-79', '70-74', '65-69', '60-64',
+        '55-59', '50-54', '45-49', '40-44', '35-39', '30-34', '25-29', '20-24', '15-19', '10-14', '5-9', '0-4']
+
+
+# две пирамиды отдельно
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+seaborn.barplot(data=dataplotold, x='Male', y='Age', order=ages, color='red', ax=ax1)
+seaborn.barplot(data=dataplotold, x='Female', y='Age', order=ages, color='red', ax=ax1)
+
+ax1.set_title(""+regionname+" 2023")
+ax1.grid()
+ax1.set_xlabel("Мужины | Женщины")
+
+seaborn.barplot(data=dataplotnew, x='Male', y='Age', order=ages, color='grey', ax=ax2)
+seaborn.barplot(data=dataplotnew, x='Female', y='Age', order=ages, color='grey', ax=ax2)
+
+ax2.set_title(""+regionname+" "+ str(year[len(year) - 1]) +"")
+ax2.grid()
+ax2.set_xlabel("Мужины | Женщины")
+plt.show()
+
+
+"""
+# две пирамиды вместе
+ax1 = seaborn.barplot(data=dataplotold, x='Male', y='Age', order=ages, color='red')
+ax2 = seaborn.barplot(data=dataplotold, x='Female', y='Age', order=ages, color='red')
+
+plt.title(""+regionname+" 2023")
+plt.grid()
+plt.xlabel("Мужины | Женщины")
+
+ax3 = seaborn.barplot(data=dataplotnew, x='Male', y='Age', order=ages, color='gray')
+ax4 = seaborn.barplot(data=dataplotnew, x='Female', y='Age', order=ages, color='gray')
+
+plt.title(""+regionname+" "+ str(year[len(year) - 1]) +"")
+plt.grid()
+plt.xlabel("Мужины | Женщины")
+plt.show()
+"""
