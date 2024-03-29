@@ -11,7 +11,7 @@ data = docx.Document("0.docx")
 example = []
 tmp = []
 
-if len(data.tables) > 6:    # данные разбиты на 4 таблицы
+if len(data.tables) == 7:    # данные разбиты на 4 таблицы
     a = data.tables[3]
     b = data.tables[4]
     c = data.tables[5]
@@ -36,7 +36,7 @@ if len(data.tables) > 6:    # данные разбиты на 4 таблицы
             tmp.append(d.rows[i].cells[j].text)
 
         example.append(np.array(tmp))
-else:   # данные разбиты на 2 таблицы (моногород)
+elif len(data.tables) == 5:   # данные разбиты на 2 таблицы (моногород)
     a = data.tables[3]
     b = data.tables[4]
     for i in range(len(a.rows)):
@@ -58,6 +58,21 @@ else:   # данные разбиты на 2 таблицы (моногород)
             tmp.append(b.rows[i].cells[6].text)
 
         example.append(np.array(tmp))
+
+elif len(data.tables) == 6:
+    v = 2
+    for k in range(3, 6):
+        if k == 3:
+            v = 0
+        else:
+            v = 2
+        for i in range(v, len(data.tables[k].rows)):
+            tmp.clear()
+            for j in range(len(data.tables[k].rows[i].cells)):
+                tmp.append(data.tables[k].rows[i].cells[j].text)
+
+            example.append(np.array(tmp))
+
 
 example = np.array(example)
 
