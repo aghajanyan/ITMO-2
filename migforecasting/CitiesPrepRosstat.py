@@ -98,7 +98,7 @@ for dis in range(8):
         data = data.drop(data.columns[data.shape[1] - 1], axis=1)
 
         x = -1  # несколько городов в файле
-        if data.shape[1] == 4:
+        if data.shape[1] == 3:
             x = -2  # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)

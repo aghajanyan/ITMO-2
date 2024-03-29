@@ -48,10 +48,14 @@ else:   # данные разбиты на 2 таблицы (моногород)
 
     for i in range(1, len(b.rows)):
         tmp.clear()
-        tmp.append(b.rows[i].cells[0].text)
-        tmp.append(b.rows[i].cells[2].text)
-        tmp.append(b.rows[i].cells[5].text)
-        tmp.append(b.rows[i].cells[6].text)
+        if len(b.rows[i].cells) == 4:
+            for j in range(len(b.rows[i].cells)):
+                tmp.append(b.rows[i].cells[j].text)
+        else:
+            tmp.append(b.rows[i].cells[0].text)
+            tmp.append(b.rows[i].cells[2].text)
+            tmp.append(b.rows[i].cells[5].text)
+            tmp.append(b.rows[i].cells[6].text)
 
         example.append(np.array(tmp))
 
