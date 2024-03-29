@@ -47,6 +47,7 @@ class City:
                      self.foodservturnover, self.saldo])
 
 examples = []
+"""
 for dis in range(8):
     files = next(os.walk("cities19-21/"+ str(dis) +""))
     for f in range(len(files[2])):
@@ -87,6 +88,54 @@ for dis in range(8):
                                  data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
                                  data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
                                  data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
+
+"""
+for dis in range(8):
+    files = next(os.walk("cities17-18/"+ str(dis) +""))
+    for f in range(len(files[2])):
+        data = pd.read_excel("cities17-18/"+ str(dis) +"/d"+ str(f + 1) +".xlsx")
+        data = data.drop(data.columns[0], axis=1)
+        data = data.drop(data.columns[data.shape[1] - 1], axis=1)
+
+        x = -1  # несколько городов в файле
+        if data.shape[1] == 4:
+            x = -2  # для моногородних файлов
+
+        # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
+        for i in range(0, data.shape[0]):
+            for j in range(0, data.shape[1]):
+                try:
+                    data.iloc[i, j] = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
+                except AttributeError:
+                    data.iloc[i, j] = data.iloc[i, j]
+
+        if x == -2:
+            cityname = data.iloc[0, 0]
+        else:
+            cityname = data.iloc[0, 1]
+
+        for m in range(1, data.shape[1]):
+            if data.iloc[1, m] != '2019':
+                # вычисление суммы промышленного оборота (+ корр. строки в эксель)
+                factorycap = 0
+                for i in range(58 + x, 62 + x):
+                    try:
+                        factorycap += float(data.iloc[i, m])
+                    except (ValueError, TypeError):
+                        factorycap += 0
+
+                if data.iloc[0, m] != cityname:
+                    cityname = data.iloc[0, m]
+
+                examples.append(City(cityname, data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
+                                     data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
+                                     data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
+                                     data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
+                                     data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
+
+
+
 
 # запись в csv
 titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea', 'beforeschool', 'docsperpop',
