@@ -157,7 +157,7 @@ class DemForecasting:
             olddata.append(olddata[len(olddata) - 1] * (inc + 1))
 
 # !!ПАРАМЕТРЫ ПРОГНОЗА!!
-regionid = 1 # номер региона (номер листа эксель (от 0 до 17))
+regionid = 0 # номер региона (номер листа эксель (от 0 до 17))
 iterations = 2  # количество прогнозных итераций (шаг 5 лет)
 
 data = pd.read_excel("data0.xlsx", sheet_name=regionid)
@@ -190,7 +190,7 @@ popsizemigRU, popsizemigLO = [], []
 popLO, popRU = [], []
 popmigRU, popmigLO = [], []
 interval = 5    # шаг прогноза (пока не трогать!!)
-popsizeRU, popRU = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "RU", False)
+#popsizeRU, popRU = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "RU", False)
 popsizeLO, popLO = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "LO", False)
 popsizemigRU, popmigRU = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "RU", True)
 popsizemigLO, popmigLO = DemForecasting.ComponentMethod(fulldata23, interval, iterations, regionid, regionname, "LO", True)

@@ -8,7 +8,7 @@ import docx
 
 data = docx.Document("0.docx")
 
-for k in range(3, 6):
+for k in range(1, 3):
     example = []
     tmp = []
     for i in range(len(data.tables[k].rows)):
@@ -18,6 +18,9 @@ for k in range(3, 6):
 
         example.append(np.array(tmp))
 
+    if k == 9:
+        example.pop(32)
+        example.pop(31)
     example = np.array(example)
     result = pd.DataFrame(example)
     result.to_excel("" + str(k) + ".xlsx")
