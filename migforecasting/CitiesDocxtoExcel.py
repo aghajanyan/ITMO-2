@@ -36,7 +36,7 @@ if len(data.tables) == 7:    # данные разбиты на 4 таблицы
             tmp.append(d.rows[i].cells[j].text)
 
         example.append(np.array(tmp))
-elif len(data.tables) == 5:   # данные разбиты на 2 таблицы (моногород)
+elif len(data.tables) == 5:   # данные разбиты на 2 таблицы
     a = data.tables[3]
     b = data.tables[4]
     for i in range(len(a.rows)):
@@ -48,7 +48,7 @@ elif len(data.tables) == 5:   # данные разбиты на 2 таблиц�
 
     for i in range(1, len(b.rows)):
         tmp.clear()
-        if len(b.rows[i].cells) == 4:
+        if len(b.rows[i].cells) == len(a.rows[0].cells):
             for j in range(len(b.rows[i].cells)):
                 tmp.append(b.rows[i].cells[j].text)
         else:
@@ -59,7 +59,7 @@ elif len(data.tables) == 5:   # данные разбиты на 2 таблиц�
 
         example.append(np.array(tmp))
 
-elif len(data.tables) == 6:
+elif len(data.tables) == 6:     # данные разбиты на 3 таблицы
     v = 2
     for k in range(3, 6):
         if k == 3:
