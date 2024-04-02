@@ -47,7 +47,6 @@ class City:
                      self.foodservturnover, self.saldo])
 
 examples = []
-"""
 for dis in range(8):
     files = next(os.walk("cities19-21/"+ str(dis) +""))
     for f in range(len(files[2])):
@@ -89,7 +88,7 @@ for dis in range(8):
                                  data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
                                  data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
 
-"""
+
 for dis in range(8):
     files = next(os.walk("cities17-18/"+ str(dis) +""))
     for f in range(len(files[2])):
@@ -142,7 +141,7 @@ titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea
           'bedsperpop', 'cliniccap', 'invests', 'funds', 'companies', 'factoriescap', 'conscap', 'consnewareas',
           'consnewapt', 'retailturnover', 'foodservturnover', 'saldo']
 
-with open("test.csv", 'w', newline='\n') as csv_file:
+with open("citiesdataset 17-21.csv", 'w', newline='\n') as csv_file:
     wr = csv.writer(csv_file, delimiter=',')
     wr.writerow(titles)
     for a in examples:
