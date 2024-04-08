@@ -226,13 +226,6 @@ for dis in range(8):
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[60 + x, m],
                                      data.iloc[61 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
 
-                #11-12
-                examples.append(City(cityname, data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
-                                     data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
-                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
-                                     data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
-                                     data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
-
 for dis in range(8):
     files = next(os.walk("cities11-12/"+ str(dis) +""))
     for f in range(len(files[2])):
