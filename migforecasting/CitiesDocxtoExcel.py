@@ -10,12 +10,13 @@ data = docx.Document("0.docx")
 
 example = []
 tmp = []
-
-if len(data.tables) == 7:    # данные разбиты на 4 таблицы
-    a = data.tables[3]
-    b = data.tables[4]
-    c = data.tables[5]
-    d = data.tables[6]
+n = 4
+x = 1
+if len(data.tables) == 7 + x:    # данные разбиты на 4 таблицы
+    a = data.tables[n]
+    b = data.tables[n + 1]
+    c = data.tables[n + 2]
+    d = data.tables[n + 3]
 
     for i in range(len(a.rows)):
         tmp.clear()
@@ -36,15 +37,30 @@ if len(data.tables) == 7:    # данные разбиты на 4 таблицы
             tmp.append(d.rows[i].cells[j].text)
 
         example.append(np.array(tmp))
-elif len(data.tables) == 5:   # данные разбиты на 2 таблицы
-    a = data.tables[3]
-    b = data.tables[4]
+elif len(data.tables) == 5 + x:   # данные разбиты на 2 таблицы
+    a = data.tables[n]
+    b = data.tables[n + 1]
     for i in range(len(a.rows)):
         tmp.clear()
+
         for j in range(len(a.rows[i].cells)):
             tmp.append(a.rows[i].cells[j].text)
 
-        example.append(np.array(tmp))
+        w = tmp[0].split()
+        if len(w) != 0:
+            if w[0] == 'Миграционный' and n == 4:
+                for y in range(5):
+                    empt = list(range(len(a.rows[i].cells)))
+                    example.append(np.array(empt))
+
+        try:
+            if w[0] + w[1] == 'Численностьдетей,' and n == 4:
+                tmp.clear()
+            else:
+                example.append(np.array(tmp))
+        except IndexError:
+            example.append(np.array(tmp))
+
 
     for i in range(1, len(b.rows)):
         tmp.clear()
@@ -59,9 +75,9 @@ elif len(data.tables) == 5:   # данные разбиты на 2 таблиц�
 
         example.append(np.array(tmp))
 
-elif len(data.tables) == 6:     # данные разбиты на 3 таблицы
+elif len(data.tables) == 6 + x:     # данные разбиты на 3 таблицы
     v = 2
-    for k in range(3, 6):
+    for k in range(n, 6):
         if k == 3:
             v = 0
         else:
