@@ -272,9 +272,11 @@ for dis in range(8):
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
 
 # запись в csv
-titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea', 'beforeschool', 'docsperpop',
-          'bedsperpop', 'cliniccap', 'invests', 'funds', 'companies', 'factoriescap', 'conscap', 'consnewareas',
-          'consnewapt', 'retailturnover', 'foodservturnover', 'saldo']
+titles = ['name', 'popsize (тыс)', 'avgemployers (тыс)', 'unemployed (шт)', 'avgsalary (руб)', 'livarea',
+          'beforeschool (тыс)', 'docsperpop (на 10 тыс)', 'bedsperpop (на 10 тыс)', 'cliniccap (на 10 тыс)',
+          'invests (удел. вес %)', 'funds износ %', 'companies (шт)', 'factoriescap (сумма млн. руб.)',
+          'conscap (млн. руб.)', 'consnewareas (тыс. м2)', 'consnewapt (шт)', 'retailturnover (млн. руб.)',
+          'foodservturnover (млн. руб)', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 examples.to_csv("citiesdataset 11-21.csv", index=False)
