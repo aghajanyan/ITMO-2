@@ -1,4 +1,4 @@
-name,popsize (тыс),avgemployers (тыс),unemployed (шт),avgsalary (руб),livarea,beforeschool (тыс),docsperpop (на 10 тыс),bedsperpop (на 10 тыс),cliniccap (на 10 тыс),invests (удел. вес %),funds износ %,companies (шт),factoriescap (сумма млн. руб.),conscap (млн. руб.),consnewareas (тыс. м2),consnewapt (шт),retailturnover (млн. руб.),foodservturnover (млн. руб),saldo
+name,popsize,avgemployers,unemployed,avgsalary,livarea,beforeschool,docsperpop,bedsperpop,cliniccap,invests,funds,companies,factoriescap,conscap,consnewareas,consnewapt,retailturnover,foodservturnover,saldo
 Ростов-на-Дону,1137.9,278.5,2760,47431.4,28,37.6,74.4,110.8,305.5,33.5,48.8,43268,290676.0,23190.5,1259.2,21711,147092,4381.6,6140
 Ростов-на-Дону,1137.7,284.1,30829,49663.2,28.7,38.1,81.8,109,313.4,32.7,50.8,38588,319082.89999999997,26537.3,1298.4,23418,162835.4,4234,5162
 Ростов-на-Дону,1134.7,283.5,3911,55628.1,29.8,41.9,83.8,108,334.7,44.2,50.7,35833,368935.7,47497.2,1437.7,23862,212000.0,6268.9,5722
