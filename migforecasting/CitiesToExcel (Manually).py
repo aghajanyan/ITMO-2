@@ -8,7 +8,7 @@ import docx
 
 data = docx.Document("0.docx")
 
-for k in range(11, 16):
+for k in range(1, 4):
     example = []
     tmp = []
     for i in range(len(data.tables[k].rows)):
