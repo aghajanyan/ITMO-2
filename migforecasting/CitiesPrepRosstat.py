@@ -333,12 +333,4 @@ for i in range(examples.shape[0]):
             tmp = ''.join(examples.iloc[i, j].split())
             examples.iloc[i, j] = tmp[:-2]
 
-examples.to_csv("citiesdataset 10-21.csv", encoding='cp1251', index=False)
-
-"""
-with open("citiesdataset 13-21.csv", 'w', newline='\n') as csv_file:
-    wr = csv.writer(csv_file, delimiter=',')
-    wr.writerow(titles)
-    for a in examples:
-        wr.writerow(list(a))
-"""
+examples.to_csv("citiesdataset 10-21.csv", index=False)
