@@ -7,10 +7,11 @@ import csv
 import os
 
 class City:
-    def __init__(self, name, popsize, avgemployers, unemployed, avgsalary, livarea, beforeschool, docsperpop,
+    def __init__(self, name, year, popsize, avgemployers, unemployed, avgsalary, livarea, beforeschool, docsperpop,
                  bedsperpop, cliniccap, invests, funds, companies, factoriescap, conscap, consnewareas, consnewapt,
                  retailturnover, foodservturnover, saldo):
         self.name = name
+        self.year = year
         self.popsize = popsize
         self.avgemployers = avgemployers
         self.unemployed = unemployed
@@ -32,8 +33,8 @@ class City:
         self.saldo = saldo
 
     def __str__(self):
-        result = "{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}".format(
-            self.name, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
+        result = "{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}".format(
+            self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
             self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
             self.companies,
             self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
@@ -41,7 +42,7 @@ class City:
         return result
 
     def __iter__(self):
-        return iter([self.name, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
+        return iter([self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
                      self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
                      self.companies,
                      self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
@@ -85,7 +86,7 @@ for dis in range(8):
             if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
                 cityname = data.iloc[1, m]
 
-            examples.append(City(cityname, data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
+            examples.append(City(cityname, data.iloc[2, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
                                  data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
                                  data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
                                  data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
@@ -131,7 +132,7 @@ for dis in range(8):
                     cityname = data.iloc[0, m]
 
                 #17-18
-                examples.append(City(cityname, data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
+                examples.append(City(cityname, data.iloc[1, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
                                      data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
                                      data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
                                      data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
@@ -176,7 +177,7 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
-                examples.append(City(cityname, data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
+                examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[48 + x, m], data.iloc[55 + x, m],
                                      data.iloc[58 + x, m], factorycap, data.iloc[66 + x, m], data.iloc[67 + x, m],
@@ -221,7 +222,7 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
-                examples.append(City(cityname, data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
+                examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[60 + x, m],
@@ -266,7 +267,7 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
-                examples.append(City(cityname, data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
+                examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
@@ -311,14 +312,14 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
-                examples.append(City(cityname, data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
+                examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
 
 # запись в csv
-titles = ['name', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
+titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
@@ -333,4 +334,4 @@ for i in range(examples.shape[0]):
             tmp = ''.join(examples.iloc[i, j].split())
             examples.iloc[i, j] = tmp[:-2]
 
-examples.to_csv("citiesdataset 10-21.csv", index=False)
+examples.to_csv("citiesdataset 10-21 (+y).csv", index=False)
