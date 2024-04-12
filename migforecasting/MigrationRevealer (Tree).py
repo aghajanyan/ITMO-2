@@ -37,6 +37,9 @@ rawdata = np.array(rawdata)
 rawdata = np.delete(rawdata, 1, 1)  # удаляем год
 rawdata = np.delete(rawdata, 0, 1)  # удаляем название городов
 
+np.random.shuffle(rawdata)
+
+
 # перевод из текста в число (удалить пример при невозможности конвертации)
 i = 0
 while i < len(rawdata):
@@ -56,7 +59,7 @@ while i < len(rawdata):
 
 Normalization.normbymax(rawdata)
 
-random.shuffle(rawdata)
+np.random.shuffle(rawdata)
 
 rawdata = np.array(rawdata)
 
