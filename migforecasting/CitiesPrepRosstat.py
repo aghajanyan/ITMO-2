@@ -86,7 +86,7 @@ for dis in range(8):
             if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
                 cityname = data.iloc[1, m]
 
-            examples.append(City(cityname, data.iloc[2, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
+            examples.append(City(cityname, data.iloc[2 + x, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
                                  data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
                                  data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
                                  data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
@@ -118,7 +118,7 @@ for dis in range(8):
             cityname = data.iloc[0, 1]
 
         for m in range(1, data.shape[1]):
-            if data.iloc[1, m] != '2019':
+            if str(data.iloc[1, m]) != '2019':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
                 factorycap = 0
                 for i in range(58 + x, 62 + x):
@@ -164,7 +164,7 @@ for dis in range(8):
             cityname = data.iloc[0, 1]
 
         for m in range(1, data.shape[1]):
-            if data.iloc[1, m] != '2017':
+            if str(data.iloc[1, m]) != '2017':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
                 factorycap = 0
                 for i in range(61 + x, 65 + x):
@@ -209,7 +209,7 @@ for dis in range(8):
             cityname = data.iloc[0, 1]
 
         for m in range(1, data.shape[1]):
-            if data.iloc[1, m] != '2015':
+            if str(data.iloc[1, m]) != '2015':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
                 factorycap = 0
                 for i in range(55 + x, 58 + x):
@@ -254,7 +254,7 @@ for dis in range(8):
             cityname = data.iloc[0, 1]
 
         for m in range(1, data.shape[1]):
-            if data.iloc[1, m] != '2013':
+            if str(data.iloc[1, m]) != '2013':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
                 factorycap = 0
                 for i in range(55 + x, 58 + x):
@@ -299,7 +299,7 @@ for dis in range(8):
             cityname = data.iloc[0, 1]
 
         for m in range(1, data.shape[1]):
-            if data.iloc[1, m] != '2011':
+            if str(data.iloc[1, m]) != '2011':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
                 factorycap = 0
                 for i in range(55 + x, 58 + x):
