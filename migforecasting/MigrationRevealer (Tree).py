@@ -30,10 +30,11 @@ class Normalization:
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset 10-21.csv")
+rawdata = pd.read_csv("citiesdataset 10-21 (+y).csv")
 rawdata = np.array(rawdata)
 
 # -- Нормализация --
+rawdata = np.delete(rawdata, 1, 1)  # удаляем год
 rawdata = np.delete(rawdata, 0, 1)  # удаляем название городов
 
 # перевод из текста в число (удалить пример при невозможности конвертации)
