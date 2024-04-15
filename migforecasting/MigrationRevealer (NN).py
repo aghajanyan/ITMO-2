@@ -50,7 +50,7 @@ model.add(Dense(64, activation='relu'))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
-history = model.fit(trainin, trainout, epochs=150, batch_size=6)
+history = model.fit(trainin, trainout, epochs=150, batch_size=4)
 
 pred = model.predict(trainin)
 pred1 = model.predict(testin)
@@ -59,7 +59,7 @@ plt.plot(pred[:100], label='Предсказание')
 plt.plot(testout[:100], label='Реальное значение')
 plt.legend(loc='upper left')
 plt.xlabel("Номер теста")
-plt.ylabel("Объем продаж")
+plt.ylabel("Миграционное сальдо")
 plt.title("Прогноз на тестовой выборке")
 plt.show()
 
