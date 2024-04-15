@@ -29,7 +29,7 @@ rawdata = np.array(rawdata)
 resulttest = []
 resulttrain = []
 
-for k in range(5):
+for k in range(30):
     np.random.shuffle(rawdata)
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -55,7 +55,7 @@ for k in range(5):
     model.add(Dense(1))
 
     model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
-    model.fit(trainin, trainout, epochs=7, batch_size=5)
+    model.fit(trainin, trainout, epochs=300, batch_size=5)
     
     predtrain = model.predict(trainin)
     errortrain = mean_absolute_percentage_error(trainout, predtrain)
