@@ -10,12 +10,12 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 
-rawdata = pd.read_csv("dataset-0.csv")
+rawdata = pd.read_csv("citiesdataset-2.csv")
 rawdata = np.array(rawdata)
 
 resulttest = []
 resulttrain = []
-for k in range(50):
+for k in range(20):
     np.random.shuffle(rawdata)
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -34,7 +34,7 @@ for k in range(50):
 
     # модель
     model = RandomForestRegressor(n_estimators=100, random_state=0)
-    model.fit(trainin, trainout)
+    model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
     errortrain = mean_absolute_percentage_error(trainout, predtrain)
@@ -44,6 +44,8 @@ for k in range(50):
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)
+
+    print('Итерация: ' + str(k))
 
 resulttest = np.array(resulttest)
 resulttrain = np.array(resulttrain)

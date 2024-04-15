@@ -34,11 +34,35 @@ rawdata = pd.read_csv("citiesdataset 10-21 (+y).csv")
 rawdata = np.array(rawdata)
 
 # -- Нормализация --
+#удаляем из датасета Москву и Питер
+i = 0
+while i < len(rawdata):
+    if rawdata[i, 0] == 'Москва' or rawdata[i, 0] == 'Санкт-Петербург':
+        rawdata = np.delete(rawdata, i, 0)
+        i-=1
+    else:
+        i+=1
+
 rawdata = np.delete(rawdata, 1, 1)  # удаляем год
 rawdata = np.delete(rawdata, 0, 1)  # удаляем название городов
 
-np.random.shuffle(rawdata)
-
+# вычисление среднего для каждого признака
+avg = []
+tmpavg = 0
+count = 0
+for k in range(len(rawdata[1])):
+    for i in range(len(rawdata)):
+        if rawdata[i, k] == rawdata[i, k]:  # проверка NaN
+            try:
+                tmpavg+= float(rawdata[i, k])
+                count+=1
+            except ValueError:
+                tmpavg+=0
+        else:
+            tmpavg+=0
+    avg.append(tmpavg / count)
+    tmpavg = 0
+    count = 0
 
 # перевод из текста в число (удалить пример при невозможности конвертации)
 i = 0
@@ -48,16 +72,19 @@ while i < len(rawdata):
             try:
                 rawdata[i, j] = float(rawdata[i, j])
             except ValueError:
-                rawdata = np.delete(rawdata, i, 0)
+                rawdata[i, j] = avg[j]
                 i -= 1
                 break
         else:
-            rawdata = np.delete(rawdata, i, 0)
+            rawdata[i, j] = avg[j]
             i -= 1
             break
     i += 1
 
 Normalization.normbymax(rawdata)
+
+dataset = pd.DataFrame(rawdata)
+dataset.to_csv('citiesdataset-2.csv', index=False)
 
 np.random.shuffle(rawdata)
 
@@ -79,7 +106,7 @@ testout = np.array(datasetout[int(spliter):])
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)
-model.fit(trainin, trainout)
+model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
 errortrain = mean_absolute_percentage_error(trainout, predtrain)
