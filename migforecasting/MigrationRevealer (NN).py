@@ -47,10 +47,11 @@ model = Sequential()
 model.add(Dense(64, input_dim=18, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
+model.add(Dense(64, activation='relu'))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
-history = model.fit(trainin, trainout, epochs=150, batch_size=4)
+history = model.fit(trainin, trainout, epochs=300, batch_size=5)
 
 pred = model.predict(trainin)
 pred1 = model.predict(testin)
