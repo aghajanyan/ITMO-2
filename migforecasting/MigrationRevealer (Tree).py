@@ -30,7 +30,7 @@ class Normalization:
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset 10-21 (+y).csv")
+rawdata = pd.read_csv("datasets/citiesdataset 10-21 (+y).csv")
 rawdata = np.array(rawdata)
 
 # -- Нормализация --

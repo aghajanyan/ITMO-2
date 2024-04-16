@@ -23,7 +23,7 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset-0.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-0.csv")
 rawdata = np.array(rawdata)
 
 np.random.shuffle(rawdata)

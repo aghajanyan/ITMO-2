@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 
-rawdata = pd.read_csv("citiesdataset-2.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-2.csv")
 rawdata = np.array(rawdata)
 
 resulttest = []

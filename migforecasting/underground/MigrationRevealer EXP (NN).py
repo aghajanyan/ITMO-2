@@ -23,7 +23,7 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset-2.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-2.csv")
 rawdata = np.array(rawdata)
 
 resulttest = []
