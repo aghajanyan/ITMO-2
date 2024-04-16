@@ -17,29 +17,9 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 
-class Normalization:
-    def normbymax(trainset):
-        for k in range(len(trainset[0])):
-            maxi = trainset[0][k]
-            for i in range(len(trainset)):
-                if (maxi < trainset[i][k]):
-                    maxi = trainset[i][k]
-
-            for j in range(len(trainset)):
-                trainset[j][k] = trainset[j][k] / maxi
-
-
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset 10-21 (+y).csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
 rawdata = np.array(rawdata)
-
-rawdata = np.delete(rawdata, 1, 1)  # удаляем год
-rawdata = np.delete(rawdata, 0, 1)  # удаляем название городов
-
-Normalization.normbymax(rawdata)
-
-dataset = pd.DataFrame(rawdata)
-dataset.to_csv('citiesdataset-2.csv', index=False)
 
 np.random.shuffle(rawdata)
 
