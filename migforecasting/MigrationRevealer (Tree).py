@@ -33,53 +33,8 @@ class Normalization:
 rawdata = pd.read_csv("datasets/citiesdataset 10-21 (+y).csv")
 rawdata = np.array(rawdata)
 
-# -- Нормализация --
-#удаляем из датасета Москву и Питер
-i = 0
-while i < len(rawdata):
-    if rawdata[i, 0] == 'Москва' or rawdata[i, 0] == 'Санкт-Петербург':
-        rawdata = np.delete(rawdata, i, 0)
-        i-=1
-    else:
-        i+=1
-
 rawdata = np.delete(rawdata, 1, 1)  # удаляем год
 rawdata = np.delete(rawdata, 0, 1)  # удаляем название городов
-
-# вычисление среднего для каждого признака
-avg = []
-tmpavg = 0
-count = 0
-for k in range(len(rawdata[1])):
-    for i in range(len(rawdata)):
-        if rawdata[i, k] == rawdata[i, k]:  # проверка NaN
-            try:
-                tmpavg+= float(rawdata[i, k])
-                count+=1
-            except ValueError:
-                tmpavg+=0
-        else:
-            tmpavg+=0
-    avg.append(tmpavg / count)
-    tmpavg = 0
-    count = 0
-
-# перевод из текста в число (удалить пример при невозможности конвертации)
-i = 0
-while i < len(rawdata):
-    for j in range(len(rawdata[1])):
-        if rawdata[i, j] == rawdata[i, j]:  # проверка NaN
-            try:
-                rawdata[i, j] = float(rawdata[i, j])
-            except ValueError:
-                rawdata[i, j] = avg[j]
-                i -= 1
-                break
-        else:
-            rawdata[i, j] = avg[j]
-            i -= 1
-            break
-    i += 1
 
 Normalization.normbymax(rawdata)
 

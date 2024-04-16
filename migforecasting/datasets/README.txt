@@ -5,3 +5,5 @@ citiesdataset-0.csv - оригинальный датасет без каких-
 citiesdataset-1.csv - пустые значения в примерах заменены средними по выборке (training ready)
 
 citiesdataset-2.csv - dataset-1 + удалены Москва и Питер (training ready)
+
+NextYearPrep.py - модуль формирования датасета для прогноза миграционного сальдо на следующий год
