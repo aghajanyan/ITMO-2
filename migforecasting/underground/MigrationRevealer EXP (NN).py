@@ -23,13 +23,13 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset-0.csv")
+rawdata = pd.read_csv("citiesdataset-1.csv")
 rawdata = np.array(rawdata)
 
 resulttest = []
 resulttrain = []
 
-for k in range(30):
+for k in range(20):
     np.random.shuffle(rawdata)
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
