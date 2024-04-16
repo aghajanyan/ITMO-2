@@ -10,17 +10,17 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-2.csv")
-rawdata = np.array(rawdata)
+rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
+#rawdata = np.array(rawdata)
 
 resulttest = []
 resulttrain = []
-for k in range(20):
-    np.random.shuffle(rawdata)
+for k in range(50):
+    rawdata = rawdata.sample(frac=1)
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
-    datasetin = rawdata[:, :18]
-    datasetout = rawdata[:, 18:]
+    datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
+    datasetout = np.array(rawdata[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, trainout, testin, testout = [], [], [], []
