@@ -30,21 +30,12 @@ resulttest = []
 resulttrain = []
 
 for k in range(20):
-    rawdata = rawdata.sample(frac=1)    # перетасовка
-
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
     datasetout = np.array(rawdata[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
-    trainin, trainout, testin, testout = [], [], [], []
-
-    spliter = len(datasetin) * 0.9
-    trainin = np.array(datasetin[:int(spliter)])
-    trainout = np.array(datasetout[:int(spliter)])
-
-    testin = np.array(datasetin[int(spliter):])
-    testout = np.array(datasetout[int(spliter):])
+    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
     
     #модель
     model = Sequential()
