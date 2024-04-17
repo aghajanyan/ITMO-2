@@ -15,11 +15,11 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 
 # Получение данных
 rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
-rawdata = np.array(rawdata)
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
 datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
