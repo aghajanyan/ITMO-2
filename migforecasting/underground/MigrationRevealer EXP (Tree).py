@@ -11,17 +11,19 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-2.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-2.csv")
 
 resulttest = []
 resulttrain = []
 for k in range(50):
+    rawdata = rawdata.sample(frac=1) # перетасовка
+
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
     datasetout = np.array(rawdata[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
-    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
+    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
     # модель
     model = RandomForestRegressor(n_estimators=100, random_state=0)

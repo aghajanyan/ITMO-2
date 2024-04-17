@@ -29,6 +29,8 @@ rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
 resulttest = []
 resulttrain = []
 for k in range(20):
+    rawdata = rawdata.sample(frac=1)  # перетасовка
+
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
     datasetout = np.array(rawdata[['saldo']])
