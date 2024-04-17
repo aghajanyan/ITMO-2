@@ -24,13 +24,12 @@ from tensorflow.keras.layers import Dropout
 
 # Получение данных
 rawdata = pd.read_csv("datasets/citiesdataset-0.csv")
-rawdata = np.array(rawdata)
 
-np.random.shuffle(rawdata)
+rawdata = rawdata.sample(frac=1)    # перетасовка
 
-# разбиение датасета на входные признаки и выходной результат (сальдо) 
-datasetin = rawdata[:, :18]
-datasetout = rawdata[:, 18:]
+# разбиение датасета на входные признаки и выходной результат (сальдо)
+datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
+datasetout = np.array(rawdata[['saldo']])
 
 # разбиение на обучающую и тестовую выборку
 trainin, trainout, testin, testout = [], [], [], []

@@ -11,12 +11,11 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
-#rawdata = np.array(rawdata)
 
 resulttest = []
 resulttrain = []
 for k in range(50):
-    rawdata = rawdata.sample(frac=1)
+    rawdata = rawdata.sample(frac=1)    # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
