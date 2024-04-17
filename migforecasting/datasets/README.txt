@@ -10,4 +10,6 @@ citiesdataset-2.csv - dataset-1 + удалены Москва и Питер (tra
 
 citiesdataset-NY-1.csv - || - || - || - || - для прогноза на год вперёд (training ready)
 
+citiesdataset-NY-2.csv - || - || - || - || - для прогноза на год вперёд (training ready)
+
 NextYearPrep.py - модуль формирования датасета для прогноза миграционного сальдо на следующий год

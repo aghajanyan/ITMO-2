@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-2.csv")
 
 resulttest = []
 resulttrain = []

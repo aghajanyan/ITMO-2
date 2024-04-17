@@ -29,6 +29,16 @@ for i in range(len(rawdata) - 1):
         examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
+
+#удаляем из датасета Москву и Питер
+i = 0
+while i < len(examples):
+    if examples[i, 0] == 'Москва' or examples[i, 0] == 'Санкт-Петербург':
+        examples = np.delete(examples, i, 0)
+        i-=1
+    else:
+        i+=1
+
 examples = np.delete(examples, 1, 1)  # удаляем год
 examples = np.delete(examples, 0, 1)  # удаляем название городов
 
@@ -67,17 +77,6 @@ while i < len(examples):
             break
     i += 1
 
-"""
-#удаляем из датасета Москву и Питер
-i = 0
-while i < len(rawdata):
-    if rawdata[i, 0] == 'Москва' or rawdata[i, 0] == 'Санкт-Петербург':
-        rawdata = np.delete(rawdata, i, 0)
-        i-=1
-    else:
-        i+=1
-"""
-
 Normalization.normbymax(examples)
 
 # запись в csv
@@ -89,6 +88,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NY-1.csv", index=False)
+examples.to_csv("citiesdataset-NY-2.csv", index=False)
 
 print('Done')
