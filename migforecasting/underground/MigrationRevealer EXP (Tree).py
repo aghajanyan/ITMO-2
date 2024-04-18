@@ -30,10 +30,10 @@ for k in range(50):
     model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_percentage_error(trainout, predtrain)
+    errortrain = mean_squared_error(trainout, predtrain)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_percentage_error(testout, predtest)
+    errortest = mean_squared_error(testout, predtest)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)

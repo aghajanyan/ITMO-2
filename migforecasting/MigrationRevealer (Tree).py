@@ -19,7 +19,9 @@ from sklearn.model_selection import train_test_split
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-2.csv")
+
+rawdata = rawdata.sample(frac=1)  # перетасовка
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
 datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
@@ -47,11 +49,18 @@ plt.ylabel("Миграционное сальдо")
 plt.title("Прогноз на тестовой выборке")
 plt.show()
 
+"""
 features = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
             'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
             'invests', 'funds', 'companies', 'factoriescap',
             'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
             'foodservturnover']
+"""
+features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
+            'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
+            'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
+            'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
+            'Оборот общепит.']
 
 important = model.feature_importances_
 
