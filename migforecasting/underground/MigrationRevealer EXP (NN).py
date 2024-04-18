@@ -24,7 +24,7 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-2.csv")
 
 resulttest = []
 resulttrain = []
@@ -36,7 +36,7 @@ for k in range(20):
     datasetout = np.array(rawdata[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
-    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
+    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
     
     #модель
     model = Sequential()
@@ -46,14 +46,14 @@ for k in range(20):
     model.add(Dense(64, activation='relu'))
     model.add(Dense(1))
 
-    model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
+    model.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError())
     model.fit(trainin, trainout, epochs=300, batch_size=5)
     
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_percentage_error(trainout, predtrain)
+    errortrain = mean_squared_error(trainout, predtrain)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_percentage_error(testout, predtest)
+    errortest = mean_squared_error(testout, predtest)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)

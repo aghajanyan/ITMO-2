@@ -28,7 +28,7 @@ datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
 datasetout = np.array(rawdata[['saldo']])
 
 # разбиение на обучающую и тестовую выборку
-trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
+trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)
