@@ -7,7 +7,6 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 
