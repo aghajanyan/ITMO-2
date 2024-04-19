@@ -13,3 +13,9 @@ citiesdataset-NY-1.csv - || - || - || - || - для прогноза на год
 citiesdataset-NY-2.csv - || - || - || - || - для прогноза на год вперёд (training ready)
 
 NextYearPrep.py - модуль формирования датасета для прогноза миграционного сальдо на следующий год
+
+GetCoordinates (Anthony-Cov).py - модуль получения координат городов из датасета
+
+coordinates.csv - координаты городов
+
+
