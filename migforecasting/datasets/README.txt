@@ -18,4 +18,6 @@ GetCoordinates (Anthony-Cov).py - модуль получения координ
 
 coordinates.csv - координаты городов
 
+dollaravg.csv - среднегодовой курс доллара
+
 

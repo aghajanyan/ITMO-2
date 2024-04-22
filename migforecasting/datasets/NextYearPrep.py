@@ -16,12 +16,14 @@ class Normalization:
                 trainset[j][k] = trainset[j][k] / maxi
 
 #получение и сортировка данных
-rawdata = pd.read_csv("citiesdataset 10-21 (FD+Inv).csv")
+rawdata = pd.read_csv("citiesdataset 10-21.csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 coordinates = pd.read_csv("coordinates.csv")
+dollar = pd.read_csv("dollaravg.csv")
 
 rawdata = rawdata.merge(coordinates, on='name', how='left')
+rawdata = rawdata.merge(dollar, on='year', how='left')
 
 # сальдо в конец таблицы
 saldo = rawdata[['saldo']]
@@ -93,10 +95,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'feddist', 'saldo']
+          'foodservturnover', 'dollar', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-FD-2.csv", index=False)
+examples.to_csv("citiesdataset-NYDCor-2.csv", index=False)
 
 print('Done')
