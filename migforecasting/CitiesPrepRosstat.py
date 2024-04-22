@@ -10,7 +10,7 @@ import os
 class City:
     def __init__(self, name, year, popsize, avgemployers, unemployed, avgsalary, livarea, beforeschool, docsperpop,
                  bedsperpop, cliniccap, invests, funds, companies, factoriescap, conscap, consnewareas, consnewapt,
-                 retailturnover, foodservturnover, feddist, saldo):
+                 retailturnover, foodservturnover, saldo):
         self.name = name
         self.year = year
         self.popsize = popsize
@@ -34,16 +34,15 @@ class City:
         self.consnewapt = consnewapt
         self.retailturnover = retailturnover
         self.foodservturnover = foodservturnover
-        self.feddist = feddist
         self.saldo = saldo
 
     def __str__(self):
         result = ("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, "
-                  "{12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}").format(
+                  "{12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}").format(
             self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
             self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
             self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
-            self.foodservturnover, self.feddist, self.saldo)
+            self.foodservturnover, self.saldo)
         return result
 
     def __iter__(self):
@@ -51,7 +50,7 @@ class City:
             [self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
              self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
              self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt,
-             self.retailturnover, self.foodservturnover, self.feddist, self.saldo])
+             self.retailturnover, self.foodservturnover, self.saldo])
 
 
 examples = []
@@ -104,7 +103,7 @@ for dis in range(8):
                                  data.iloc[27 + x, m], data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m],
                                  data.iloc[52 + x, m], data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m],
                                  data.iloc[64 + x, m], data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
-                                 dis, data.iloc[13 + x, m]))
+                                 data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities17-18/"+ str(dis) +""))
@@ -158,7 +157,7 @@ for dis in range(8):
                                      data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m], data.iloc[52 + x, m],
                                      data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
                                      data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
-                                     dis, data.iloc[13 + x, m]))
+                                     data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities15-16/"+ str(dis) +""))
@@ -211,7 +210,7 @@ for dis in range(8):
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[47 + x, m], data.iloc[55 + x, m],
                                      data.iloc[58 + x, m], factorycap, data.iloc[66 + x, m], data.iloc[67 + x, m],
                                      data.iloc[68 + x, m], data.iloc[75 + x, m], data.iloc[77 + x, m],
-                                     dis, data.iloc[12 + x, m]))
+                                     data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities13-14/"+ str(dis) +""))
@@ -264,7 +263,7 @@ for dis in range(8):
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[60 + x, m],
                                      data.iloc[61 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     dis, data.iloc[12 + x, m]))
+                                     data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities11-12/"+ str(dis) +""))
@@ -317,7 +316,7 @@ for dis in range(8):
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     dis, data.iloc[12 + x, m]))
+                                     data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities10/"+ str(dis) +""))
@@ -370,14 +369,14 @@ for dis in range(8):
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     dis, data.iloc[12 + x, m]))
+                                     data.iloc[12 + x, m]))
 
 # запись в csv
 titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'feddist', 'saldo']
+          'foodservturnover', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("citiesdataset 10-21 (FD+Inv).csv", index=False)
+examples.to_csv("citiesdataset 10-21.csv", index=False)
