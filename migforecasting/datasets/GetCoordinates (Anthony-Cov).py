@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-df=pd.read_csv('citiesdataset 10-21 (+y).csv')#, encoding='cp1251', encoding_errors='strict')
+df=pd.read_csv('citiesdataset 10-21 (FD+Inv).csv')#, encoding='cp1251', encoding_errors='strict')
 
 names=df.name.sort_values().unique()
 
