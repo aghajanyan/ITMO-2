@@ -6,10 +6,11 @@ import codecs
 import csv
 import os
 
+
 class City:
     def __init__(self, name, year, popsize, avgemployers, unemployed, avgsalary, livarea, beforeschool, docsperpop,
                  bedsperpop, cliniccap, invests, funds, companies, factoriescap, conscap, consnewareas, consnewapt,
-                 retailturnover, foodservturnover, saldo):
+                 retailturnover, foodservturnover, feddist, saldo):
         self.name = name
         self.year = year
         self.popsize = popsize
@@ -21,7 +22,10 @@ class City:
         self.docsperpop = docsperpop
         self.bedsperpop = bedsperpop
         self.cliniccap = cliniccap
-        self.invests = invests
+        try:
+            self.invests = float(invests) / float(popsize)  # доля инвест на чел.
+        except ValueError:
+            self.invests = invests
         self.funds = funds
         self.companies = companies
         self.factoriescap = factoriescap
@@ -30,43 +34,52 @@ class City:
         self.consnewapt = consnewapt
         self.retailturnover = retailturnover
         self.foodservturnover = foodservturnover
+        self.feddist = feddist
         self.saldo = saldo
 
     def __str__(self):
-        result = "{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}".format(
+        result = ("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, "
+                  "{12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}").format(
             self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
             self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
-            self.companies,
-            self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
-            self.foodservturnover, self.saldo)
+            self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
+            self.foodservturnover, self.feddist, self.saldo)
         return result
 
     def __iter__(self):
-        return iter([self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
-                     self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
-                     self.companies,
-                     self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
-                     self.foodservturnover, self.saldo])
+        return iter(
+            [self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
+             self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
+             self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt,
+             self.retailturnover, self.foodservturnover, self.feddist, self.saldo])
+
 
 examples = []
 
 for dis in range(8):
-    files = next(os.walk("cities19-21/"+ str(dis) +""))
+    files = next(os.walk("cities19-21/" + str(dis) + ""))
     for f in range(len(files[2])):
-        data = pd.read_excel("cities19-21/"+ str(dis) +"/d"+ str(f + 1) +".xlsx")
+        data = pd.read_excel("cities19-21/" + str(dis) + "/d" + str(f + 1) + ".xlsx")
 
         x = 0  # несколько городов в файле
         if data.shape[1] == 4:
             x = -2  # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(2, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -2:
             cityname = data.iloc[0, 0]
@@ -86,11 +99,12 @@ for dis in range(8):
             if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
                 cityname = data.iloc[1, m]
 
-            examples.append(City(cityname, data.iloc[2 + x, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
-                                 data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
-                                 data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
-                                 data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
-                                 data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
+            examples.append(City(cityname, data.iloc[2 + x, m], data.iloc[4 + x, m], data.iloc[15 + x, m],
+                                 data.iloc[17 + x, m], data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m],
+                                 data.iloc[27 + x, m], data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m],
+                                 data.iloc[52 + x, m], data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m],
+                                 data.iloc[64 + x, m], data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
+                                 dis, data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities17-18/"+ str(dis) +""))
@@ -104,13 +118,20 @@ for dis in range(8):
             x = -2  # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(1, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -2:
             cityname = data.iloc[0, 0]
@@ -134,9 +155,10 @@ for dis in range(8):
                 #17-18
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
                                      data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
-                                     data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[45 + x, m], data.iloc[52 + x, m],
+                                     data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m], data.iloc[52 + x, m],
                                      data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
-                                     data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m], data.iloc[13 + x, m]))
+                                     data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
+                                     dis, data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities15-16/"+ str(dis) +""))
@@ -150,13 +172,20 @@ for dis in range(8):
             x = -1 # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(1, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -1:
             cityname = data.iloc[0, 0]
@@ -179,9 +208,10 @@ for dis in range(8):
 
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
-                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[48 + x, m], data.iloc[55 + x, m],
+                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[47 + x, m], data.iloc[55 + x, m],
                                      data.iloc[58 + x, m], factorycap, data.iloc[66 + x, m], data.iloc[67 + x, m],
-                                     data.iloc[68 + x, m], data.iloc[75 + x, m], data.iloc[77 + x, m], data.iloc[12 + x, m]))
+                                     data.iloc[68 + x, m], data.iloc[75 + x, m], data.iloc[77 + x, m],
+                                     dis, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities13-14/"+ str(dis) +""))
@@ -195,13 +225,20 @@ for dis in range(8):
             x = -1 # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(1, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -1:
             cityname = data.iloc[0, 0]
@@ -224,9 +261,10 @@ for dis in range(8):
 
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
-                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
+                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[60 + x, m],
-                                     data.iloc[61 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
+                                     data.iloc[61 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
+                                     dis, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities11-12/"+ str(dis) +""))
@@ -240,13 +278,20 @@ for dis in range(8):
             x = -1 # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(1, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -1:
             cityname = data.iloc[0, 0]
@@ -269,9 +314,10 @@ for dis in range(8):
 
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
-                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
+                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
-                                     data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
+                                     data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
+                                     dis, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities10/"+ str(dis) +""))
@@ -285,13 +331,20 @@ for dis in range(8):
             x = -1 # для моногородних файлов
 
         # нормализация (убрать неразрывный пробел и запятые вещественных чисел)
-        for i in range(0, data.shape[0]):
+        for i in range(1, data.shape[0]):
             for j in range(0, data.shape[1]):
                 try:
                     data.iloc[i, j] = ''.join(data.iloc[i, j].split())
                     data.iloc[i, j] = data.iloc[i, j].replace(",", ".")
                 except AttributeError:
                     data.iloc[i, j] = data.iloc[i, j]
+
+        # убираем сноски из данных
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                if ')' in str(data.iloc[i, j]):
+                    tmp = ''.join(data.iloc[i, j].split())
+                    data.iloc[i, j] = tmp[:-2]
 
         if x == -1:
             cityname = data.iloc[0, 0]
@@ -314,24 +367,17 @@ for dis in range(8):
 
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
-                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[74 + x, m], data.iloc[45 + x, m],
+                                     data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
-                                     data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m], data.iloc[12 + x, m]))
+                                     data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
+                                     dis, data.iloc[12 + x, m]))
 
 # запись в csv
 titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'saldo']
+          'foodservturnover', 'feddist', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-
-# убираем сноски из данных
-for i in range(examples.shape[0]):
-    for j in range(examples.shape[1]):
-        if ')' in str(examples.iloc[i, j]):
-            tmp = ''.join(examples.iloc[i, j].split())
-            examples.iloc[i, j] = tmp[:-2]
-
-examples.to_csv("citiesdataset 10-21 (+y).csv", index=False)
+examples.to_csv("citiesdataset 10-21 (FD+Inv).csv", index=False)
