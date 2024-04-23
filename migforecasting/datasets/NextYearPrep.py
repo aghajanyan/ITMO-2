@@ -15,6 +15,20 @@ class Normalization:
             for j in range(len(trainset)):
                 trainset[j][k] = trainset[j][k] / maxi
 
+    def normbydollar(trainset):
+        #разделить рублевые признаки на стоимость доллара
+        rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
+        d = trainset[['dollar']]
+        for k in range(len(rubfeatures)):
+            tmp = trainset[[rubfeatures[k]]]
+            for i in range(len(tmp)):
+                try:
+                    tmp.iloc[i, 0] = float(tmp.iloc[i, 0]) / d.iloc[i, 0]
+                except ValueError:
+                    tmp.iloc[i, 0] = tmp.iloc[i, 0]
+            trainset[rubfeatures[k]] = tmp
+            tmp = pd.DataFrame(None)
+
 #получение и сортировка данных
 rawdata = pd.read_csv("citiesdataset 10-21.csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
@@ -29,6 +43,8 @@ rawdata = rawdata.merge(dollar, on='year', how='left')
 saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
+
+Normalization.normbydollar(rawdata)
 
 examples = []
 
@@ -99,6 +115,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYDCor-2.csv", index=False)
+examples.to_csv("citiesdataset-NYDCor-3.csv", index=False)
 
 print('Done')
