@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYD-2.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-DCor-3.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 

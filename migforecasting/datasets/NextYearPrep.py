@@ -111,10 +111,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'dollar', 'saldo']
+          'foodservturnover', 'lat', 'lon', 'dollar', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYDCor-3.csv", index=False)
+examples.to_csv("citiesdataset-DCor-3.csv", index=False)
 
 print('Done')
