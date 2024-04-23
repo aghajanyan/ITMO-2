@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-DCor-3.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-3.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -55,12 +55,14 @@ features = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
             'invests', 'funds', 'companies', 'factoriescap',
             'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
             'foodservturnover']
+            
+            'Широта', 'Долгота', 'Доллар'
 """
 features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
             'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
             'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
             'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Широта', 'Долгота', 'Доллар']
+            'Оборот общепит.']
 
 important = model.feature_importances_
 

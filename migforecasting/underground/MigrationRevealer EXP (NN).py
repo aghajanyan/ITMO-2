@@ -24,7 +24,7 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-2.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-3.csv")
 
 resulttest = []
 resulttrain = []
