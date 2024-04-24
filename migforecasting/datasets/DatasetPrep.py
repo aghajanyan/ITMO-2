@@ -35,8 +35,8 @@ def normbydollar(trainset):
     return trainset
 
 
-def norbbyinf(trainset):
-    # умножить рублевые признаки на соотвествующую долю инфляции
+def normbyinf(trainset):
+    # умножить рублевые признаки на соответствующую долю инфляции
     rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
     inflation = pd.read_csv("inflation1.csv")
     trainset = trainset.merge(inflation, on='year', how='left')
@@ -64,13 +64,16 @@ rawdata = rawdata.sort_values(by=['name', 'year'])
 coordinates = pd.read_csv("coordinates.csv")
 rawdata = rawdata.merge(coordinates, on='name', how='left')
 
+dollar = pd.read_csv("dollaravg.csv")
+rawdata = rawdata.merge(dollar, on='year', how='left')
+
 # сальдо в конец таблицы
 saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
 
 # rawdata = normbydollar(rawdata)
-rawdata = norbbyinf(rawdata)
+rawdata = normbyinf(rawdata)
 examples = []
 
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -136,10 +139,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'lat', 'lon', 'dollar' 'saldo']
+          'foodservturnover', 'lat', 'lon', 'dollar', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYDcor-3.csv", index=False)
+examples.to_csv("citiesdataset-NYDcor-4.csv", index=False)
 
 print('Done')
