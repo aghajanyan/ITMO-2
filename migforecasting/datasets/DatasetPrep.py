@@ -59,7 +59,7 @@ def normbyinf(trainset):
 # получение и сортировка данных
 rawdata = pd.read_csv("citiesdataset 10-21.csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
-
+"""
 # добавление координат
 coordinates = pd.read_csv("coordinates.csv")
 rawdata = rawdata.merge(coordinates, on='name', how='left')
@@ -71,7 +71,7 @@ rawdata = rawdata.merge(dollar, on='year', how='left')
 saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
-
+"""
 # rawdata = normbydollar(rawdata)
 rawdata = normbyinf(rawdata)
 examples = []
@@ -139,10 +139,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'lat', 'lon', 'dollar', 'saldo']
+          'foodservturnover', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYDcor-4.csv", index=False)
+examples.to_csv("citiesdataset-NY-4.csv", index=False)
 
 print('Done')

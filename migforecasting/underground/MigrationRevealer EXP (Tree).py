@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-3.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-4.csv")
 
 resulttest = []
 resulttrain = []
