@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-NY-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-DCor-4.csv")
 
 resulttest = []
 resulttrain = []
@@ -29,10 +29,10 @@ for k in range(50):
     model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_percentage_error(trainout, predtrain)
+    errortrain = mean_squared_error(trainout, predtrain)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_percentage_error(testout, predtest)
+    errortest = mean_squared_error(testout, predtest)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)
