@@ -67,6 +67,8 @@ rawdata = rawdata.merge(coordinates, on='name', how='left')
 dollar = pd.read_csv("dollaravg.csv")
 rawdata = rawdata.merge(dollar, on='year', how='left')
 
+maxsaldo = rawdata['saldo'].max()
+
 # сальдо в конец таблицы
 saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -79,8 +81,8 @@ examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
-    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        #rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
+    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
         examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -143,6 +145,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-DCor-4.csv", index=False)
+examples.to_csv("citiesdataset-NYDCor-4.csv", index=False)
 
 print('Done')

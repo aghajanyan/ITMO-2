@@ -13,6 +13,7 @@ import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -35,14 +36,15 @@ model = RandomForestRegressor(n_estimators=100, random_state=0)
 model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
-errortrain = mean_absolute_percentage_error(trainout, predtrain)
+errortrain = mean_absolute_error(trainout, predtrain)
 
 predtest = model.predict(testin)
-errortest = mean_absolute_percentage_error(testout, predtest)
+errortest = mean_absolute_error(testout, predtest)
 
+maxsaldo = 26466
 # вывод результатов
-scale = np.linspace(trainout.min(), trainout.max(), 100)
-plt.scatter(testout, predtest, c='purple', alpha=.3, label='Тестовая выборка')
+scale = np.linspace(trainout.min() * maxsaldo, trainout.max() * maxsaldo, 100)
+plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Тестовая выборка')
 plt.plot(scale, scale, c='green', label='Идеал')
 plt.axhline(0, c='k')
 plt.axvline(0, c='k')
@@ -51,8 +53,8 @@ plt.ylabel('Предсказание')
 plt.legend()
 plt.show()
 
-plt.plot(predtest[:100], label='Предсказание')
-plt.plot(testout[:100], label='Реальное значение')
+plt.plot(predtest[:100] * maxsaldo, label='Предсказание')
+plt.plot(testout[:100] * maxsaldo, label='Реальное значение')
 plt.legend(loc='upper left')
 plt.xlabel("Номер теста")
 plt.ylabel("Миграционное сальдо")

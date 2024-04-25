@@ -6,14 +6,16 @@ import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset-DCor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NY-4.csv")
 
 resulttest = []
 resulttrain = []
+maxsaldo = 26466
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
@@ -29,10 +31,10 @@ for k in range(50):
     model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain)
+    errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest)
+    errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)
