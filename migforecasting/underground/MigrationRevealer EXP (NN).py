@@ -30,7 +30,7 @@ rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-4.csv")
 resulttest = []
 resulttrain = []
 maxsaldo = 26466
-for k in range(2):
+for k in range(20):
     rawdata = rawdata.sample(frac=1)  # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
