@@ -41,6 +41,16 @@ predtest = model.predict(testin)
 errortest = mean_absolute_percentage_error(testout, predtest)
 
 # вывод результатов
+scale = np.linspace(trainout.min(), trainout.max(), 100)
+plt.scatter(testout, predtest, c='purple', alpha=.3, label='Тестовая выборка')
+plt.plot(scale, scale, c='green', label='Идеал')
+plt.axhline(0, c='k')
+plt.axvline(0, c='k')
+plt.xlabel('Реальное значение')
+plt.ylabel('Предсказание')
+plt.legend()
+plt.show()
+
 plt.plot(predtest[:100], label='Предсказание')
 plt.plot(testout[:100], label='Реальное значение')
 plt.legend(loc='upper left')
