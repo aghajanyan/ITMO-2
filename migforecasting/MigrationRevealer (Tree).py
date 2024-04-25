@@ -18,6 +18,18 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
+'''Наименьшие квадраты для одной переменной'''
+def MLS(x,y):
+    x=np.array(x).astype(float)
+    y=np.array(y).astype(float)
+    n=len(x)
+    sumx, sumy=sum(x), sum(y)
+    sumx2=sum([t*t for t in x])
+    sumxy=sum([t*u for t,u in zip(x,y)])
+    a = (n * sumxy - (sumx * sumy)) / (n * sumx2 - sumx * sumx);
+    b = (sumy - a * sumx) / n;
+    return a, b
+
 
 # Получение данных
 rawdata = pd.read_csv("datasets/citiesdataset-NYDcor-4.csv")
@@ -41,11 +53,14 @@ errortrain = mean_absolute_error(trainout, predtrain)
 predtest = model.predict(testin)
 errortest = mean_absolute_error(testout, predtest)
 
+a, b = MLS(testout, predtest)
+
 maxsaldo = 26466
 # вывод результатов
 scale = np.linspace(trainout.min() * maxsaldo, trainout.max() * maxsaldo, 100)
 plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Тестовая выборка')
 plt.plot(scale, scale, c='green', label='Идеал')
+plt.plot(testout * maxsaldo, (testout * maxsaldo)*a+b, c='red', label='Смещение модели')
 plt.axhline(0, c='k')
 plt.axvline(0, c='k')
 plt.xlabel('Реальное значение')

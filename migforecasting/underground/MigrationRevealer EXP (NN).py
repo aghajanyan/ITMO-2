@@ -13,6 +13,7 @@ import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -24,11 +25,12 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-3.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-4.csv")
 
 resulttest = []
 resulttrain = []
-for k in range(20):
+maxsaldo = 26466
+for k in range(2):
     rawdata = rawdata.sample(frac=1)  # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -46,17 +48,17 @@ for k in range(20):
     model.add(Dense(64, activation='relu'))
     model.add(Dense(1))
 
-    model.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError())
+    model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
     model.fit(trainin, trainout, epochs=300, batch_size=5)
     
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain)
+    errortrain = mean_absolute_error(trainout, predtrain)
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest)
+    errortest = mean_absolute_error(testout, predtest)
 
-    resulttrain.append(errortrain)
-    resulttest.append(errortest)
+    resulttrain.append(errortrain * maxsaldo)
+    resulttest.append(errortest * maxsaldo)
 
 resulttest = np.array(resulttest)
 resulttrain = np.array(resulttrain)
