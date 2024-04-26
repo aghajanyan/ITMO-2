@@ -66,6 +66,7 @@ rawdata = rawdata.merge(coordinates, on='name', how='left')
 
 #dollar = pd.read_csv("dollaravg.csv")
 oil = pd.read_csv("oilpricesavg.csv")
+#rawdata = rawdata.merge(dollar, on='year', how='left')
 rawdata = rawdata.merge(oil, on='year', how='left')
 
 # сальдо в конец таблицы
@@ -140,10 +141,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'lon', 'lat', 'oil', 'saldo']
+          'foodservturnover', 'lat', 'lon', 'oil', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-OCor-4.csv", index=False)
+examples.to_csv("citiesdataset-NYOCor-4.csv", index=False)
 
 print('Done')

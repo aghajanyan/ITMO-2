@@ -32,7 +32,7 @@ def MLS(x, y):
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDcor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDOcor-4.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -89,7 +89,7 @@ features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.'
             'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
             'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
             'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Широта', 'Долгота', 'Доллар']
+            'Оборот общепит.', 'Широта', 'Долгота', 'Oil']
 
 important = model.feature_importances_
 
