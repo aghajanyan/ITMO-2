@@ -32,7 +32,7 @@ def MLS(x, y):
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDOcor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYOcor-4.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
