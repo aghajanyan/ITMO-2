@@ -25,7 +25,7 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDOCor-4.csv")
 
 resulttest = []
 resulttrain = []
@@ -42,7 +42,7 @@ for k in range(20):
     
     #модель
     model = Sequential()
-    model.add(Dense(64, input_dim=21, activation='relu'))
+    model.add(Dense(64, input_dim=22, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))

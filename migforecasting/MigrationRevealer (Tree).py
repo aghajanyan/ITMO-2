@@ -30,9 +30,10 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
+maxsaldo = 26466
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYOcor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDOcor-4.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -48,14 +49,13 @@ model = RandomForestRegressor(n_estimators=100, random_state=0)
 model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
-errortrain = mean_absolute_error(trainout, predtrain)
+errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
 
 predtest = model.predict(testin)
-errortest = mean_absolute_error(testout, predtest)
+errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
 a, b = MLS(testout, predtest)
 
-maxsaldo = 26466
 # вывод результатов
 scale = np.linspace(trainout.min() * maxsaldo, trainout.max() * maxsaldo, 100)
 plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Тестовая выборка')
@@ -89,7 +89,7 @@ features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.'
             'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
             'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
             'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Широта', 'Долгота', 'Oil']
+            'Оборот общепит.', 'Широта', 'Долгота', 'dollar', 'Oil']
 
 important = model.feature_importances_
 
