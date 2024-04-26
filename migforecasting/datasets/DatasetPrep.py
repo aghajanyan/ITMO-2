@@ -55,6 +55,26 @@ def normbyinf(trainset):
     return trainset
 
 
+def normbyoil(trainset):
+    # умножить рублевые признаки на цену за нефть как долю процента
+    rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
+    oil2 = pd.read_csv("oilpricesavg.csv")
+    trainset = trainset.merge(oil2, on='year', how='left')
+    o = trainset[['oil']]
+    for k in range(len(rubfeatures)):
+        tmp = trainset[[rubfeatures[k]]]
+        for i in range(len(tmp)):
+            try:
+                oilnorm = o.iloc[i, 0] / 100
+                tmp.iloc[i, 0] = float(tmp.iloc[i, 0]) * oilnorm
+            except ValueError:
+                tmp.iloc[i, 0] = tmp.iloc[i, 0]
+        trainset[rubfeatures[k]] = tmp
+        tmp = pd.DataFrame(None)
+    trainset = trainset[trainset.columns.drop('oil')]
+    return trainset
+
+
 
 # получение и сортировка данных
 rawdata = pd.read_csv("citiesdataset 10-21.csv")
@@ -63,6 +83,10 @@ rawdata = rawdata.sort_values(by=['name', 'year'])
 # добавление координат
 coordinates = pd.read_csv("coordinates.csv")
 rawdata = rawdata.merge(coordinates, on='name', how='left')
+
+# rawdata = normbydollar(rawdata)
+# rawdata = normbyinf(rawdata)
+rawdata = normbyoil(rawdata)
 
 #dollar = pd.read_csv("dollaravg.csv")
 oil = pd.read_csv("oilpricesavg.csv")
@@ -74,8 +98,6 @@ saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
 
-# rawdata = normbydollar(rawdata)
-rawdata = normbyinf(rawdata)
 examples = []
 
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -145,6 +167,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYOCor-4.csv", index=False)
+examples.to_csv("citiesdataset-NYOCor-5.csv", index=False)
 
 print('Done')
