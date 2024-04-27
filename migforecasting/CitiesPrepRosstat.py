@@ -26,12 +26,7 @@ class City:
             self.invests = float(invests) / float(popsize)  # доля инвест на чел.
         except ValueError:
             self.invests = invests
-
-        try:
-            self.orgfunds = float(orgfunds) / float(popsize)  # доля фондов на чел.
-        except ValueError:
-            self.orgfunds = orgfunds
-
+        self.orgfunds = orgfunds
         self.funds = funds
         self.companies = companies
         self.factoriescap = factoriescap
@@ -390,4 +385,4 @@ titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 
           'foodservturnover', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("citiesdataset 10-21 (+fp).csv", index=False)
+examples.to_csv("citiesdataset 10-21 (+f).csv", index=False)

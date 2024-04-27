@@ -37,7 +37,7 @@ def normbydollar(trainset):
 
 def normbyinf(trainset):
     # умножить рублевые признаки на соответствующую долю инфляции
-    rubfeatures = ['avgsalary', 'invests', 'orgfunds', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
+    rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
     inflation = pd.read_csv("inflation1.csv")
     trainset = trainset.merge(inflation, on='year', how='left')
     inf = trainset[['inf']]
@@ -77,7 +77,7 @@ def normbyoil(trainset):
 
 
 # получение и сортировка данных
-rawdata = pd.read_csv("citiesdataset 10-21 (+fp).csv")
+rawdata = pd.read_csv("citiesdataset 10-21.csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 # добавление координат
@@ -86,7 +86,7 @@ rawdata = rawdata.merge(coordinates, on='name', how='left')
 
 # rawdata = normbydollar(rawdata)
 # rawdata = normbyinf(rawdata)
-rawdata = normbyinf(rawdata)
+rawdata = normbyoil(rawdata)
 
 #dollar = pd.read_csv("dollaravg.csv")
 oil = pd.read_csv("oilpricesavg.csv")
@@ -161,12 +161,12 @@ examples = normbymax(examples)
 # запись в csv
 titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
-          'invests', 'orgfunds', 'funds', 'companies', 'factoriescap',
+          'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
           'foodservturnover', 'lat', 'lon', 'oil', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYFOCor-4.csv", index=False)
+examples.to_csv("citiesdataset-NYOCor-5.csv", index=False)
 
 print('Done')
