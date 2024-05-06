@@ -4,7 +4,7 @@ import random
 import pandas as pd
 
 
-data = pd.read_excel("бокс-13-2.xlsx")
+data = pd.read_excel("бокс-11-1.xlsx")
 
 titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'invests', 'factoriescap', 'conscap', 'consnewareas', 'retailturnover',
@@ -20,15 +20,15 @@ except ValueError:
 x = 1
 boksdata.loc[0] = [float(data.iloc[7 + x, 3]) / 1000,
                    float(data.iloc[16 + x, 3]) / 1000,
-                   (float(data.iloc[30, 3]) / 100) * data.iloc[7 + x, 3],
-                   data.iloc[38, 3],
-                   data.iloc[101, 3],
-                   float(data.iloc[79, 3]) / 1000,
-                   float(data.iloc[52, 3]) / 1000,
+                   (float(data.iloc[31, 3]) / 100) * data.iloc[7 + x, 3],
+                   data.iloc[54, 3],
+                   data.iloc[121, 3],
                    float(data.iloc[99, 3]) / 1000,
-                   data.iloc[100, 3],
-                   float(data.iloc[75, 3]) / 1000,
-                   float(data.iloc[76, 3]) / 1000,
+                   float(data.iloc[68, 3]) / 1000,
+                   float(data.iloc[119, 3]) / 1000,
+                   data.iloc[120, 3],
+                   float(data.iloc[95, 3]),
+                   float(data.iloc[96, 3]) / 1000,
                    data.iloc[10 + x, 3]]
 
 boksdata.to_excel("1.xlsx")
