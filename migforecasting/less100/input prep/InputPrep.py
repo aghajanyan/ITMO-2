@@ -59,7 +59,7 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 
 
 # получение и сортировка данных
-rawdata = pd.read_excel("input.xlsx")
+rawdata = pd.read_excel("inputNY.xlsx")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 rawdata = normbyinf(rawdata)
@@ -69,9 +69,9 @@ examples = []
 
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
-for i in range(len(rawdata) - 1):
-    # if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-    # rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
+for i in range(len(rawdata)):
+    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        #rawdata.iloc[i, rawdata.shape[1] - 1] = rawdata.iloc[i + 1, rawdata.shape[1] - 1]
     examples.append(rawdata.iloc[i])
 
 examples = np.delete(examples, 1, 1)  # удаляем год
@@ -82,6 +82,6 @@ titles = allmax.keys()
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("input.csv", index=False)
+examples.to_csv("inputNY.csv", index=False)
 
 print('Done')

@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 11 11:09:34 2024
-
-@author: Albert 
-"""
-
 import csv
 import numpy as np
 import random
@@ -33,7 +26,7 @@ def MLS(x, y):
 maxsaldo = 26466
 
 # Получение данных
-rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-DCor-4.csv")
+rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-NYDCor-4.csv")
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
@@ -53,10 +46,10 @@ model = RandomForestRegressor(n_estimators=100, random_state=0)
 model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
-errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
+errortrain = mean_absolute_percentage_error(trainout * maxsaldo, predtrain * maxsaldo)
 
 predtest = model.predict(testin)
-errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
+errortest = mean_absolute_percentage_error(testout * maxsaldo, predtest * maxsaldo)
 
 a, b = MLS(testout, predtest)
 
@@ -109,5 +102,19 @@ print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
 
 #проверка точности предсказания на малых городах/территориях
+village = pd.read_csv("inputNY.csv")
+
+villagein = np.array(village[village.columns.drop('saldo')])
+villageout = np.array(village[['saldo']])
+
+predvillage = model.predict(villagein)
+errorvillage = mean_absolute_percentage_error(villageout * maxsaldo, predvillage * maxsaldo)
+
+print("MAPE for input cities: ", errorvillage)
+
+predvillage = np.array(predvillage * maxsaldo)
+predvillage = pd.DataFrame(predvillage)
+
+predvillage.to_excel("output.xlsx")
 
 
