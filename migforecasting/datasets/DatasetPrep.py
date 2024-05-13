@@ -6,11 +6,14 @@ import pandas as pd
 
 
 def normbymax(trainset):
+    tmpp = []
     for k in range(len(trainset[0])):
         maxi = trainset[0][k]
         for i in range(len(trainset)):
             if (maxi < trainset[i][k]):
                 maxi = trainset[i][k]
+
+        tmpp.append(maxi)
 
         for j in range(len(trainset)):
             trainset[j][k] = trainset[j][k] / maxi
@@ -85,8 +88,8 @@ coordinates = pd.read_csv("coordinates.csv")
 rawdata = rawdata.merge(coordinates, on='name', how='left')
 
 # rawdata = normbydollar(rawdata)
-# rawdata = normbyinf(rawdata)
-rawdata = normbyoil(rawdata)
+rawdata = normbyinf(rawdata)
+#rawdata = normbyoil(rawdata)
 
 #dollar = pd.read_csv("dollaravg.csv")
 oil = pd.read_csv("oilpricesavg.csv")
@@ -157,6 +160,31 @@ while i < len(examples):
     i += 1
 
 examples = normbymax(examples)
+
+allmax = {
+    'popsize': 1625.6,
+    'avgemployers': 475.8,
+    'unemployed': 44134.0,
+    'avgsalary': 65935.7371,
+    'livarea': 69.6,
+    'beforeschool': 50640.0,
+    'docsperpop': 146.1,
+    'bedsperpop': 252.0,
+    'cliniccap': 1156.4,
+    'invests': 1646.8895179039303,
+    'funds': 89.9,
+    'companies': 209412.0,
+    'factoriescap': 567115.8942,
+    'conscap': 106568.55884,
+    'consnewareas': 7563.0,
+    'consnewapt': 42801.0,
+    'retailturnover': 154512.08200999998,
+    'foodservturnover': 16055.4,
+    'lat': 69.38294581595048,
+    'lon': 177.49228362395198,
+    'oil': 97.98,
+    'saldo': 26466.0
+}
 
 # запись в csv
 titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
