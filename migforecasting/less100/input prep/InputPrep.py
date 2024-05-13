@@ -4,9 +4,7 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
-
-def normbymax(trainset):    # нормализовать входные признаки по максимальным значениям датасета
-    allmax = {
+allmax = {
         'popsize': 1625.6,
         'avgemployers': 475.8,
         'unemployed': 44134.0,
@@ -30,11 +28,13 @@ def normbymax(trainset):    # нормализовать входные приз
         # 'oil': 97.98,
         'saldo': 26466.0
     }
-    for k in range(len(allmax)):
-        tmp = trainset[[allmax[k]]]
+
+def normbymax(trainset):    # нормализовать входные признаки по максимальным значениям датасета
+    for k in allmax:
+        tmp = trainset[[k]]
         for i in range(len(tmp)):
-            tmp.iloc[i, 0] = tmp.iloc[i, 0] / allmax[k]
-        trainset[[allmax[k]]] = tmp
+            tmp.iloc[i, 0] = float(tmp.iloc[i, 0]) / float(allmax[k])
+        trainset[k] = tmp
         tmp = pd.DataFrame(None)
     return trainset
 
@@ -59,10 +59,11 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 
 
 # получение и сортировка данных
-rawdata = pd.read_csv("input.xlsx")
+rawdata = pd.read_excel("input.xlsx")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 rawdata = normbyinf(rawdata)
+rawdata = normbymax(rawdata)
 
 examples = []
 
@@ -75,3 +76,12 @@ for i in range(len(rawdata) - 1):
 
 examples = np.delete(examples, 1, 1)  # удаляем год
 examples = np.delete(examples, 0, 1)  # удаляем название городов
+
+# запись в csv
+titles = allmax.keys()
+
+examples = pd.DataFrame(examples, columns=titles)
+
+examples.to_csv("input.csv", index=False)
+
+print('Done')
