@@ -33,15 +33,11 @@ def MLS(x, y):
 maxsaldo = 26466
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDOcor-4.csv")
+rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-DCor-4.csv")
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
-rawdata = rawdata.drop(['beforeschool', 'docsperpop'], axis=1)
-rawdata = rawdata[rawdata.columns.drop('docsperpop')]
-rawdata = rawdata[rawdata.columns.drop('bedsperpop')]
-rawdata = rawdata[rawdata.columns.drop('cliniccap')]
-rawdata = rawdata[rawdata.columns.drop('funds')]
-rawdata = rawdata[rawdata.columns.drop('funds')]
+rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
+                        'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -111,3 +107,7 @@ plt.show()
 
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
+
+#проверка точности предсказания на малых городах/территориях
+
+
