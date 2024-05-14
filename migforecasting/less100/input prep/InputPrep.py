@@ -25,7 +25,7 @@ allmax = {
         'foodservturnover': 16055.4,
         'lat': 69.38294581595048,
         'lon': 177.49228362395198,
-        # 'oil': 97.98,
+        'dollar': 73.6,
         'saldo': 26466.0
     }
 
@@ -62,6 +62,15 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 rawdata = pd.read_excel("inputNY.xlsx")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
+dollar = pd.read_csv("dollaravg.csv")
+#oil = pd.read_csv("oilpricesavg.csv")
+rawdata = rawdata.merge(dollar, on='year', how='left')
+
+# сальдо в конец таблицы
+saldo = rawdata[['saldo']]
+rawdata = rawdata[rawdata.columns.drop('saldo')]
+rawdata = pd.concat([rawdata, saldo], axis=1)
+
 rawdata = normbyinf(rawdata)
 rawdata = normbymax(rawdata)
 
@@ -82,6 +91,6 @@ titles = allmax.keys()
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("inputNY.csv", index=False)
+examples.to_csv("inputNYD.csv", index=False)
 
 print('Done')
