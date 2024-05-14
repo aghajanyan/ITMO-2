@@ -9,7 +9,7 @@ allmax = {
         'avgemployers': 475.8,
         'unemployed': 44134.0,
         'avgsalary': 65935.7371,
-        'livarea': 69.6,
+        #'livarea': 69.6,
         # 'beforeschool': 50640.0,
         # 'docsperpop': 146.1,
         # 'bedsperpop': 252.0,
@@ -18,14 +18,14 @@ allmax = {
         # 'funds': 89.9,
         # 'companies': 209412.0,
         'factoriescap': 567115.8942,
-        'conscap': 106568.55884,
-        'consnewareas': 7563.0,
+        #'conscap': 106568.55884,
+        #'consnewareas': 7563.0,
         # 'consnewapt': 42801.0,
         'retailturnover': 154512.08200999998,
         'foodservturnover': 16055.4,
         'lat': 69.38294581595048,
         'lon': 177.49228362395198,
-        'oil': 97.98,
+        #'oil': 97.98,
         'saldo': 26466.0
     }
 
@@ -59,7 +59,7 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 
 
 # получение и сортировка данных
-rawdata = pd.read_excel("moreinput.xlsx")
+rawdata = pd.read_excel("moreinputNY.xlsx")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 """
@@ -93,6 +93,6 @@ titles = allmax.keys()
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("inputNYO.csv", index=False)
+examples.to_csv("moreinputNY.csv", index=False)
 
 print('Done')
