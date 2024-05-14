@@ -59,17 +59,19 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 
 
 # получение и сортировка данных
-rawdata = pd.read_excel("inputNY.xlsx")
+rawdata = pd.read_excel("moreinput.xlsx")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
+"""
 #dollar = pd.read_csv("dollaravg.csv")
-oil = pd.read_csv("oilpricesavg.csv")
-rawdata = rawdata.merge(oil, on='year', how='left')
+#oil = pd.read_csv("oilpricesavg.csv")
+#rawdata = rawdata.merge(oil, on='year', how='left')
 
 # сальдо в конец таблицы
 saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
+"""
 
 rawdata = normbyinf(rawdata)
 rawdata = normbymax(rawdata)
