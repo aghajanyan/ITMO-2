@@ -10,7 +10,7 @@ import os
 class City:
     def __init__(self, name, year, popsize, avgemployers, unemployed, avgsalary, livarea, beforeschool, docsperpop,
                  bedsperpop, cliniccap, invests, funds, companies, factoriescap, conscap, consnewareas, consnewapt,
-                 retailturnover, foodservturnover, saldo):
+                 retailturnover, foodservturnover, newaptprice, saldo):
         self.name = name
         self.year = year
         self.popsize = popsize
@@ -34,15 +34,16 @@ class City:
         self.consnewapt = consnewapt
         self.retailturnover = retailturnover
         self.foodservturnover = foodservturnover
+        self.newaptprice = newaptprice
         self.saldo = saldo
 
     def __str__(self):
         result = ("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, "
-                  "{12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}").format(
+                  "{12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}").format(
             self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
             self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
             self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt, self.retailturnover,
-            self.foodservturnover, self.saldo)
+            self.foodservturnover, self.newaptprice, self.saldo)
         return result
 
     def __iter__(self):
@@ -50,7 +51,7 @@ class City:
             [self.name, self.year, self.popsize, self.avgemployers, self.unemployed, self.avgsalary, self.livarea,
              self.beforeschool, self.docsperpop, self.bedsperpop, self.cliniccap, self.invests, self.funds,
              self.companies, self.factoriescap, self.conscap, self.consnewareas, self.consnewapt,
-             self.retailturnover, self.foodservturnover, self.saldo])
+             self.retailturnover, self.foodservturnover, self.newaptprice, self.saldo])
 
 
 examples = []
@@ -94,7 +95,7 @@ for dis in range(8):
                 m = i
                 break
         # получение сред. цены за 1кв. м. для области (индекс строки, год)
-        aptprice = aptpricesdata.iloc[aptpricesdata.index[m], data.iloc[2 + x, m]]
+        newaptprice = aptpricesdata.iloc[aptpricesdata.index[m], data.iloc[2 + x, m]]
 
         for m in range(1, data.shape[1]):
             # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -114,7 +115,7 @@ for dis in range(8):
                                  data.iloc[27 + x, m], data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m],
                                  data.iloc[52 + x, m], data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m],
                                  data.iloc[64 + x, m], data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
-                                 data.iloc[13 + x, m]))
+                                 newaptprice, data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities17-18/"+ str(dis) +""))
@@ -387,7 +388,7 @@ titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'saldo']
+          'foodservturnover', 'newaptprice', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("citiesdataset 10-21.csv", index=False)
+examples.to_csv("citiesdataset 10-21 (AptPrice).csv", index=False)
