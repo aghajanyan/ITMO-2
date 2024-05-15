@@ -27,7 +27,7 @@ for i in range(3, rawdata.shape[0]):
     data.append(np.array(tmp))
     tmp.clear()
 
-data = np.array(data)
+data = np.array(data )
 
 data = pd.DataFrame(data)
 

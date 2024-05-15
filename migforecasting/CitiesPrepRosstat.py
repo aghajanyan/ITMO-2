@@ -55,6 +55,8 @@ class City:
 
 examples = []
 
+aptpricesdata = pd.read_excel("AvgAptPrices.xlsx")
+
 for dis in range(8):
     files = next(os.walk("cities19-21/" + str(dis) + ""))
     for f in range(len(files[2])):
@@ -84,6 +86,15 @@ for dis in range(8):
             cityname = data.iloc[0, 0]
         else:
             cityname = data.iloc[1, 1]
+
+        # поиск по названию города (центр области)
+        m = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                m = i
+                break
+        # получение сред. цены за 1кв. м. для области (индекс строки, год)
+        aptprice = aptpricesdata.iloc[aptpricesdata.index[m], data.iloc[2 + x, m]]
 
         for m in range(1, data.shape[1]):
             # вычисление суммы промышленного оборота (+ корр. строки в эксель)
