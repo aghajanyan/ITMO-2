@@ -80,7 +80,7 @@ def normbyoil(trainset):
 
 
 # получение и сортировка данных
-rawdata = pd.read_csv("citiesdataset 10-21.csv")
+rawdata = pd.read_csv("citiesdataset 10-21 (AptPrice).csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 # добавление координат
@@ -92,9 +92,9 @@ rawdata = normbyinf(rawdata)
 #rawdata = normbyoil(rawdata)
 
 #dollar = pd.read_csv("dollaravg.csv")
-oil = pd.read_csv("oilpricesavg.csv")
+#oil = pd.read_csv("oilpricesavg.csv")
 #rawdata = rawdata.merge(dollar, on='year', how='left')
-rawdata = rawdata.merge(oil, on='year', how='left')
+#rawdata = rawdata.merge(oil, on='year', how='left')
 
 # сальдо в конец таблицы
 saldo = rawdata[['saldo']]
@@ -106,8 +106,8 @@ examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
-    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
+    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        #rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
         examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -191,10 +191,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'lat', 'lon', 'oil', 'saldo']
+          'foodservturnover', 'newaptprice', 'lat', 'lon', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYOCor-5.csv", index=False)
+examples.to_csv("citiesdataset-ACor-4(infnoapt).csv", index=False)
 
 print('Done')

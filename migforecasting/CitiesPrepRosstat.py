@@ -442,4 +442,4 @@ titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 
           'foodservturnover', 'newaptprice', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("citiesdataset 10-21 (AptPrice).csv")
+examples.to_csv("citiesdataset 10-21 (AptPrice).csv", index=False)
