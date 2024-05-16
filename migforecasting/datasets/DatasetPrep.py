@@ -92,9 +92,9 @@ rawdata = rawdata.merge(coordinates, on='name', how='left')
 rawdata = normbyinf(rawdata)
 #rawdata = normbyoil(rawdata)
 
-#dollar = pd.read_csv("dollaravg.csv")
+dollar = pd.read_csv("dollaravg.csv")
 #oil = pd.read_csv("oilpricesavg.csv")
-#rawdata = rawdata.merge(dollar, on='year', how='left')
+rawdata = rawdata.merge(dollar, on='year', how='left')
 #rawdata = rawdata.merge(oil, on='year', how='left')
 
 # сальдо в конец таблицы
@@ -107,8 +107,8 @@ examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
-    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
+   # if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+       # rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
         examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -192,10 +192,10 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
           'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
           'invests', 'funds', 'companies', 'factoriescap',
           'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-          'foodservturnover', 'newaptprice', 'lat', 'lon', 'saldo']
+          'foodservturnover', 'newaptprice', 'lat', 'lon', 'dollar', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-NYACor-4.csv", index=False)
+examples.to_csv("citiesdataset-ADCor-4.csv", index=False)
 
 print('Done')
