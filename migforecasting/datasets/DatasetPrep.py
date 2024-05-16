@@ -40,7 +40,8 @@ def normbydollar(trainset):
 
 def normbyinf(trainset):
     # умножить рублевые признаки на соответствующую долю инфляции
-    rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
+    rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover',
+                   'foodservturnover', 'newaptprice']
     inflation = pd.read_csv("inflation1.csv")
     trainset = trainset.merge(inflation, on='year', how='left')
     inf = trainset[['inf']]
@@ -106,8 +107,8 @@ examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
-    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        #rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
+    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        rawdata.iloc[i, 20] = rawdata.iloc[i + 1, 20]
         examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -195,6 +196,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-ACor-4(infnoapt).csv", index=False)
+examples.to_csv("citiesdataset-NYACor-4.csv", index=False)
 
 print('Done')
