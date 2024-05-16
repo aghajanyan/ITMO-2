@@ -56,7 +56,7 @@ class City:
 
 examples = []
 
-aptpricesdata = pd.read_excel("AvgAptPrices.xlsx")
+aptpricesdata = pd.read_excel("datasets/AvgAptPrices.xlsx")
 
 for dis in range(8):
     files = next(os.walk("cities19-21/" + str(dis) + ""))
@@ -89,13 +89,11 @@ for dis in range(8):
             cityname = data.iloc[1, 1]
 
         # поиск по названию города (центр области)
-        m = 0
+        y = 0
         for i in range(aptpricesdata.shape[0]):
             if cityname == aptpricesdata.iloc[i, 0]:
-                m = i
+                y = i
                 break
-        # получение сред. цены за 1кв. м. для области (индекс строки, год)
-        newaptprice = aptpricesdata.iloc[aptpricesdata.index[m], data.iloc[2 + x, m]]
 
         for m in range(1, data.shape[1]):
             # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -109,6 +107,9 @@ for dis in range(8):
 
             if data.iloc[1, m] == data.iloc[1, m]:  # если не NAN, то город меняется
                 cityname = data.iloc[1, m]
+
+            # получение сред. цены за 1кв. м. для области (индекс строки, год)
+            newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[2 + x, m])]
 
             examples.append(City(cityname, data.iloc[2 + x, m], data.iloc[4 + x, m], data.iloc[15 + x, m],
                                  data.iloc[17 + x, m], data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m],
@@ -149,6 +150,13 @@ for dis in range(8):
         else:
             cityname = data.iloc[0, 1]
 
+        # поиск по названию города (центр области)
+        y = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                y = i
+                break
+
         for m in range(1, data.shape[1]):
             if str(data.iloc[1, m]) != '2019':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -163,13 +171,16 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
+                # получение сред. цены за 1кв. м. для области (индекс строки, год)
+                newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[1, m])]
+
                 #17-18
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[4 + x, m], data.iloc[15 + x, m], data.iloc[17 + x, m],
                                      data.iloc[19 + x, m], data.iloc[22 + x, m], data.iloc[23 + x, m], data.iloc[27 + x, m],
                                      data.iloc[34 + x, m], data.iloc[38 + x, m], data.iloc[44 + x, m], data.iloc[52 + x, m],
                                      data.iloc[55 + x, m], factorycap, data.iloc[63 + x, m], data.iloc[64 + x, m],
                                      data.iloc[65 + x, m], data.iloc[72 + x, m], data.iloc[74 + x, m],
-                                     data.iloc[13 + x, m]))
+                                     newaptprice, data.iloc[13 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities15-16/"+ str(dis) +""))
@@ -203,6 +214,13 @@ for dis in range(8):
         else:
             cityname = data.iloc[0, 1]
 
+        # поиск по названию города (центр области)
+        y = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                y = i
+                break
+
         for m in range(1, data.shape[1]):
             if str(data.iloc[1, m]) != '2017':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -217,12 +235,15 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
+                # получение сред. цены за 1кв. м. для области (индекс строки, год)
+                newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[1, m])]
+
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[47 + x, m], data.iloc[55 + x, m],
                                      data.iloc[58 + x, m], factorycap, data.iloc[66 + x, m], data.iloc[67 + x, m],
                                      data.iloc[68 + x, m], data.iloc[75 + x, m], data.iloc[77 + x, m],
-                                     data.iloc[12 + x, m]))
+                                     newaptprice, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities13-14/"+ str(dis) +""))
@@ -256,6 +277,13 @@ for dis in range(8):
         else:
             cityname = data.iloc[0, 1]
 
+        # поиск по названию города (центр области)
+        y = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                y = i
+                break
+
         for m in range(1, data.shape[1]):
             if str(data.iloc[1, m]) != '2015':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -270,12 +298,15 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
+                # получение сред. цены за 1кв. м. для области (индекс строки, год)
+                newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[1, m])]
+
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[60 + x, m],
                                      data.iloc[61 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     data.iloc[12 + x, m]))
+                                     newaptprice, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities11-12/"+ str(dis) +""))
@@ -309,6 +340,13 @@ for dis in range(8):
         else:
             cityname = data.iloc[0, 1]
 
+        # поиск по названию города (центр области)
+        y = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                y = i
+                break
+
         for m in range(1, data.shape[1]):
             if str(data.iloc[1, m]) != '2013':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -323,12 +361,15 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
+                # получение сред. цены за 1кв. м. для области (индекс строки, год)
+                newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[1, m])]
+
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     data.iloc[12 + x, m]))
+                                     newaptprice, data.iloc[12 + x, m]))
 
 for dis in range(8):
     files = next(os.walk("cities10/"+ str(dis) +""))
@@ -362,6 +403,13 @@ for dis in range(8):
         else:
             cityname = data.iloc[0, 1]
 
+        # поиск по названию города (центр области)
+        y = 0
+        for i in range(aptpricesdata.shape[0]):
+            if cityname == aptpricesdata.iloc[i, 0]:
+                y = i
+                break
+
         for m in range(1, data.shape[1]):
             if str(data.iloc[1, m]) != '2011':
                 # вычисление суммы промышленного оборота (+ корр. строки в эксель)
@@ -376,12 +424,15 @@ for dis in range(8):
                 if data.iloc[0, m] != cityname:
                     cityname = data.iloc[0, m]
 
+                # получение сред. цены за 1кв. м. для области (индекс строки, год)
+                newaptprice = aptpricesdata.loc[aptpricesdata.index[y], int(data.iloc[1, m])]
+
                 examples.append(City(cityname, data.iloc[1, m], data.iloc[3 + x, m], data.iloc[14 + x, m], data.iloc[16 + x, m],
                                      data.iloc[18 + x, m], data.iloc[21 + x, m], data.iloc[25 + x, m], data.iloc[28 + x, m],
                                      data.iloc[35 + x, m], data.iloc[39 + x, m], data.iloc[73 + x, m], data.iloc[45 + x, m],
                                      data.iloc[48 + x, m], factorycap, data.iloc[59 + x, m], data.iloc[61 + x, m],
                                      data.iloc[62 + x, m], data.iloc[68 + x, m], data.iloc[70 + x, m],
-                                     data.iloc[12 + x, m]))
+                                     newaptprice, data.iloc[12 + x, m]))
 
 # запись в csv
 titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
@@ -391,4 +442,4 @@ titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 
           'foodservturnover', 'newaptprice', 'saldo']
 
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("citiesdataset 10-21 (AptPrice).csv", index=False)
+examples.to_csv("citiesdataset 10-21 (AptPrice).csv")
