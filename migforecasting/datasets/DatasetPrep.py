@@ -81,7 +81,7 @@ def normbyoil(trainset):
 
 
 # получение и сортировка данных
-rawdata = pd.read_csv("citiesdataset 10-21 (AptPrice).csv")
+rawdata = pd.read_csv("citiesdataset 10-21 (AptPrice + newinv).csv")
 rawdata = rawdata.sort_values(by=['name', 'year'])
 
 # добавление координат
@@ -196,6 +196,6 @@ titles = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("citiesdataset-ADCor-4.csv", index=False)
+examples.to_csv("citiesdataset-ADCor-4 (newinv).csv", index=False)
 
 print('Done')
