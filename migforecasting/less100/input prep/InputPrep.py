@@ -9,7 +9,7 @@ allmax = {
         'avgemployers': 475.8,
         'unemployed': 44134.0,
         'avgsalary': 65935.7371,
-        #'livarea': 69.6,
+        'livarea': 69.6,
         # 'beforeschool': 50640.0,
         # 'docsperpop': 146.1,
         # 'bedsperpop': 252.0,
@@ -18,8 +18,8 @@ allmax = {
         # 'funds': 89.9,
         # 'companies': 209412.0,
         'factoriescap': 567115.8942,
-        #'conscap': 106568.55884,
-        #'consnewareas': 7563.0,
+        'conscap': 106568.55884,
+        'consnewareas': 7563.0,
         # 'consnewapt': 42801.0,
         'retailturnover': 154512.08200999998,
         'foodservturnover': 16055.4,
@@ -57,10 +57,13 @@ def normbyinf(trainset):  # умножить рублевые признаки �
     trainset = trainset[trainset.columns.drop('inf')]
     return trainset
 
+# НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ МАКСИМАЛЬНЫЕ ЗНАЧЕНИЯ ALLMAX
+# НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ СОРТИРОВКУ
+# НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ ИНФЛЯЦИЮ
 
 # получение и сортировка данных
-rawdata = pd.read_excel("moreinputNY.xlsx")
-rawdata = rawdata.sort_values(by=['name', 'year'])
+rawdata = pd.read_excel("smallinput.xlsx")
+#rawdata = rawdata.sort_values(by=['name', 'year'])
 
 """
 #dollar = pd.read_csv("dollaravg.csv")
@@ -72,6 +75,42 @@ saldo = rawdata[['saldo']]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 rawdata = pd.concat([rawdata, saldo], axis=1)
 """
+
+
+# вычисление среднего для каждого признака
+avg = []
+tmpavg = 0
+count = 0
+for k in range(2, rawdata.shape[1]):
+    for i in range(rawdata.shape[0]):
+        if rawdata.iloc[i, k] == rawdata.iloc[i, k]:  # проверка NaN
+            try:
+                tmpavg += float(rawdata.iloc[i, k])
+                count += 1
+            except ValueError:
+                tmpavg += 0
+        else:
+            tmpavg += 0
+    avg.append(tmpavg / count)
+    tmpavg = 0
+    count = 0
+
+# перевод из текста в число (заменить средним при невозможности конвертации)
+i = 0
+while i < rawdata.shape[0]:
+    for j in range(2, rawdata.shape[1]):
+        if rawdata.iloc[i, j] == rawdata.iloc[i, j]:  # проверка NaN
+            try:
+                rawdata.iloc[i, j] = float(rawdata.iloc[i, j])
+            except ValueError:
+                rawdata.iloc[i, j] = avg[j - 2]
+                i -= 1
+                break
+        else:
+            rawdata.iloc[i, j] = avg[j - 2]
+            i -= 1
+            break
+    i += 1
 
 rawdata = normbyinf(rawdata)
 rawdata = normbymax(rawdata)
@@ -93,6 +132,8 @@ titles = allmax.keys()
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("moreinputNY.csv", index=False)
+examples.to_csv("input60.csv", index=False)
 
-print('Done')
+print('НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ МАКСИМАЛЬНЫЕ ЗНАЧЕНИЯ ALLMAX')
+print('НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ СОРТИРОВКУ')
+print('НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ ИНФЛЯЦИЮ')
