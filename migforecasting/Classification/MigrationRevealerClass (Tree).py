@@ -15,6 +15,10 @@ from sklearn.metrics import accuracy_score, roc_curve, auc, f1_score
 # Получение данных
 rawdata = pd.read_csv("citiesdataset-NYDcor-4 (CLASS).csv")
 
+# Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
+rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
+                        'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
+
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -45,3 +49,19 @@ plt.ylabel('True Positive')
 plt.title('Прогноз оттока или притока миграции (тестовый сет)')
 plt.legend(loc="lower right")
 plt.show()
+
+#проверка точности предсказания на малых городах/территориях
+village = pd.read_csv("input60NY (C).csv")
+
+villagein = np.array(village[village.columns.drop('saldo')])
+villageout = np.array(village[['saldo']])
+
+predvillage = model.predict(villagein)
+
+errorvillage = f1_score(villageout, predvillage)
+
+print("Error for input cities: ", errorvillage)
+
+predvillage = pd.DataFrame(predvillage)
+
+predvillage.to_excel("output.xlsx")
