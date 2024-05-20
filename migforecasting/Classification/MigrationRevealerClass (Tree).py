@@ -8,8 +8,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import accuracy_score, roc_curve, auc, f1_score
 
 
 
@@ -26,13 +25,13 @@ datasetout = np.array(rawdata[['saldo']])
 trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
 # модель
-model = RandomForestRegressor(n_estimators=100, random_state=0)
+model = RandomForestClassifier(n_estimators=100, random_state=0)
 model.fit(trainin, trainout.ravel())
 
 predtest = model.predict(testin)
 
-#acc = accuracy_score(testout, predtest)
-#print(acc)
+fone = f1_score(testout, predtest)
+print(fone)
 
 fpr, tpr, thresholds = roc_curve(testout, predtest)
 aucscore = auc(fpr, tpr)
