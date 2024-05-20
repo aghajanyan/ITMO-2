@@ -30,7 +30,7 @@ rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/dataset
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
-                        'funds', 'companies', 'consnewapt', 'conscap', 'livarea', 'consnewareas', 'dollar'], axis=1)
+                        'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -88,8 +88,8 @@ features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.'
             'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
             'Оборот общепит.', 'Широта', 'Долгота', 'dollar', 'Oil']
 """
-features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п',
-            'Инвест.', 'Мощ. промыш.', 'Оборот розницы',
+features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
+            'Инвест.', 'Мощ. промыш.', 'Объемы строит.', 'Постр. жил. площ.', 'Оборот розницы',
             'Оборот общепит.', 'Широта', 'Долгота']
 
 important = model.feature_importances_
@@ -101,7 +101,7 @@ print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
 
 #проверка точности предсказания на малых городах/территориях
-village = pd.read_csv("moreinputNY.csv")
+village = pd.read_csv("input60NY.csv")
 
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
