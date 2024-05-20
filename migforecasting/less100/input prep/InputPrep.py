@@ -62,8 +62,9 @@ def normbyinf(trainset):  # умножить рублевые признаки �
 # НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ ИНФЛЯЦИЮ
 
 # получение и сортировка данных
-rawdata = pd.read_excel("smallinput.xlsx")
+rawdata = pd.read_excel("smallinputNY.xlsx")
 #rawdata = rawdata.sort_values(by=['name', 'year'])
+
 
 """
 #dollar = pd.read_csv("dollaravg.csv")
@@ -132,7 +133,7 @@ titles = allmax.keys()
 
 examples = pd.DataFrame(examples, columns=titles)
 
-examples.to_csv("input60.csv", index=False)
+examples.to_csv("input60NY.csv", index=False)
 
 print('НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ МАКСИМАЛЬНЫЕ ЗНАЧЕНИЯ ALLMAX')
 print('НЕ ЗАБУДЬ СКОРРЕКТИРОВАТЬ СОРТИРОВКУ')
