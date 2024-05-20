@@ -11,14 +11,14 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-DCor-4.csv")
+rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-NYDCor-4.csv")
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
                         'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
 
 #проверка точности предсказания на малых городах/территориях
-village = pd.read_csv("input60.csv")
+village = pd.read_csv("input60NY.csv")
 
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
