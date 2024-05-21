@@ -16,7 +16,7 @@ rawdata = pd.read_csv("datasets/citiesdataset-NYDcor-4 (KZ).csv")
 resulttest = []
 resulttrain = []
 maxsaldo = 26466
-for k in range(50):
+for k in range(5):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -32,10 +32,10 @@ for k in range(50):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain)
+    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest)
+    errortest = mean_absolute_error(testout, predtest) * maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
