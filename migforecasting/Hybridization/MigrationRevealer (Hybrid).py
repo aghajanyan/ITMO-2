@@ -44,18 +44,33 @@ trainin2, testin2, trainout2, testout2 = train_test_split(datasetin2, datasetout
 # модель 1
 model1 = RandomForestRegressor(n_estimators=100, random_state=0)
 model1.fit(trainin1, trainout1.ravel())
+predtrainreg = model1.predict(trainin1)
 
 # модель 2
 model2 = RandomForestClassifier(n_estimators=100, random_state=0)
 model2.fit(trainin2, trainout2.ravel())
+predtrainclass = model2.predict(trainin2)
 
-# объединение прогнозов и вычисление ошибки
-predtrainreg = model1.predict(trainin1)
-predtraindlass = model2.predict(trainin2)
+# замена знака прогноза регрессионной модели согласно прогнозу классификатора
+for i in range(len(predtrainreg)):
+    if predtrainclass[i] == 1:
+        predtrainreg[i] = abs(predtrainreg[i])
+    else:
+        predtrainreg[i] = -abs(predtrainreg[i])
 
-#----заменить знаки в predtrainreg согласно predtraindlass
+errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
 
-errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
+# оценка тестовой выборки
+predtestreg = model1.predict(testin1)
+predtestclass = model1.predict(testin2)
 
-predtest = model.predict(testin)
-errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
+for i in range(len(predtestreg)):
+    if predtestclass[i] == 1:
+        predtestreg[i] = abs(predtestreg[i])
+    else:
+        predtestreg[i] = -abs(predtestreg[i])
+
+
+errortest = mean_absolute_error(testout2, predtestreg) * maxsaldo
+
+# !!!ПРОТЕСТИРОВАТЬ МОДУЛЬ НА ВСЕХ ЭТАПАХ!!!!
