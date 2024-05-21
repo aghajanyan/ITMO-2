@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score, roc_curve, auc, f1_score
 
 
 # Получение данных
-rawdata = pd.read_csv("citiesdataset-NYDcor-4 (CLASS).csv")
+rawdata = pd.read_csv("citiesdataset-NYDcor-4 (CLASS-KZ).csv")
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',

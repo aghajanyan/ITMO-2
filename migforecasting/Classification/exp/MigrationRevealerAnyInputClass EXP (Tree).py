@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, roc_curve, auc, f1_score
 
 
-rawdata = pd.read_csv("citiesdataset-NYDCor-4 (CLASS).csv")
+rawdata = pd.read_csv("citiesdataset-NYDCor-4 (CLASS-KZ).csv")
 
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
