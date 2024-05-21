@@ -30,12 +30,14 @@ for k in range(50):
     model = RandomForestRegressor(n_estimators=100, random_state=0)
     model.fit(trainin, trainout.ravel())
 
+    # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_percentage_error(trainout * maxsaldo, predtrain * maxsaldo)
+    errortrain = mean_squared_error(trainout, predtrain)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_percentage_error(testout * maxsaldo, predtest * maxsaldo)
+    errortest = mean_squared_error(testout, predtest)
 
+    # запись ошибки
     resulttrain.append(errortrain)
     resulttest.append(errortest)
 
