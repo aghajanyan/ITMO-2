@@ -42,14 +42,14 @@ trainin, testin, trainout2, testout2 = train_test_split(datasetin, datasetout2, 
 # модель 1
 model1 = RandomForestRegressor(n_estimators=100, random_state=0)
 model1.fit(trainin, trainout1.ravel())
-predtrainreg = model1.predict(trainin1)
+predtrainreg = model1.predict(trainin)
 
 # модель 2
 model2 = RandomForestClassifier(n_estimators=100, random_state=0)
 model2.fit(trainin, trainout2.ravel())
-predtrainclass = model2.predict(trainin2)
+predtrainclass = model2.predict(trainin)
 
-# замена знака прогноза регрессионной модели согласно прогнозу классификатора
+# замена знака в прогнозе регрессионной модели согласно прогнозу классификатора
 for i in range(len(predtrainreg)):
     if predtrainclass[i] == 1:
         predtrainreg[i] = abs(predtrainreg[i])
@@ -57,10 +57,11 @@ for i in range(len(predtrainreg)):
         predtrainreg[i] = -abs(predtrainreg[i])
 
 errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
+print(errortrain)
 
 # оценка тестовой выборки
 predtestreg = model1.predict(testin)
-predtestclass = model1.predict(testin)
+predtestclass = model2.predict(testin)
 
 for i in range(len(predtestreg)):
     if predtestclass[i] == 1:
@@ -69,6 +70,6 @@ for i in range(len(predtestreg)):
         predtestreg[i] = -abs(predtestreg[i])
 
 
-errortest = mean_absolute_error(testout2, predtestreg) * maxsaldo
+errortest = mean_absolute_error(testout1, predtestreg) * maxsaldo
+print(errortest)
 
-# !!!ПРОТЕСТИРОВАТЬ МОДУЛЬ НА ВСЕХ ЭТАПАХ!!!!
