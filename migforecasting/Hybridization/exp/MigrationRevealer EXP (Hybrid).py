@@ -27,16 +27,18 @@ for k in range(50):
             rawdataclass = rawdataclass.append(rawdata.iloc[i])
             rawdataclass.iloc[i, rawdata.shape[1] - 1] = 0
 
+    """
     # убираем знак миграции для регрессионной модели
     rawdataabs = pd.DataFrame()
     for i in range(rawdata.shape[0]):
         rawdataabs = rawdataabs.append(rawdata.iloc[i])
         rawdataabs.iloc[i, rawdata.shape[1] - 1] = abs(rawdataabs.iloc[i, rawdata.shape[1] - 1])
+    """
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     # 1 - для модели регресси, 2 - для модели классификатора (входные данные одинаковые)
-    datasetin = np.array(rawdataabs[rawdataabs.columns.drop('saldo')])
-    datasetout1 = np.array(rawdataabs[['saldo']])
+    datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
+    datasetout1 = np.array(rawdata[['saldo']])
     datasetout2 = np.array(rawdataclass[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
