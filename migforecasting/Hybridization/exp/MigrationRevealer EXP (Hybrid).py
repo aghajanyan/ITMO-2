@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.metrics import mean_absolute_percentage_error
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
