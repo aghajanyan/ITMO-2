@@ -84,9 +84,9 @@ for k in range(50):
         else:
             predvillagereg[i] = -abs(predvillagereg[i])
 
-    errortrain = mean_absolute_percentage_error(trainout1, predtrainreg) #* maxsaldo
-    errortest = mean_absolute_percentage_error(testout1, predtestreg) #* maxsaldo
-    errorvillage = mean_absolute_percentage_error(villageout, predvillagereg) #* maxsaldo
+    errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
+    errortest = mean_absolute_error(testout1, predtestreg) * maxsaldo
+    errorvillage = mean_absolute_error(villageout, predvillagereg) * maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
