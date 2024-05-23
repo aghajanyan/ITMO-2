@@ -21,13 +21,17 @@ village = pd.read_csv("input60NY.csv")
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
 
+rawdataclass = pd.read_csv("citiesdataset_C_synth.csv")
+
 resulttest = []
 resulttrain = []
 resultvillage = []
 maxsaldo = 26466
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
+    rawdataclass = rawdataclass.sample(frac=1) # перетасовка
 
+    """
     # создание бинарного датасета для прогнозирования оттока/притока
     rawdataclass = pd.DataFrame()
     for i in range(rawdata.shape[0]):
@@ -37,26 +41,28 @@ for k in range(50):
         else:
             rawdataclass = rawdataclass.append(rawdata.iloc[i])
             rawdataclass.iloc[i, rawdata.shape[1] - 1] = 0
-
+    """
     # разбиение датасета на входные признаки и выходной результат (сальдо)
-    # 1 - для модели регресси, 2 - для модели классификатора (входные данные одинаковые)
-    datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
+    # 1 - для модели регресси, 2 - для модели классификатора
+    datasetin1 = np.array(rawdata[rawdata.columns.drop('saldo')])
     datasetout1 = np.array(rawdata[['saldo']])
+
+    datasetin2 = np.array(rawdataclass[rawdataclass.columns.drop('saldo')])
     datasetout2 = np.array(rawdataclass[['saldo']])
 
     # разбиение на обучающую и тестовую выборку
-    trainin, testin, trainout1, testout1 = train_test_split(datasetin, datasetout1, test_size=0.2, random_state=146)
-    trainin, testin, trainout2, testout2 = train_test_split(datasetin, datasetout2, test_size=0.2, random_state=146)
+    trainin1, testin1, trainout1, testout1 = train_test_split(datasetin1, datasetout1, test_size=0.2, random_state=146)
+    trainin2, testin2, trainout2, testout2 = train_test_split(datasetin2, datasetout2, test_size=0.2, random_state=146)
 
     # модель 1
     model1 = RandomForestRegressor(n_estimators=100, random_state=0)
-    model1.fit(trainin, trainout1.ravel())
-    predtrainreg = model1.predict(trainin)
+    model1.fit(trainin1, trainout1.ravel())
+    predtrainreg = model1.predict(trainin1)
 
     # модель 2
     model2 = RandomForestClassifier(n_estimators=100, random_state=0)
-    model2.fit(trainin, trainout2.ravel())
-    predtrainclass = model2.predict(trainin)
+    model2.fit(trainin2, trainout2.ravel())
+    predtrainclass = model2.predict(trainin1)
 
     # замена знака в прогнозе регрессионной модели согласно прогнозу классификатора
     for i in range(len(predtrainreg)):
@@ -66,8 +72,8 @@ for k in range(50):
             predtrainreg[i] = -abs(predtrainreg[i])
 
     # оценка на тестовой выборке
-    predtestreg = model1.predict(testin)
-    predtestclass = model2.predict(testin)
+    predtestreg = model1.predict(testin1)
+    predtestclass = model2.predict(testin1)
 
     for i in range(len(predtestreg)):
         if predtestclass[i] == 1:

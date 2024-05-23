@@ -42,6 +42,8 @@ village = pd.read_csv("input60NY.csv")
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
 
+rawdataclass = pd.read_csv("citiesdataset_C_synth.csv")
+
 resulttest = []
 resulttrain = []
 resultvillage = []
@@ -50,16 +52,6 @@ study = None
 for k in range(50):
     # перетасовка
     rawdata = rawdata.sample(frac=1)
-
-    # создание бинарного датасета для прогнозирования оттока/притока
-    rawdataclass = pd.DataFrame()
-    for i in range(rawdata.shape[0]):
-        if rawdata.iloc[i, rawdata.shape[1] - 1] > 0:
-            rawdataclass = rawdataclass.append(rawdata.iloc[i])
-            rawdataclass.iloc[i, rawdata.shape[1] - 1] = 1
-        else:
-            rawdataclass = rawdataclass.append(rawdata.iloc[i])
-            rawdataclass.iloc[i, rawdata.shape[1] - 1] = 0
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     # 1 - для модели регресси, 2 - для модели классификатора
