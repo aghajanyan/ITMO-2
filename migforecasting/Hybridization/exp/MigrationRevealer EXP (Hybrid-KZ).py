@@ -102,8 +102,8 @@ for k in range(50):
         else:
             predtestreg[i] = -abs(predtestreg[i])
 
-    errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
-    errortest = mean_absolute_error(testout1, predtestreg) * maxsaldo
+    errortrain = mean_squared_error(trainout1, predtrainreg) #* maxsaldo
+    errortest = mean_squared_error(testout1, predtestreg) #* maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
