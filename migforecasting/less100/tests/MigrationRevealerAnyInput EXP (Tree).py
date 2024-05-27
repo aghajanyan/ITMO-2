@@ -42,13 +42,13 @@ for k in range(50):
     model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
+    errortrain = mean_squared_error(trainout, predtrain) #* maxsaldo
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_error(testout, predtest) * maxsaldo
+    errortest = mean_squared_error(testout, predtest) #* maxsaldo
 
     predvillage = model.predict(villagein)
-    errorvillage = mean_absolute_error(villageout, predvillage) * maxsaldo
+    errorvillage = mean_squared_error(villageout, predvillage) #* maxsaldo
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)

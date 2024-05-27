@@ -21,7 +21,7 @@ village = pd.read_csv("input60NY.csv")
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
 
-rawdataclass = pd.read_csv("citiesdataset_C_synth.csv")
+#rawdataclass = pd.read_csv("citiesdataset_C_synth.csv")
 
 resulttest = []
 resulttrain = []
@@ -29,9 +29,9 @@ resultvillage = []
 maxsaldo = 26466
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
-    rawdataclass = rawdataclass.sample(frac=1) # перетасовка
+    #rawdataclass = rawdataclass.sample(frac=1) # перетасовка
 
-    """
+
     # создание бинарного датасета для прогнозирования оттока/притока
     rawdataclass = pd.DataFrame()
     for i in range(rawdata.shape[0]):
@@ -41,7 +41,7 @@ for k in range(50):
         else:
             rawdataclass = rawdataclass.append(rawdata.iloc[i])
             rawdataclass.iloc[i, rawdata.shape[1] - 1] = 0
-    """
+
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     # 1 - для модели регресси, 2 - для модели классификатора
     datasetin1 = np.array(rawdata[rawdata.columns.drop('saldo')])
@@ -90,9 +90,9 @@ for k in range(50):
         else:
             predvillagereg[i] = -abs(predvillagereg[i])
 
-    errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
-    errortest = mean_absolute_error(testout1, predtestreg) * maxsaldo
-    errorvillage = mean_absolute_error(villageout, predvillagereg) * maxsaldo
+    errortrain = mean_squared_error(trainout1, predtrainreg) #* maxsaldo
+    errortest = mean_squared_error(testout1, predtestreg) #* maxsaldo
+    errorvillage = mean_squared_error(villageout, predvillagereg) #* maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
