@@ -11,12 +11,13 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset-NYDCor-4.csv")
+rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/citiesdataset_R_synth new.csv")
 
+"""
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
                         'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
-
+"""
 #проверка точности предсказания на малых городах/территориях
 village = pd.read_csv("input60NY.csv")
 
@@ -42,13 +43,13 @@ for k in range(50):
     model.fit(trainin, trainout.ravel())
 
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain) #* maxsaldo
+    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest) #* maxsaldo
+    errortest = mean_absolute_error(testout, predtest) * maxsaldo
 
     predvillage = model.predict(villagein)
-    errorvillage = mean_squared_error(villageout, predvillage) #* maxsaldo
+    errorvillage = mean_absolute_error(villageout, predvillage) * maxsaldo
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)

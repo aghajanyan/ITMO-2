@@ -9,19 +9,19 @@ from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error,
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("citiesdataset-NYDcor-4.csv")
-
+rawdata = pd.read_csv("citiesdataset_R_synth new.csv")
+"""
 # Исключение из выборки отдельных признаков (отсутствуют у малых городов/райнов)
 rawdata = rawdata.drop(['beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
                         'funds', 'companies', 'consnewapt', 'dollar'], axis=1)
-
+"""
 #проверка точности предсказания на малых городах/территориях
 village = pd.read_csv("input60NY.csv")
 
 villagein = np.array(village[village.columns.drop('saldo')])
 villageout = np.array(village[['saldo']])
 
-#rawdataclass = pd.read_csv("citiesdataset_C_synth.csv")
+rawdataclass = pd.read_csv("citiesdataset_C_synth new.csv")
 
 resulttest = []
 resulttrain = []
@@ -29,9 +29,9 @@ resultvillage = []
 maxsaldo = 26466
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
-    #rawdataclass = rawdataclass.sample(frac=1) # перетасовка
+    rawdataclass = rawdataclass.sample(frac=1) # перетасовка
 
-
+    """
     # создание бинарного датасета для прогнозирования оттока/притока
     rawdataclass = pd.DataFrame()
     for i in range(rawdata.shape[0]):
@@ -41,6 +41,7 @@ for k in range(50):
         else:
             rawdataclass = rawdataclass.append(rawdata.iloc[i])
             rawdataclass.iloc[i, rawdata.shape[1] - 1] = 0
+    """
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     # 1 - для модели регресси, 2 - для модели классификатора
@@ -90,9 +91,9 @@ for k in range(50):
         else:
             predvillagereg[i] = -abs(predvillagereg[i])
 
-    errortrain = mean_squared_error(trainout1, predtrainreg) #* maxsaldo
-    errortest = mean_squared_error(testout1, predtestreg) #* maxsaldo
-    errorvillage = mean_squared_error(villageout, predvillagereg) #* maxsaldo
+    errortrain = mean_absolute_error(trainout1, predtrainreg) * maxsaldo
+    errortest = mean_absolute_error(testout1, predtestreg) * maxsaldo
+    errorvillage = mean_absolute_error(villageout, predvillagereg) * maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
