@@ -33,7 +33,7 @@ def MLS(x, y):
 maxsaldo = 26466
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-ADCor-4.csv")
+rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-4.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -58,13 +58,14 @@ a, b = MLS(testout, predtest)
 
 # вывод результатов
 scale = np.linspace(trainout.min() * maxsaldo, trainout.max() * maxsaldo, 100)
-plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Тестовая выборка')
-plt.plot(scale, scale, c='green', label='Идеал')
-plt.plot(testout * maxsaldo, (testout * maxsaldo) * a + b, c='red', label='Смещение модели')
+plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Testing set')
+plt.plot(scale, scale, c='green', label='Ideal')
+plt.plot(testout * maxsaldo, (testout * maxsaldo) * a + b, c='red', label='Bias of the model')
 plt.axhline(0, c='k')
 plt.axvline(0, c='k')
-plt.xlabel('Реальное значение')
-plt.ylabel('Предсказание')
+plt.xlabel('Actual values')
+plt.ylabel('Predictied values')
+plt.title("Net migration forecating")
 plt.legend()
 plt.show()
 
@@ -82,14 +83,17 @@ features = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
             'invests', 'funds', 'companies', 'factoriescap',
             'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
             'foodservturnover']
+    
             
-            'Широта', 'Долгота', 'Доллар'
-"""
 features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
             'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
             'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
             'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Цена 1кв.м', 'Широта', 'Долгота', 'Доллар']
+            'Оборот общепит.', 'Широта', 'Долгота', 'Доллар']
+"""
+features = ['f-1', 'f-2', 'f-3', 'f-4', 'f-5', 'f-6', 'f-7', 'f-8', 'f-9',
+            'f-10', 'f-11', 'f-12', 'f-13', 'f-14', 'f-15', 'f-16', 'f-17',
+            'f-18', 'f-19', 'f-20', 'f-21']
 
 important = model.feature_importances_
 
