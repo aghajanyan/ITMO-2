@@ -7,17 +7,17 @@ import pandas as pd
 #rawdata = pd.read_csv("data_Y48112001_112_v20240402.csv", encoding='cp1251')
 data = []
 """
-with open('r1.csv', 'r', newline='', encoding='utf-8') as csvfile:
+with open('LO outflow.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
     for i in range(300):
         row = next(reader)
         data.append(np.array(row))
 """
 # для миграции
-with open('in2022.csv', 'r', newline='', encoding='utf-8') as csvfile:
+with open('inv.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
     for row in reader:
-        if row[4] == 'Всего' and row[5] == 'Всего' and row[6] == 'Миграция, всего':
+        if row[4] == 'Всего' and row[5] == 'Всего по обследуемым видам экономической деятельности': #and row[6] == 'Миграция, всего':
             data.append(np.array(row))
 
 data = np.array(data)
@@ -25,18 +25,41 @@ data = np.array(data)
 prepdata = []
 tmp = []
 b = 0
+oktmo = data[0, 11]
+name = data[0, 9]
+year = data[0, 13]
+total = 0
 while b < len(data):
     tmp.append(data[b, 11])
+    tmp.append(data[b, 10])
+    tmp.append(data[b, 13])
     tmp.append(data[b, 14])
-    tmp.append(data[b, 15])
     prepdata.append(np.array(tmp))
     tmp.clear()
     b+=1
-
-titles = {'name', 'year', 'inflow'}
+"""
+while b < len(data):
+    if oktmo != data[b, 11] or year != data[b, 13]:
+        tmp.append(oktmo)
+        tmp.append(name)
+        tmp.append(year)
+        tmp.append(total)
+        prepdata.append(np.array(tmp))
+        tmp.clear()
+        total = 0
+        oktmo = data[b, 11]
+        name = data[b, 9]
+        year = data[b, 13]
+    try:
+        total+= float(data[b, 14])
+    except ValueError:
+        total+=0
+    b+=1
+"""
+titles = ['oktmo', 'name', 'year', 'invest']
 
 prepdata = pd.DataFrame(prepdata, columns=titles)
 
-prepdata.to_csv("inflow 2022 (allmun).csv", index=False)
+prepdata = prepdata.drop_duplicates()
 
-print("hello")
+prepdata.to_csv("invest (allmun).csv", index=False)
