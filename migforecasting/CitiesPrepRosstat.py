@@ -443,3 +443,4 @@ titles = ['name', 'year', 'popsize', 'avgemployers', 'unemployed', 'avgsalary', 
 
 examples = pd.DataFrame(examples, columns=titles)
 examples.to_csv("citiesdataset 10-21 (AptPrice).csv", index=False)
+print("Done")
