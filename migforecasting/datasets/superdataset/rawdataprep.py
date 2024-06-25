@@ -14,10 +14,10 @@ with open('LO outflow.csv', 'r', newline='', encoding='utf-8') as csvfile:
         data.append(np.array(row))
 """
 # для миграции
-with open('inv.csv', 'r', newline='', encoding='utf-8') as csvfile:
+with open('fac.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
     for row in reader:
-        if row[4] == 'Всего' and row[5] == 'Всего по обследуемым видам экономической деятельности': #and row[6] == 'Миграция, всего':
+        if row[4] == 'Всего' and row[15] == 'Январь — декабрь':
             data.append(np.array(row))
 
 data = np.array(data)
@@ -30,10 +30,10 @@ name = data[0, 9]
 year = data[0, 13]
 total = 0
 while b < len(data):
-    tmp.append(data[b, 11])
     tmp.append(data[b, 10])
+    tmp.append(data[b, 9])
+    tmp.append(data[b, 12])
     tmp.append(data[b, 13])
-    tmp.append(data[b, 14])
     prepdata.append(np.array(tmp))
     tmp.clear()
     b+=1
@@ -56,10 +56,10 @@ while b < len(data):
         total+=0
     b+=1
 """
-titles = ['oktmo', 'name', 'year', 'invest']
+titles = ['oktmo', 'name', 'year', 'factoriescap']
 
 prepdata = pd.DataFrame(prepdata, columns=titles)
 
 prepdata = prepdata.drop_duplicates()
 
-prepdata.to_csv("invest (allmun).csv", index=False)
+prepdata.to_csv("f-2.csv", index=False)
