@@ -74,5 +74,33 @@ def normbyoil(trainset, rubfeatures):
     return trainset
 
 
-rubfeatures = ['avgsalary', 'invests', 'factoriescap', 'conscap', 'retailturnover', 'foodservturnover']
+rubfeatures = ['avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
+               'budincome', 'funds', 'naturesecure', 'factoriescap']
 
+# получение и сортировка данных
+rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/superdataset/superdataset (full data).csv")
+rawdata = rawdata.sort_values(by=['oktmo', 'year'])
+
+dataset = []
+# формирование полного датасета, но только с примерами, где все признаки не NaN
+rawdata = rawdata[rawdata.columns.drop('consnewapt')]
+rawdata = rawdata[rawdata.columns.drop('theatres')]
+rawdata = rawdata[rawdata.columns.drop('parks')]
+rawdata = rawdata[rawdata.columns.drop('museums')]
+rawdata = rawdata[rawdata.columns.drop('budincome')]
+rawdata = rawdata[rawdata.columns.drop('schoolnum')]
+rawdata = rawdata[rawdata.columns.drop('cliniccap')]
+rawdata = rawdata[rawdata.columns.drop('livestock')]
+rawdata = rawdata[rawdata.columns.drop('harvest')]
+rawdata = rawdata.dropna()
+"""
+for i in range(rawdata.shape[0]):
+    dataset.append(rawdata.iloc[i])
+    for j in range(rawdata.shape[1]):
+        if rawdata.iloc[i, j] != rawdata.iloc[i, j]:
+            dataset.pop()
+            break
+"""
+
+
+print('Done')

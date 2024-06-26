@@ -19,6 +19,8 @@ for k in range(len(features) - 1):
     tempset = tempset[tempset.columns.drop('name')]
     dataset = dataset.merge(tempset, on=['oktmo', 'year'], how='left')
 
+dataset = dataset.drop_duplicates()
+
 dataset.to_csv("superdataset (full data).csv", index=False)
 
 print('Done')
