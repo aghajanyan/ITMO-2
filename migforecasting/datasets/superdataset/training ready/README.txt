@@ -1,0 +1,1 @@
+superdataset-00.csv - 5843 examples, next year, normbydollar, 20 feartures without: consnewapt, theatres, museums, parks, cliniccap, schoolnum, naturesecure, foodservturnover

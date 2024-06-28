@@ -19,6 +19,7 @@ def normbymax(trainset):
             trainset[j][k] = trainset[j][k] / maxi
     return trainset
 
+
 def normbydollar(trainset, rubfeatures):
     # разделить рублевые признаки на стоимость доллара
     dollar = pd.read_csv("dollaravg.csv")
@@ -74,33 +75,71 @@ def normbyoil(trainset, rubfeatures):
     return trainset
 
 
-rubfeatures = ['avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
-               'budincome', 'funds', 'naturesecure', 'factoriescap']
+# признаки для ценового нормирования
+allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
+                  'budincome', 'funds', 'naturesecure', 'factoriescap']
+
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'invest', 'budincome', 'funds', 'factoriescap']
 
 # получение и сортировка данных
-rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/superdataset/superdataset (full data).csv")
+rawdata = pd.read_csv(
+    "C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/datasets/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 dataset = []
 # формирование полного датасета, но только с примерами, где все признаки не NaN
+
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('theatres')]
-rawdata = rawdata[rawdata.columns.drop('parks')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
-rawdata = rawdata[rawdata.columns.drop('budincome')]
-rawdata = rawdata[rawdata.columns.drop('schoolnum')]
+rawdata = rawdata[rawdata.columns.drop('parks')]
 rawdata = rawdata[rawdata.columns.drop('cliniccap')]
-rawdata = rawdata[rawdata.columns.drop('livestock')]
-rawdata = rawdata[rawdata.columns.drop('harvest')]
+rawdata = rawdata[rawdata.columns.drop('schoolnum')]
+rawdata = rawdata[rawdata.columns.drop('naturesecure')]
+rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
+
+# rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
+
+rawdata = rawdata.sort_values(by=['oktmo', 'year'])
+
+#rawdata = normbydollar(rawdata, thisrubfeatures)
+
+examples = []
+# формирование датасета с социально-экономическими показателями предыдущего года
+# но миграционным сальдо следующего
+for i in range(len(rawdata) - 1):
+    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]
+        examples.append(rawdata.iloc[i])
+
+examples = np.array(examples)
+
+examples = np.delete(examples, 2, 1)  # удаляем год
+examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
+examples = np.delete(examples, 0, 1)  # удаляем октмо
+
 """
-for i in range(rawdata.shape[0]):
-    dataset.append(rawdata.iloc[i])
-    for j in range(rawdata.shape[1]):
-        if rawdata.iloc[i, j] != rawdata.iloc[i, j]:
-            dataset.pop()
-            break
+# подсчет количества NaNов у признака
+x = 0
+count = []
+for k in range(5, rawdata.shape[1]):
+    for i in range(rawdata.shape[0]):
+        if rawdata.iloc[i, k] != rawdata.iloc[i, k]:
+            x+=1
+    count.append(rawdata.columns[k])
+    count.append(x)
+    x = 0
 """
+
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'invest', 'budincome', 'funds',
+            'hospitals', 'beforeschool', 'factoriescap']
+
+examples = pd.DataFrame(examples, columns=features)
+
+examples.to_csv("superdataset-00.csv", index=False)
 
 
 print('Done')
