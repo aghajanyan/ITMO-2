@@ -11,11 +11,12 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/citiesdataset_R_synth new.csv")
+rawdata = pd.read_csv("datasets/")
 
 resulttest = []
 resulttrain = []
-maxsaldo = 26466
+#maxsaldo = 26466
+maxsaldo = 39719
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
