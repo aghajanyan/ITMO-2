@@ -34,6 +34,7 @@ def normbydollar(trainset, rubfeatures):
                 tmp.iloc[i, 0] = tmp.iloc[i, 0]
         trainset[rubfeatures[k]] = tmp
         tmp = pd.DataFrame(None)
+    trainset = trainset[trainset.columns.drop('dollar')]
     return trainset
 
 
@@ -103,7 +104,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = normbydollar(rawdata, thisrubfeatures)
+rawdata = normbydollar(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -118,6 +119,9 @@ examples = np.array(examples)
 examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
+
+# нормализация от 0 до 1
+examples = normbymax(examples)
 
 """
 # подсчет количества NaNов у признака

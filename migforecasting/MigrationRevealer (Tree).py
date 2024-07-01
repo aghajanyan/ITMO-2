@@ -30,10 +30,11 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
-maxsaldo = 26466
+#maxsaldo = 26466
+maxsaldo = 39719
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NYDCor-4.csv")
+rawdata = pd.read_csv("datasets/superdataset/training ready/superdataset-00.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -97,11 +98,10 @@ features = ['f-1', 'f-2', 'f-3', 'f-4', 'f-5', 'f-6', 'f-7', 'f-8', 'f-9',
 
 """
 
-features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
-            'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
-            'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
-            'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Широта', 'Долгота', 'Доллар']
+features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'invest', 'budincome', 'funds',
+            'hospitals', 'beforeschool', 'factoriescap']
 
 important = model.feature_importances_
 
