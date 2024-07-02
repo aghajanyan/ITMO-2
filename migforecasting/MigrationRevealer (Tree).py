@@ -34,7 +34,7 @@ def MLS(x, y):
 maxsaldo = 39719
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-03.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-04.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
