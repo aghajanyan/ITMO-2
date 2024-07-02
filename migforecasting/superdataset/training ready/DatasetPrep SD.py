@@ -75,6 +75,22 @@ def normbyoil(trainset, rubfeatures):
     trainset = trainset[trainset.columns.drop('oil')]
     return trainset
 
+def normbyprod(trainset, rubfeatures):
+    # разделить рублевые признаки на стоимость доллара
+    prod = pd.read_csv("avgbeef.csv")
+    trainset = trainset.merge(prod, on='year', how='left')
+    d = trainset[['beefprice']]
+    for k in range(len(rubfeatures)):
+        tmp = trainset[[rubfeatures[k]]]
+        for i in range(len(tmp)):
+            try:
+                tmp.iloc[i, 0] = float(tmp.iloc[i, 0]) / d.iloc[i, 0]
+            except ValueError:
+                tmp.iloc[i, 0] = tmp.iloc[i, 0]
+        trainset[rubfeatures[k]] = tmp
+        tmp = pd.DataFrame(None)
+    trainset = trainset[trainset.columns.drop('beefprice')]
+    return trainset
 
 # признаки для ценового нормирования
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
@@ -103,7 +119,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyprod(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -142,7 +158,7 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-02.csv", index=False)
+examples.to_csv("superdataset-04.csv", index=False)
 
 
 print('Done')
