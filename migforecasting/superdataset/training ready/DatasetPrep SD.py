@@ -40,7 +40,7 @@ def normbydollar(trainset, rubfeatures):
 
 def normbyinf(trainset, rubfeatures):
     # умножить рублевые признаки на соответствующую долю инфляции
-    inflation = pd.read_csv("inflation1.csv")
+    inflation = pd.read_csv("inflation14.csv")
     trainset = trainset.merge(inflation, on='year', how='left')
     inf = trainset[['inf']]
     for k in range(len(rubfeatures)):
@@ -74,6 +74,7 @@ def normbyoil(trainset, rubfeatures):
         tmp = pd.DataFrame(None)
     trainset = trainset[trainset.columns.drop('oil')]
     return trainset
+
 
 def normbyprod(trainset, rubfeatures):
     # разделить рублевые признаки на стоимость доллара
@@ -121,7 +122,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbydollar(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -159,7 +160,7 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-11.csv", index=False)
+examples.to_csv("superdataset-13.csv", index=False)
 
 
 print('Done')

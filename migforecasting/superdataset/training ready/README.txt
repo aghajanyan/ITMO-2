@@ -12,6 +12,10 @@ superdataset-10.csv - 10336 examples, next year, no pricenorm, 18 feartures with
 
 superdataset-11.csv - отличается от датасета 10 нормализацией на основе доллара (normbydollar)
 
+superdataset-12.csv - отличается от датасета 10 нормализацией на основе инфляции (normbyinf)
+
+superdataset-13.csv - отличается от датасета 10 нормализацией на основе инфляции c 2014 (normbyinf)
+
 dollaravg.csv - среднегодовой курс доллара (для нормализации)
 
 inflation0.csv - среднегодовая инфляция
