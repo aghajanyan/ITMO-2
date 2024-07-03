@@ -96,7 +96,7 @@ def normbyprod(trainset, rubfeatures):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'invest', 'budincome', 'funds', 'factoriescap']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'funds', 'factoriescap']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -113,13 +113,15 @@ rawdata = rawdata[rawdata.columns.drop('cliniccap')]
 rawdata = rawdata[rawdata.columns.drop('schoolnum')]
 rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
+rawdata = rawdata[rawdata.columns.drop('invest')]
+rawdata = rawdata[rawdata.columns.drop('budincome')]
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbyprod(rawdata, thisrubfeatures)
+rawdata = normbydollar(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -153,12 +155,11 @@ for k in range(5, rawdata.shape[1]):
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'invest', 'budincome', 'funds',
-            'hospitals', 'beforeschool', 'factoriescap']
+            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-04.csv", index=False)
+examples.to_csv("superdataset-11.csv", index=False)
 
 
 print('Done')

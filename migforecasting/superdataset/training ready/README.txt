@@ -1,12 +1,16 @@
-superdataset-00.csv - 5843 examples, next year, normbydollar, 20 feartures without: consnewapt, theatres, museums, parks, cliniccap, schoolnum, naturesecure, foodservturnover
+superdataset-00.csv - 5843 examples, next year, no pricenorm, 20 feartures without: consnewapt, theatres, museums, parks, cliniccap, schoolnum, naturesecure, foodservturnover
 
-superdataset-01.csv - отличается от датасета 00 нормализацией на основе инфляции (normbyinf)
+superdataset-01.csv - отличается от датасета 00 нормализацией на основе доллара (normbydollar)
 
-superdataset-02.csv - отличается от датасета 00 отсутствием нормализации цен
+superdataset-02.csv - отличается от датасета 00 нормализацией на основе инфляции (normbyinf)
 
 superdataset-03.csv - отличается от датасета 00 нормализацией на основе ср. цены за кг. курицы
 
 superdataset-04.csv - отличается от датасета 00 нормализацией на основе ср. цены за кг. говядины
+
+superdataset-10.csv - 10336 examples, next year, no pricenorm, 18 feartures without: consnewapt, theatres, museums, parks, cliniccap, schoolnum, naturesecure, foodservturnover, invest, budincome
+
+superdataset-11.csv - отличается от датасета 10 нормализацией на основе доллара (normbydollar)
 
 dollaravg.csv - среднегодовой курс доллара (для нормализации)
 
