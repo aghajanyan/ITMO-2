@@ -93,6 +93,7 @@ def normbyprod(trainset, rubfeatures):
     trainset = trainset[trainset.columns.drop('beefprice')]
     return trainset
 
+
 # признаки для ценового нормирования
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
@@ -116,13 +117,19 @@ rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
+# rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbyinf(rawdata, thisrubfeatures)
+# rawdata = normbyinf(rawdata, thisrubfeatures)
+
+# удаление больших городов (население более 100 тысяч)
+for index, row in rawdata.iterrows():
+    if row['popsize'] > 100000:
+        rawdata = rawdata.drop(index)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -160,7 +167,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-13.csv", index=False)
-
+examples.to_csv("superdataset-20.csv", index=False)
 
 print('Done')
