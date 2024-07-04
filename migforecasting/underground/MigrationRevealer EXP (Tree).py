@@ -13,6 +13,8 @@ from sklearn.model_selection import train_test_split
 
 rawdata = pd.read_csv("datasets/superdataset-13.csv")
 
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+
 resulttest = []
 resulttrain = []
 #maxsaldo = 26466
@@ -33,10 +35,10 @@ for k in range(50):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain) #* maxsaldo
+    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest) #* maxsaldo
+    errortest = mean_absolute_error(testout, predtest) * maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)
