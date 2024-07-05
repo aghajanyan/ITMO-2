@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 rawdata = pd.read_csv("datasets/superdataset-20.csv")
 
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 resulttest = []
 resulttrain = []
