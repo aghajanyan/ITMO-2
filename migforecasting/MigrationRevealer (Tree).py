@@ -35,7 +35,7 @@ def MLS(x, y):
 maxsaldo = 10001    # dataset 20
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-20.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-21.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 

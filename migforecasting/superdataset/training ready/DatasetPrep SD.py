@@ -124,7 +124,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-# rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
@@ -167,6 +167,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-20.csv", index=False)
+examples.to_csv("superdataset-21.csv", index=False)
 
 print('Done')
