@@ -11,14 +11,15 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-13.csv")
+rawdata = pd.read_csv("datasets/superdataset-20.csv")
 
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 resulttest = []
 resulttrain = []
-#maxsaldo = 26466
-maxsaldo = 39719
+#maxsaldo = 26466   # olddatasets
+#maxsaldo = 39719   # dataset 00-10
+maxsaldo = 10001    # dataset 20
 for k in range(50):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
