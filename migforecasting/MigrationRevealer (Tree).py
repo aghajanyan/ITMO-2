@@ -32,12 +32,13 @@ def MLS(x, y):
 
 #maxsaldo = 26466
 #maxsaldo = 39719
-maxsaldo = 10001    # dataset 20
+maxsaldo = 10001    # dataset 20 (also positive flow)
+#maxsaldo = 2854     # dataset 20, negative flow
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
 rawdata = pd.read_csv("superdataset/training ready/superdataset-21.csv")
 
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -104,7 +105,7 @@ features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 're
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 """
 features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
 
