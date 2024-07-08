@@ -131,6 +131,15 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
+# удалить из датасета отрицательное/положительное сальдо
+count = 0
+for index, row in rawdata.iterrows():
+    if row['saldo'] < 0:
+        rawdata = rawdata.drop(index)
+
+# убрать отрицательный знак
+rawdata['saldo'] = rawdata['saldo'].abs()
+
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
@@ -167,6 +176,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-21.csv", index=False)
+examples.to_csv("superdataset-21 (positive flow).csv", index=False)
 
 print('Done')

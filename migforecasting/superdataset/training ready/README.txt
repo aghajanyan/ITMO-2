@@ -20,6 +20,10 @@ superdataset-20.csv - 9127 examples, отличается от датасета 
 
 superdataset-21.csv - отличается от датасета 20 нормализацией на основе инфляции c 2014 (normbyinf)
 
+superdataset-21 (negative flow).csv - 6510 examples, отличается от датасета 21 тем, что убраны примеры с положительным сальдо.
+
+superdataset-21 (positive flow).csv - 1796 examples, отличается от датасета 21 тем, что убраны примеры с отрицательным сальдо.
+
 dollaravg.csv - среднегодовой курс доллара (для нормализации)
 
 inflation0.csv - среднегодовая инфляция
