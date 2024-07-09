@@ -8,6 +8,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import f1_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
@@ -43,7 +44,7 @@ trainin2, testin2, trainout2, testout2 = train_test_split(datasetin2, datasetout
 
 #подготовка входных и выходных данных для обучения классификатора
 #объединить входы негатива и позитива
-classdata, trainout3 = [], []
+classdata = []
 for i in range(trainin2.shape[0]):
     classdata.append(np.append(trainin1[i], 0))  # 0 - для отрицательного сальдо
     classdata.append(np.append(trainin2[i], 1))  # 1 - для подожительного сальдо
@@ -59,14 +60,51 @@ trainin3 = classdata
 trainin3 = np.array(trainin3)
 trainout3 = np.array(trainout3)
 
-#для тестовой выборки тасовка не требуется
-testin3, testout3 = [], []
+#тоже самое для тестовой выборки
+classdatatest = []
 for i in range(testin2.shape[0]):
-    testin3.append(testin1[i])
-    testout3.append(0)
-    testin3.append(testin2[i])
-    testout3.append(1)
+    classdatatest.append(np.append(testin1[i], 0))
+    classdatatest.append(np.append(testin2[i], 1))
+
+classdatatest = pd.DataFrame(classdatatest)
+classdatatest = classdatatest.sample(frac=1)
+
+testout3 = classdatatest[[classdatatest.shape[1] - 1]]
+classdatatest = classdatatest[classdatatest.columns.drop(classdatatest.shape[1] - 1)]
+testin3 = classdatatest
 
 testin3 = np.array(testin3)
 testout3 = np.array(testout3)
+
+# модель 1 (прогноз отрицательного сальдо)
+model1 = RandomForestRegressor(n_estimators=100, random_state=0)
+model1.fit(trainin1, trainout1.ravel())
+
+# модель 2 (прогноз положительного сальдо)
+model2 = RandomForestRegressor(n_estimators=100, random_state=0)
+model2.fit(trainin2, trainout2.ravel())
+
+# модель 3 (классифкация отрицательного/положительного сальдо)
+model3 = RandomForestClassifier(n_estimators=100, random_state=0)
+model3.fit(trainin3, trainout3.ravel())
+#predtrainclass = model3.predict(trainin3)
+
+# оценка тестовой выборки
+# прогноз регресионных моделей на общей тестовой выборке (для классификатора)
+prednegative = model1.predict(testin3)
+predpositive = model2.predict(testin3)
+
+predclass = model3.predict(testin3)
+classerror = f1_score(testout3, predclass)
+print("f1 score: ", classerror)
+
+hybridpred = []
+for i in range(len(prednegative)):
+    if int(predclass[i]) == 1:
+        hybridpred.append(predpositive[i] * maxsaldoP)
+    else:
+        hybridpred.append((prednegative[i] * maxsaldoN) * -1)
+
+hybridpred = np.array(hybridpred)
+
 
