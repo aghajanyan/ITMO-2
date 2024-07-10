@@ -23,8 +23,9 @@ negative = negative[negative.columns.drop('consnewareas')]
 positive = positive[positive.columns.drop('consnewareas')]
 
 hybridtest = []
+hybridtrain = []
 classtest = []
-for k in range(3):
+for k in range(50):
     # перетасовка
     negative = negative.sample(frac=1)
     positive = positive.sample(frac=1)
@@ -36,7 +37,7 @@ for k in range(3):
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     # 1 - для оттока (негатив), 2 - для притока (позитив), 3 - для классификатора,
-    # 4 - для гибридной модели (только тест)
+    # 4 - для гибридной модели (только выход)
     datasetin1 = np.array(negative[negative.columns.drop('saldo')])
     datasetin2 = np.array(positive[positive.columns.drop('saldo')])
     datasetout1 = np.array(negative[['saldo']])
@@ -50,22 +51,25 @@ for k in range(3):
     #объединить входы негатива и позитива
     classdata = []
     for i in range(trainin1.shape[0]):
-        classdata.append(np.append(trainin1[i], 0))  # 0 - для отрицательного сальдо
+        classdata.append(np.append(trainin1[i], [-abs(trainout1[i, 0]), 0]))  # 0 - для отрицательного сальдо
         if i < trainin2.shape[0] - 1:
-            classdata.append(np.append(trainin2[i], 1))  # 1 - для подожительного сальдо
+            classdata.append(np.append(trainin2[i], [trainout2[i, 0], 1]))  # 1 - для положительного сальдо
 
     classdata = pd.DataFrame(classdata)
     classdata = classdata.sample(frac=1)    # перетасовка
 
     # разделение входных и выходных данных
     trainout3 = classdata[[classdata.shape[1] - 1]]
+    trainout4 = classdata[[classdata.shape[1] - 2]]
+    classdata = classdata[classdata.columns.drop(classdata.shape[1] - 1)]
     classdata = classdata[classdata.columns.drop(classdata.shape[1] - 1)]
     trainin3 = classdata
 
     trainin3 = np.array(trainin3)
     trainout3 = np.array(trainout3)
+    trainout4 = np.array(trainout4)
 
-    #тоже самое для тестовой выборки + формирование теста для гибридной модели (4)
+    #тоже самое для тестовой выборки
     classdatatest = []
     for i in range(testin1.shape[0]):
         classdatatest.append(np.append(testin1[i], [-abs(testout1[i, 0]), 0]))
@@ -125,18 +129,47 @@ for k in range(3):
 
     hybriderror = mean_absolute_error(testout4, hybridpred)
 
+    #оценка точности на тренировочной выборке
+    prednegativetrain = model1.predict(trainin3)
+    predpositivetrain = model2.predict(trainin3)
+
+    predclasstrain = model3.predict(trainin3)
+
+    # получение ответа гибридной модели + преобразование в естественный вид
+    hybridpredtrain = []
+    for i in range(len(prednegativetrain)):
+        if int(predclasstrain[i]) == 1:
+            hybridpredtrain.append(predpositivetrain[i] * maxsaldoP)
+        else:
+            hybridpredtrain.append((prednegativetrain[i] * maxsaldoN) * -1)
+
+    hybridpredtrain = np.array(hybridpredtrain)
+
+    # преобразовать тестовый датасет и потом сравнить с ответом гибридной модели
+    for i in range(len(trainout4)):
+        if trainout4[i] > 0:
+            trainout4[i] = trainout4[i] * maxsaldoP
+        else:
+            trainout4[i] = trainout4[i] * maxsaldoN
+
+    hybriderrortrain = mean_absolute_error(trainout4, hybridpredtrain)
+
     # запись ошибки
     hybridtest.append(hybriderror)
+    hybridtrain.append(hybriderrortrain)
     classtest.append(classerror)
 
     print('Итерация: ' + str(k))
 
 hybridtest = np.array(hybridtest)
+hybridtrain = np.array(hybridtrain)
 classtest = np.array(classtest)
 
 hybridtest = pd.DataFrame(hybridtest)
+hybridtrain = pd.DataFrame(hybridtrain)
 classtest = pd.DataFrame(classtest)
 
 hybridtest.to_excel('test-data.xlsx')
+hybridtrain.to_excel('train-data.xlsx')
 classtest.to_excel('class-score.xlsx')
 
