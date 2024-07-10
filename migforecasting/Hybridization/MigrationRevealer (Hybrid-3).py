@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, roc_auc_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
@@ -32,7 +32,7 @@ positive = positive.sample(frac=1)
 #    negative.iloc[i, 0] = negative.iloc[i, 0] / maxsaldoP
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
-# 1 - для оттока (негатив), 2 - для притока (позитив), 3 - для классификатора
+# 1 - для оттока (негатив), 2 - для притока (позитив), 3 - для классификатора, 4 - для гибридной модели (только тест)
 datasetin1 = np.array(negative[negative.columns.drop('saldo')])
 datasetin2 = np.array(positive[positive.columns.drop('saldo')])
 datasetout1 = np.array(negative[['saldo']])
@@ -60,21 +60,24 @@ trainin3 = classdata
 trainin3 = np.array(trainin3)
 trainout3 = np.array(trainout3)
 
-#тоже самое для тестовой выборки
+#тоже самое для тестовой выборки + формирование теста для гибридной модели (4)
 classdatatest = []
 for i in range(testin2.shape[0]):
-    classdatatest.append(np.append(testin1[i], 0))
-    classdatatest.append(np.append(testin2[i], 1))
+    classdatatest.append(np.append(testin1[i], [-abs(testout1[i, 0]), 0]))
+    classdatatest.append(np.append(testin2[i], [testout2[i, 0], 1]))
 
 classdatatest = pd.DataFrame(classdatatest)
 classdatatest = classdatatest.sample(frac=1)
 
 testout3 = classdatatest[[classdatatest.shape[1] - 1]]
+testout4 = classdatatest[[classdatatest.shape[1] - 2]]
+classdatatest = classdatatest[classdatatest.columns.drop(classdatatest.shape[1] - 1)]
 classdatatest = classdatatest[classdatatest.columns.drop(classdatatest.shape[1] - 1)]
 testin3 = classdatatest
 
 testin3 = np.array(testin3)
-testout3 = np.array(testout3)
+testout3 = np.array(testout3)   # для проверки классификатора
+testout4 = np.array(testout4)   # для проверки гибридной модели
 
 # модель 1 (прогноз отрицательного сальдо)
 model1 = RandomForestRegressor(n_estimators=100, random_state=0)
@@ -106,5 +109,8 @@ for i in range(len(prednegative)):
         hybridpred.append((prednegative[i] * maxsaldoN) * -1)
 
 hybridpred = np.array(hybridpred)
+
+#преобразовать финальный тестовый датасет и потом сравнить с ответом гибридной модели
+
 
 
