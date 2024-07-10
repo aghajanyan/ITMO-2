@@ -101,6 +101,7 @@ predclass = model3.predict(testin3)
 classerror = f1_score(testout3, predclass)
 print("f1 score: ", classerror)
 
+#получение ответа гибридной модели + преобразование в естественный вид
 hybridpred = []
 for i in range(len(prednegative)):
     if int(predclass[i]) == 1:
@@ -110,7 +111,16 @@ for i in range(len(prednegative)):
 
 hybridpred = np.array(hybridpred)
 
-#преобразовать финальный тестовый датасет и потом сравнить с ответом гибридной модели
+#преобразовать тестовый датасет и потом сравнить с ответом гибридной модели
+for i in range(len(testout4)):
+    if testout4[i] > 0:
+        testout4[i] = testout4[i] * maxsaldoP
+    else:
+        testout4[i] = testout4[i] * maxsaldoN
+
+hybriderror = mean_absolute_error(testout4, hybridpred)
+
+print('Error of hybrid model: ', hybriderror)
 
 
 
