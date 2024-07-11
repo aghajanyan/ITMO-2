@@ -36,7 +36,7 @@ maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 2854     # negative flow (dataset 20)
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-21.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-31.csv")
 
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
@@ -47,7 +47,7 @@ datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
 datasetout = np.array(rawdata[['saldo']])
 
 # разбиение на обучающую и тестовую выборку
-trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
+trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)
