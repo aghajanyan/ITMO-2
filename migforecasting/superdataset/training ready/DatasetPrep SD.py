@@ -131,6 +131,13 @@ for index, row in rawdata.iterrows():
     if row['popsize'] < 100000:
         rawdata = rawdata.drop(index)
 
+# удаление муниципальных районов (только города)
+for index, row in rawdata.iterrows():
+    tmp = row['name'].split()
+    if len(tmp) > 1:
+        if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
+            rawdata = rawdata.drop(index)
+
 # удалить из датасета отрицательное/положительное сальдо
 #count = 0
 #for index, row in rawdata.iterrows():
