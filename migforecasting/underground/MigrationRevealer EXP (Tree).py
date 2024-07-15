@@ -58,6 +58,12 @@ for k in range(n):
         else:
             signif[i]+= v
 
+for i in range(len(signif)):
+    signif[i] = signif[i] / n
+
+signif = np.array(signif)
+signif = pd.DataFrame(signif)
+signif.to_excel('feature significance.xlsx')
 
 resulttest = np.array(resulttest)
 resulttrain = np.array(resulttrain)
