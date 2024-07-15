@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-21 (positive flow).csv")
+rawdata = pd.read_csv("datasets/superdataset-21.csv")
 
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
@@ -21,7 +21,9 @@ resulttrain = []
 #maxsaldo = 39719   # dataset 00-10
 maxsaldo = 10001    # dataset 20 (also positive)
 #maxsaldo = 2854     # negative flow (dataset 20)
-for k in range(50):
+signif = []
+n = 50
+for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
@@ -47,6 +49,15 @@ for k in range(50):
     resulttest.append(errortest)
 
     print('Итерация: ' + str(k))
+
+    # вычисление средней значимости признаков
+    important = model.feature_importances_
+    for i, v in enumerate(important):
+        if k == 0:
+            signif.append(v)
+        else:
+            signif[i]+= v
+
 
 resulttest = np.array(resulttest)
 resulttrain = np.array(resulttrain)

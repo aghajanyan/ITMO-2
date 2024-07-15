@@ -117,14 +117,14 @@ rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
-# rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbyinf(rawdata, thisrubfeatures)
+#rawdata = normbyinf(rawdata, thisrubfeatures)
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():

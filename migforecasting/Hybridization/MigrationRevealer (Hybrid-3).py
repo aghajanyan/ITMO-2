@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
-from sklearn.metrics import f1_score, roc_auc_score
+from sklearn.metrics import f1_score, roc_auc_score, roc_curve, auc
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
@@ -102,6 +102,19 @@ predpositive = model2.predict(testin3)
 predclass = model3.predict(testin3)
 classerror = f1_score(testout3, predclass)
 print("f1 score: ", classerror)
+
+fpr, tpr, thresholds = roc_curve(testout3, predclass)
+aucscore = auc(fpr, tpr)
+
+plt.plot(fpr, tpr, label='ROC curve (area = %0.2f)' % aucscore)
+plt.plot([0, 1], [0, 1], 'k--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive')
+plt.ylabel('True Positive')
+plt.title('Прогноз оттока или притока (тестовый сет)')
+plt.legend(loc="lower right")
+plt.show()
 
 #получение ответа гибридной модели + преобразование в естественный вид
 hybridpred = []
