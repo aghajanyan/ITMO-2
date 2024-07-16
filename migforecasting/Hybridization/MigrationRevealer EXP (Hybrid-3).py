@@ -26,7 +26,8 @@ hybridtest = []
 hybridtrain = []
 classtest = []
 signif = []
-for k in range(50):
+n = 50
+for k in range(n):
     # перетасовка
     negative = negative.sample(frac=1)
     positive = positive.sample(frac=1)
