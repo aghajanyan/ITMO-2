@@ -25,6 +25,7 @@ positive = positive[positive.columns.drop('consnewareas')]
 hybridtest = []
 hybridtrain = []
 classtest = []
+signif = []
 for k in range(50):
     # перетасовка
     negative = negative.sample(frac=1)
@@ -160,6 +161,21 @@ for k in range(50):
     classtest.append(classerror)
 
     print('Итерация: ' + str(k))
+
+    # вычисление средней значимости признаков
+    important = model3.feature_importances_
+    for i, v in enumerate(important):
+        if k == 0:
+            signif.append(v)
+        else:
+            signif[i]+= v
+
+for i in range(len(signif)):
+    signif[i] = signif[i] / n
+
+signif = np.array(signif)
+signif = pd.DataFrame(signif)
+signif.to_excel('feature significance.xlsx')
 
 hybridtest = np.array(hybridtest)
 hybridtrain = np.array(hybridtrain)

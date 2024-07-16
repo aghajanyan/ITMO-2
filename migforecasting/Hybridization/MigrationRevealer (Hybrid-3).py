@@ -116,6 +116,15 @@ plt.title('Прогноз оттока или притока (тестовый �
 plt.legend(loc="lower right")
 plt.show()
 
+important = model3.feature_importances_
+
+features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+
+plt.barh(features, important)
+plt.show()
+
 #получение ответа гибридной модели + преобразование в естественный вид
 hybridpred = []
 for i in range(len(prednegative)):
