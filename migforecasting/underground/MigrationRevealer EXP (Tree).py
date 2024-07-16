@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-31.csv")
+rawdata = pd.read_csv("datasets/superdataset-21 (positive flow).csv")
 
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
