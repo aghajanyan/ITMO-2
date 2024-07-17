@@ -105,8 +105,30 @@ rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superda
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 dataset = []
-# формирование полного датасета, но только с примерами, где все признаки не NaN
 
+rawdata = rawdata[rawdata.columns.drop('consnewapt')]
+rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
+rawdata = rawdata[rawdata.columns.drop('invest')]
+rawdata = rawdata[rawdata.columns.drop('budincome')]
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('cliniccap')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('avgemployers')]
+rawdata = rawdata[rawdata.columns.drop('avgsalary')]
+rawdata = rawdata[rawdata.columns.drop('retailturnover')]
+rawdata = rawdata[rawdata.columns.drop('livarea')]
+rawdata = rawdata[rawdata.columns.drop('livestock')]
+rawdata = rawdata[rawdata.columns.drop('harvest')]
+rawdata = rawdata[rawdata.columns.drop('agrprod')]
+rawdata = rawdata[rawdata.columns.drop('funds')]
+rawdata = rawdata[rawdata.columns.drop('hospitals')]
+rawdata = rawdata[rawdata.columns.drop('factoriescap')]
+rawdata = rawdata[rawdata.columns.drop('naturesecure')]
+rawdata = rawdata[rawdata.columns.drop('schoolnum')]
+rawdata = rawdata[rawdata.columns.drop('beforeschool')]
+rawdata = rawdata[rawdata.columns.drop('shoparea')]
+
+"""
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('theatres')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
@@ -118,6 +140,7 @@ rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
 #rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+"""
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
@@ -128,16 +151,19 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
-    if row['popsize'] < 100000:
+    if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
+rawdata = rawdata[rawdata.columns.drop('popsize')]
+
+"""
 # удаление муниципальных районов (только города)
 for index, row in rawdata.iterrows():
     tmp = row['name'].split()
     if len(tmp) > 1:
         if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
             rawdata = rawdata.drop(index)
-
+"""
 # удалить из датасета отрицательное/положительное сальдо
 #count = 0
 #for index, row in rawdata.iterrows():
@@ -176,13 +202,16 @@ for k in range(5, rawdata.shape[1]):
     count.append(x)
     x = 0
 """
-
+"""
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+"""
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'roadslen',
+            'museums', 'parks', 'theatres']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-31.csv", index=False)
+examples.to_csv("superdataset-40.csv", index=False)
 
 print('Done')
