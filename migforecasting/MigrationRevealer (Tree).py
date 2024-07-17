@@ -34,7 +34,7 @@ def MLS(x, y):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 2854     # negative flow (dataset 20)
-maxsaldo = 2937     # value-driven (40-series)
+maxsaldo = 3146     # value-driven (40-series)
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
 rawdata = pd.read_csv("superdataset/training ready/superdataset-40.csv")
