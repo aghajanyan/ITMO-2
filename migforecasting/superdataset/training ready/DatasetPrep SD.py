@@ -127,6 +127,7 @@ rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('schoolnum')]
 rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 rawdata = rawdata[rawdata.columns.drop('shoparea')]
+rawdata = rawdata[rawdata.columns.drop('roadslen')]
 
 """
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
@@ -207,8 +208,7 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 """
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'roadslen',
-            'museums', 'parks', 'theatres']
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
 
 examples = pd.DataFrame(examples, columns=features)
 

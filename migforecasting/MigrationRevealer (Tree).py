@@ -32,13 +32,12 @@ def MLS(x, y):
 
 #maxsaldo = 26466
 #maxsaldo = 39719
-maxsaldo = 10001    # dataset 20 (also positive flow)
+#maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 2854     # negative flow (dataset 20)
+maxsaldo = 2937     # value-driven (40-series)
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-31.csv")
-
-rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = pd.read_csv("superdataset/training ready/superdataset-40.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -104,9 +103,7 @@ features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 're
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 """
-features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
 
 
 important = model.feature_importances_
