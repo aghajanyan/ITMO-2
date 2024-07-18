@@ -188,6 +188,26 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
+"""
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
+
+examples = pd.DataFrame(examples, columns=features)
+
+avg = examples.mean()
+maxmax = examples.max()
+minmin = examples.min()
+
+x = 0
+count = []
+for k in range(0, examples.shape[1]):
+    for i in range(examples.shape[0]):
+        if examples.iloc[i, k] == 0:
+            x+=1
+    count.append(examples.columns[k])
+    count.append(x)
+    x = 0
+"""
+
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
