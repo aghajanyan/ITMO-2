@@ -158,6 +158,15 @@ for index, row in rawdata.iterrows():
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 """
+# удаление полностью нулевых примеров
+for index, row in rawdata.iterrows():
+    if (row['foodseats'] == 0 and row['sportsvenue'] == 0 and row['servicesnum'] == 0 and row['museums'] == 0 and
+            row['parks'] == 0 and row['theatres'] == 0):
+        rawdata = rawdata.drop(index)
+
+"""
+
+"""
 # удаление муниципальных районов (только города)
 for index, row in rawdata.iterrows():
     tmp = row['name'].split()
@@ -189,6 +198,7 @@ examples = np.delete(examples, 1, 1)  # удаляем название мун. 
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 """
+# анализ признаков датасета
 features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
 
 examples = pd.DataFrame(examples, columns=features)
