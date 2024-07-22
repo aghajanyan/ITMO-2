@@ -4,7 +4,7 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['saldo', 'library', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'foodservturnover', 'consnewareas', 'consnewapt', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'invest', 'budincome', 'funds', 'museums', 'parks',
             'theatres', 'hospitals', 'cliniccap', 'beforeschool', 'schoolnum', 'naturesecure', 'factoriescap']
