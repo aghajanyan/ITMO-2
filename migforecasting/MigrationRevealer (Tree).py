@@ -37,7 +37,7 @@ def MLS(x, y):
 maxsaldo = 3146     # value-driven (40-series)
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-40.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-41.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -103,7 +103,8 @@ features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 're
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 """
-features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
+features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
+            'library', 'cultureorg', 'musartschool']
 
 
 important = model.feature_importances_

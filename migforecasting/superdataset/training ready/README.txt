@@ -28,6 +28,8 @@ superdataset-31.csv - 894 examples, отличается от датасета 1
 
 superdataset-40.csv - 1925 examples, только образования меньше 100 тыс. и на основе ценностно-ориентированных признаков: 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres'
 
+superdataset-41.csv - 1897 examples, отличается от датасета 40 тем, что добавлены новые ценностно-ориентированные признаки: 'library', 'cultureorg' and 'musartschool'
+
 dollaravg.csv - среднегодовой курс доллара (для нормализации)
 
 inflation0.csv - среднегодовая инфляция

@@ -157,6 +157,26 @@ for index, row in rawdata.iterrows():
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 
+"""C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately"""
+
+library = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/library (allmun).csv")
+library = library[library.columns.drop('name')]
+
+rawdata = rawdata.merge(library, on=['oktmo', 'year'], how='left')
+
+cultureorg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/cultureorg (allmun).csv")
+cultureorg = cultureorg[cultureorg.columns.drop('name')]
+
+rawdata = rawdata.merge(cultureorg, on=['oktmo', 'year'], how='left')
+
+musartschool = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/musartschool (allmun).csv")
+musartschool = musartschool[musartschool.columns.drop('name')]
+
+rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
+
+
+rawdata = rawdata.dropna()
+
 """
 # удаление полностью нулевых примеров
 for index, row in rawdata.iterrows():
@@ -238,10 +258,11 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 """
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
+            'library', 'cultureorg', 'musartschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-40.csv", index=False)
+examples.to_csv("superdataset-41.csv", index=False)
 
 print('Done')
