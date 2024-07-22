@@ -217,9 +217,10 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-"""
+
 # анализ признаков датасета
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres']
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
+            'library', 'cultureorg', 'musartschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -236,7 +237,7 @@ for k in range(0, examples.shape[1]):
     count.append(examples.columns[k])
     count.append(x)
     x = 0
-"""
+
 
 # нормализация от 0 до 1
 examples = normbymax(examples)
