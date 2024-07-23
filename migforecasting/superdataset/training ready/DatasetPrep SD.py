@@ -128,6 +128,8 @@ rawdata = rawdata[rawdata.columns.drop('schoolnum')]
 rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 rawdata = rawdata[rawdata.columns.drop('shoparea')]
 rawdata = rawdata[rawdata.columns.drop('roadslen')]
+#rawdata = rawdata[rawdata.columns.drop('parks')]
+#rawdata = rawdata[rawdata.columns.drop('museums')]
 
 """
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
@@ -152,7 +154,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
-    if row['popsize'] > 100000:
+    if row['popsize'] < 100000:
         rawdata = rawdata.drop(index)
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -264,6 +266,6 @@ features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'park
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-41.csv", index=False)
+examples.to_csv("superdataset-42.csv", index=False)
 
 print('Done')

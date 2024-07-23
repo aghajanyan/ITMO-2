@@ -17,6 +17,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+import seaborn as sns
 
 '''Наименьшие квадраты для одной переменной'''
 def MLS(x, y):
@@ -34,10 +35,12 @@ def MLS(x, y):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 2854     # negative flow (dataset 20)
-maxsaldo = 3146     # value-driven (40-series)
+#maxsaldo = 3146     # value-driven (40-series)
+maxsaldo = 23444   # value-driven (42, big cities only)
+
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-41.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-42.csv")
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -80,6 +83,13 @@ plt.xlabel("Номер теста")
 plt.ylabel("Миграционное сальдо")
 plt.title("Прогноз на тестовой выборке")
 plt.show()
+
+
+#Корреляционная матрица Пирсона
+cor = rawdata.corr()
+sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
+plt.show()
+
 
 """
 features = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
