@@ -154,7 +154,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
-    if row['popsize'] < 100000:
+    if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -197,13 +197,13 @@ for index, row in rawdata.iterrows():
             rawdata = rawdata.drop(index)
 """
 # удалить из датасета отрицательное/положительное сальдо
-#count = 0
-#for index, row in rawdata.iterrows():
-    #if row['saldo'] < 0:
-        #rawdata = rawdata.drop(index)
+count = 0
+for index, row in rawdata.iterrows():
+    if row['saldo'] > 0:
+        rawdata = rawdata.drop(index)
 
 # убрать отрицательный знак
-#rawdata['saldo'] = rawdata['saldo'].abs()
+rawdata['saldo'] = rawdata['saldo'].abs()
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -266,6 +266,6 @@ features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'park
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-42.csv", index=False)
+examples.to_csv("superdataset-41 (negative flow).csv", index=False)
 
 print('Done')
