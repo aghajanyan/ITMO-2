@@ -128,8 +128,8 @@ rawdata = rawdata[rawdata.columns.drop('schoolnum')]
 rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 rawdata = rawdata[rawdata.columns.drop('shoparea')]
 rawdata = rawdata[rawdata.columns.drop('roadslen')]
-#rawdata = rawdata[rawdata.columns.drop('parks')]
-#rawdata = rawdata[rawdata.columns.drop('museums')]
+rawdata = rawdata[rawdata.columns.drop('parks')]
+rawdata = rawdata[rawdata.columns.drop('museums')]
 
 """
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
@@ -199,11 +199,11 @@ for index, row in rawdata.iterrows():
 # удалить из датасета отрицательное/положительное сальдо
 count = 0
 for index, row in rawdata.iterrows():
-    if row['saldo'] > 0:
+    if row['saldo'] < 0:
         rawdata = rawdata.drop(index)
 
 # убрать отрицательный знак
-rawdata['saldo'] = rawdata['saldo'].abs()
+#rawdata['saldo'] = rawdata['saldo'].abs()
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -266,6 +266,6 @@ features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'park
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-41 (negative flow).csv", index=False)
+examples.to_csv("superdataset-41 (positive flow).csv", index=False)
 
 print('Done')
