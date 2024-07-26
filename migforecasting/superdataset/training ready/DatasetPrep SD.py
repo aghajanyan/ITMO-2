@@ -199,11 +199,11 @@ for index, row in rawdata.iterrows():
 # удалить из датасета отрицательное/положительное сальдо
 count = 0
 for index, row in rawdata.iterrows():
-    if row['saldo'] < 0:
+    if row['saldo'] > 0:
         rawdata = rawdata.drop(index)
 
 # убрать отрицательный знак
-#rawdata['saldo'] = rawdata['saldo'].abs()
+rawdata['saldo'] = rawdata['saldo'].abs()
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -260,12 +260,14 @@ for k in range(5, rawdata.shape[1]):
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
-"""
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
+            
+            features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
             'library', 'cultureorg', 'musartschool']
+"""
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'theatres', 'library', 'cultureorg', 'musartschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-41 (positive flow).csv", index=False)
+examples.to_csv("superdataset-41-1 (negative flow).csv", index=False)
 
 print('Done')
