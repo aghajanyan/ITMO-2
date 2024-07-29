@@ -213,7 +213,7 @@ examples = []
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:     # толпроверка только на год вперед
+        if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:     # прогноз только на год вперед
             rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]
             examples.append(rawdata.iloc[i])
 
@@ -276,6 +276,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-21 (negative flow).csv", index=False)
+examples.to_csv("superdataset-21 (positive flow).csv", index=False)
 
 print('Done')

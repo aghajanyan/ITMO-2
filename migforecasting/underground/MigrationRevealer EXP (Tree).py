@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 rawdata = pd.read_csv("datasets/superdataset-41-1 (negative flow).csv")
 
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
 #rawdata = rawdata[rawdata.columns.drop('museums')]
 
