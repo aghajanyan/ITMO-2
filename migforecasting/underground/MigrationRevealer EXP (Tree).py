@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-21 (negative flow).csv")
+rawdata = pd.read_csv("datasets/superdataset-21 (positive flow).csv")
 
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
@@ -21,8 +21,8 @@ resulttest = []
 resulttrain = []
 #maxsaldo = 26466   # olddatasets
 #maxsaldo = 39719   # dataset 00-10
-#maxsaldo = 10001    # dataset 20 (also positive)
-maxsaldo = 2854     # negative flow (dataset 20)
+maxsaldo = 10001    # dataset 20 (also positive)
+#maxsaldo = 2854     # negative flow (dataset 20)
 #maxsaldo = 3146     # value-driven (40-series)
 #maxsaldo = 4795     # value-driven (41-1 positive flow)
 #maxsaldo = 3979     # value-driven negative flow (40 series & 41-1)
