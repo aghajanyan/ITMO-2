@@ -34,14 +34,16 @@ def MLS(x, y):
 #maxsaldo = 26466
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
-#maxsaldo = 2854     # negative flow (dataset 20)
-maxsaldo = 3146     # value-driven (40-series) + positive flow
+maxsaldo = 2854     # negative flow (dataset 20)
+#maxsaldo = 3146     # value-driven (40-series) + positive flow
 #maxsaldo = 3979     # value-driven negative flow (40 series)
 #maxsaldo = 23444   # value-driven (42, big cities only)
 
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-41 (positive flow).csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-21 (negative flow).csv")
+
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -113,10 +115,13 @@ features = ['f-1', 'f-2', 'f-3', 'f-4', 'f-5', 'f-6', 'f-7', 'f-8', 'f-9',
 features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
-"""
+
 features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
             'library', 'cultureorg', 'musartschool']
-
+"""
+features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
 important = model.feature_importances_
 
