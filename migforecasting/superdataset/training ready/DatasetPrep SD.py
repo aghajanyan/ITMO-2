@@ -105,14 +105,14 @@ rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superda
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 dataset = []
-
+"""
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
 rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 rawdata = rawdata[rawdata.columns.drop('cliniccap')]
-#rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('avgemployers')]
 rawdata = rawdata[rawdata.columns.drop('avgsalary')]
 rawdata = rawdata[rawdata.columns.drop('retailturnover')]
@@ -130,8 +130,8 @@ rawdata = rawdata[rawdata.columns.drop('shoparea')]
 rawdata = rawdata[rawdata.columns.drop('roadslen')]
 rawdata = rawdata[rawdata.columns.drop('parks')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
-
 """
+
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('theatres')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
@@ -143,23 +143,24 @@ rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
 #rawdata = rawdata[rawdata.columns.drop('consnewareas')]
-"""
+
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
+"""
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 
-"""C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately"""
+C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately
 
 library = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/library (allmun).csv")
 library = library[library.columns.drop('name')]
@@ -180,6 +181,7 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 
 """
+"""
 # удаление полностью нулевых примеров
 for index, row in rawdata.iterrows():
     if (row['foodseats'] == 0 and row['sportsvenue'] == 0 and row['servicesnum'] == 0 and row['museums'] == 0 and
@@ -187,7 +189,6 @@ for index, row in rawdata.iterrows():
         rawdata = rawdata.drop(index)
 
 """
-
 """
 # удаление муниципальных районов (только города)
 for index, row in rawdata.iterrows():
@@ -196,6 +197,8 @@ for index, row in rawdata.iterrows():
         if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
             rawdata = rawdata.drop(index)
 """
+
+
 # удалить из датасета отрицательное/положительное сальдо
 count = 0
 for index, row in rawdata.iterrows():
@@ -210,8 +213,9 @@ examples = []
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]
-        examples.append(rawdata.iloc[i])
+        if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:     # толпроверка только на год вперед
+            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]
+            examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
 
@@ -263,11 +267,15 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             
             features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
             'library', 'cultureorg', 'musartschool']
+            
+            features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'theatres', 'library', 'cultureorg', 'musartschool']
 """
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'theatres', 'library', 'cultureorg', 'musartschool']
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-41-1 (negative flow).csv", index=False)
+examples.to_csv("superdataset-21 (negative flow).csv", index=False)
 
 print('Done')
