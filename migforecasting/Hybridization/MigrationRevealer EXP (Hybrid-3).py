@@ -13,11 +13,14 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 #перевод из нормализованного диапазона в реальное
-maxsaldoP = 10001    # dataset 20 (also positive flow)
-maxsaldoN = 2854     # negative flow (dataset 20)
+#maxsaldoP = 10001    # dataset 20 (also positive flow)
+#maxsaldoN = 2854     # negative flow (dataset 20)
 
-positive = pd.read_csv("superdataset-21 (positive flow).csv")
-negative = pd.read_csv("superdataset-21 (negative flow).csv")
+maxsaldoP = 1775     # dataset 23 (positive flow)
+maxsaldoN = 888     # dataset 23 (negative flow)
+
+positive = pd.read_csv("superdataset-23 (positive flow).csv")
+negative = pd.read_csv("superdataset-23 (negative flow).csv")
 
 negative = negative[negative.columns.drop('consnewareas')]
 positive = positive[positive.columns.drop('consnewareas')]
