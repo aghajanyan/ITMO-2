@@ -100,10 +100,11 @@ def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
     data = copy.deepcopy(data)
 
     for col in data.columns:
-        data = data[(data[col] < np.quantile(data[col], 0.75) + 2 * sts.iqr(data[col])) &
-                    (data[col] > np.quantile(data[col], 0.25) - 2 * sts.iqr(data[col]))]
+        data = data[(data[col] < np.quantile(data[col], 0.75) + 4 * sts.iqr(data[col])) &
+                    (data[col] > np.quantile(data[col], 0.25) - 4 * sts.iqr(data[col]))]
 
     return data
+
 
 def featuresanalysis(examples):
     # анализ признаков датасета
@@ -126,11 +127,13 @@ def featuresanalysis(examples):
         count.append(x)
         x = 0
 
+
 def delifzero(data):
     for index, row in data.iterrows():
         if (row['foodseats'] == 0 and row['sportsvenue'] == 0 and row['servicesnum'] == 0 and row['museums'] == 0 and
                 row['parks'] == 0 and row['theatres'] == 0):
             data = data.drop(index)
+
 
 def onlycities(data):
     # удаление муниципальных районов (только города)
@@ -140,14 +143,18 @@ def onlycities(data):
             if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
                 data = data.drop(index)
 
+
 def delnegorpos(data):
     # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
-        if row['saldo'] > 0:
+        if row['saldo'] < 0:
             data = data.drop(index)
 
     # убрать отрицательный знак
     data['saldo'] = data['saldo'].abs()
+
+    return data
+
 
 def nannumber(data):
     # подсчет количества NaNов у признака
@@ -210,7 +217,7 @@ rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+# rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
@@ -224,6 +231,8 @@ rawdata = normbyinf(rawdata, thisrubfeatures)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
+
+#rawdata = delnegorpos(rawdata)
 
 """
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -255,7 +264,7 @@ examples = []
 # но миграционным сальдо следующего
 for i in range(len(rawdata) - 1):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:     # прогноз только на год вперед
+        if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:  # прогноз только на год вперед
             rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]
             examples.append(rawdata.iloc[i])
 
@@ -294,6 +303,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-22.csv", index=False)
+examples.to_csv("superdataset-23.csv", index=False)
 
 print('Done')
