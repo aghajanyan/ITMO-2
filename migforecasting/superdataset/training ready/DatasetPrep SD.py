@@ -265,15 +265,15 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-#features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-       #     'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        #    'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
-#examples = pd.DataFrame(examples, columns=features)
+examples = pd.DataFrame(examples, columns=features)
 
-#examples = remove_outliers(examples)
+examples = remove_outliers(examples)
 
-#examples = np.array(examples)
+examples = np.array(examples)
 
 # нормализация от 0 до 1
 examples = normbymax(examples)
@@ -294,6 +294,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-21.csv", index=False)
+examples.to_csv("superdataset-22.csv", index=False)
 
 print('Done')
