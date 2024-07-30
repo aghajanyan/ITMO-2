@@ -147,7 +147,7 @@ def onlycities(data):
 def delnegorpos(data):
     # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
-        if row['saldo'] < 0:
+        if row['saldo'] > 0:
             data = data.drop(index)
 
     # убрать отрицательный знак
@@ -232,7 +232,7 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
-#rawdata = delnegorpos(rawdata)
+rawdata = delnegorpos(rawdata)
 
 """
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -303,6 +303,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-23.csv", index=False)
+examples.to_csv("superdataset-23 (negative flow).csv", index=False)
 
 print('Done')

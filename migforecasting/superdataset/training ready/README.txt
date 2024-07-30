@@ -28,6 +28,10 @@ superdataset-22.csv - 3990 examples, отличается от датасета 
 
 superdataset-23.csv - 6122 examples, отличается от датасета 22 очисткой выбросов на уровне 4*IQR (алгоритм Кирилла)
 
+superdataset-23 (negative flow).csv - 4208 examples, отличается от датасета 23 тем, что убраны примеры с положительным сальдо
+
+superdataset-23 (positive flow).csv - 988 examples, отличается от датасета 23 тем, что убраны примеры с отрицательным сальдо
+
 superdataset-31.csv - 894 examples, отличается от датасета 13 тем, что в датасет включены только города с населнием свыше 100 тыс.
 
 superdataset-40.csv - 1925 examples, только образования меньше 100 тыс. и на основе ценностно-ориентированных признаков: 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres'
