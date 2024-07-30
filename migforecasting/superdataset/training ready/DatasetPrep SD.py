@@ -3,6 +3,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import pandas as pd
+import scipy.stats as sts
+import copy
 
 
 def normbymax(trainset):
@@ -94,6 +96,72 @@ def normbyprod(trainset, rubfeatures):
     return trainset
 
 
+def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
+    data = copy.deepcopy(data)
+
+    for col in data.columns:
+        data = data[(data[col] < np.quantile(data[col], 0.75) + 2 * sts.iqr(data[col])) &
+                    (data[col] > np.quantile(data[col], 0.25) - 2 * sts.iqr(data[col]))]
+
+    return data
+
+def featuresanalysis(examples):
+    # анализ признаков датасета
+    features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
+                'library', 'cultureorg', 'musartschool']
+
+    examples = pd.DataFrame(examples, columns=features)
+
+    avg = examples.mean()
+    maxmax = examples.max()
+    minmin = examples.min()
+
+    x = 0
+    count = []
+    for k in range(0, examples.shape[1]):
+        for i in range(examples.shape[0]):
+            if examples.iloc[i, k] == 0:
+                x += 1
+        count.append(examples.columns[k])
+        count.append(x)
+        x = 0
+
+def delifzero(data):
+    for index, row in data.iterrows():
+        if (row['foodseats'] == 0 and row['sportsvenue'] == 0 and row['servicesnum'] == 0 and row['museums'] == 0 and
+                row['parks'] == 0 and row['theatres'] == 0):
+            data = data.drop(index)
+
+def onlycities(data):
+    # удаление муниципальных районов (только города)
+    for index, row in data.iterrows():
+        tmp = row['name'].split()
+        if len(tmp) > 1:
+            if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
+                data = data.drop(index)
+
+def delnegorpos(data):
+    # удалить из датасета отрицательное/положительное сальдо
+    for index, row in data.iterrows():
+        if row['saldo'] > 0:
+            data = data.drop(index)
+
+    # убрать отрицательный знак
+    data['saldo'] = data['saldo'].abs()
+
+def nannumber(data):
+    # подсчет количества NaNов у признака
+    x = 0
+    count = []
+    for k in range(5, data.shape[1]):
+        for i in range(data.shape[0]):
+            if data.iloc[i, k] != data.iloc[i, k]:
+                x += 1
+        count.append(data.columns[k])
+        count.append(x)
+        x = 0
+
+
 # признаки для ценового нормирования
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
@@ -181,32 +249,6 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 
 """
-"""
-# удаление полностью нулевых примеров
-for index, row in rawdata.iterrows():
-    if (row['foodseats'] == 0 and row['sportsvenue'] == 0 and row['servicesnum'] == 0 and row['museums'] == 0 and
-            row['parks'] == 0 and row['theatres'] == 0):
-        rawdata = rawdata.drop(index)
-
-"""
-"""
-# удаление муниципальных районов (только города)
-for index, row in rawdata.iterrows():
-    tmp = row['name'].split()
-    if len(tmp) > 1:
-        if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
-            rawdata = rawdata.drop(index)
-"""
-
-
-# удалить из датасета отрицательное/положительное сальдо
-count = 0
-for index, row in rawdata.iterrows():
-    if row['saldo'] > 0:
-        rawdata = rawdata.drop(index)
-
-# убрать отрицательный знак
-rawdata['saldo'] = rawdata['saldo'].abs()
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -223,43 +265,19 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-"""
-# анализ признаков датасета
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
-            'library', 'cultureorg', 'musartschool']
+#features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+       #     'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+        #    'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
 
-examples = pd.DataFrame(examples, columns=features)
+#examples = pd.DataFrame(examples, columns=features)
 
-avg = examples.mean()
-maxmax = examples.max()
-minmin = examples.min()
+#examples = remove_outliers(examples)
 
-x = 0
-count = []
-for k in range(0, examples.shape[1]):
-    for i in range(examples.shape[0]):
-        if examples.iloc[i, k] == 0:
-            x+=1
-    count.append(examples.columns[k])
-    count.append(x)
-    x = 0
-"""
+#examples = np.array(examples)
 
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
-"""
-# подсчет количества NaNов у признака
-x = 0
-count = []
-for k in range(5, rawdata.shape[1]):
-    for i in range(rawdata.shape[0]):
-        if rawdata.iloc[i, k] != rawdata.iloc[i, k]:
-            x+=1
-    count.append(rawdata.columns[k])
-    count.append(x)
-    x = 0
-"""
 """
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
@@ -276,6 +294,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-21 (positive flow).csv", index=False)
+examples.to_csv("superdataset-21.csv", index=False)
 
 print('Done')
