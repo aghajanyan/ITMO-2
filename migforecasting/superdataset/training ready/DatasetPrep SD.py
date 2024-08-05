@@ -236,7 +236,7 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
-rawdata = delnegorpos(rawdata)
+#rawdata = delnegorpos(rawdata)
 
 """
 rawdata = rawdata[rawdata.columns.drop('popsize')]
