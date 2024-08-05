@@ -173,7 +173,7 @@ def nannumber(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'funds', 'factoriescap']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -217,7 +217,11 @@ rawdata = rawdata[rawdata.columns.drop('naturesecure')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
 rawdata = rawdata[rawdata.columns.drop('budincome')]
-# rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+#rawdata = rawdata[rawdata.columns.drop('shoparea')]
+#rawdata = rawdata[rawdata.columns.drop('servicesnum')]
+rawdata = rawdata[rawdata.columns.drop('funds')]
+rawdata = rawdata[rawdata.columns.drop('factoriescap')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
@@ -225,7 +229,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
@@ -275,8 +279,8 @@ examples = np.delete(examples, 1, 1)  # удаляем название мун. 
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -296,13 +300,18 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'library', 'cultureorg', 'musartschool']
             
             features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'theatres', 'library', 'cultureorg', 'musartschool']
-"""
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            
+            features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
+"""
+
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-23 (negative flow).csv", index=False)
+examples.to_csv("superdataset-24.csv", index=False)
 
 print('Done')
