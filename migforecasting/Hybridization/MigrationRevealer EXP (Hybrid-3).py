@@ -16,14 +16,17 @@ from sklearn.model_selection import train_test_split
 #maxsaldoP = 10001    # dataset 20 (also positive flow)
 #maxsaldoN = 2854     # negative flow (dataset 20)
 
-maxsaldoP = 1775     # dataset 23 (positive flow)
-maxsaldoN = 888     # dataset 23 (negative flow)
+#maxsaldoP = 1775     # dataset 23 (positive flow)
+#maxsaldoN = 888     # dataset 23 (negative flow)
 
-positive = pd.read_csv("superdataset-23 (positive flow).csv")
-negative = pd.read_csv("superdataset-23 (negative flow).csv")
+maxsaldoP = 1879     # dataset 24 (positive flow)
+maxsaldoN = 888     # dataset 24 (negative flow)
 
-negative = negative[negative.columns.drop('consnewareas')]
-positive = positive[positive.columns.drop('consnewareas')]
+positive = pd.read_csv("superdataset-24 (positive flow).csv")
+negative = pd.read_csv("superdataset-24 (negative flow).csv")
+
+#negative = negative[negative.columns.drop('consnewareas')]
+#positive = positive[positive.columns.drop('consnewareas')]
 
 hybridtest = []
 hybridtrain = []
@@ -76,7 +79,7 @@ for k in range(n):
 
     #тоже самое для тестовой выборки
     classdatatest = []
-    for i in range(testin1.shape[0]):
+    for i in range(testin2.shape[0]):
         classdatatest.append(np.append(testin1[i], [-abs(testout1[i, 0]), 0]))
         if i < testin2.shape[0] - 1:
             classdatatest.append(np.append(testin2[i], [testout2[i, 0], 1]))
