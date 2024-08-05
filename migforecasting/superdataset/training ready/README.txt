@@ -34,6 +34,10 @@ superdataset-23 (positive flow).csv - 988 examples, отличается от д
 
 superdataset-24.csv - 7445 examples, отличается от датасета 23 тем, что убраны признаки: consnewareas, funds, factoriescup
 
+superdataset-24 (negative flow).csv - 5041 examples, отличается от датасета 24 тем, что убраны примеры с положительным сальдо
+
+superdataset-24 (positive flow).csv - 1218 examples, отличается от датасета 24 тем, что убраны примеры с отрицательным сальдо
+
 superdataset-31.csv - 894 examples, отличается от датасета 13 тем, что в датасет включены только города с населнием свыше 100 тыс.
 
 superdataset-40.csv - 1925 examples, только образования меньше 100 тыс. и на основе ценностно-ориентированных признаков: 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres'
