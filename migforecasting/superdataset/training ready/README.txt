@@ -50,6 +50,8 @@ superdataset-41-1 (positive|negative).csv - отличается от датас
 
 superdataset-42.csv - 775 examples, отличается от датасета 41 тем, что включены только большие города
 
+superdataset-43.csv - 13611 examples, отличается от датасета 41-1 тем, что убран признак 'theatres' и использован IQR*4
+
 dollaravg.csv - среднегодовой курс доллара (для нормализации)
 
 inflation0.csv - среднегодовая инфляция
