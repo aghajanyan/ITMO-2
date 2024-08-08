@@ -234,10 +234,10 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
-    if row['popsize'] > 100000:
+    if row['popsize'] < 100000:
         rawdata = rawdata.drop(index)
 
-rawdata = delnegorpos(rawdata)
+#rawdata = delnegorpos(rawdata)
 
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -313,6 +313,6 @@ features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'library', 'cult
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-43 (positive flow).csv", index=False)
+examples.to_csv("superdataset-44.csv", index=False)
 
 print('Done')
