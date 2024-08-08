@@ -35,6 +35,7 @@ resulttrain = []
 maxsaldo = 845      # value-driven 43
 #maxsaldo = 1148     # value-driven 43 (negative flow)
 #maxsaldo = 1954      # value-driven 43 (positive flow)
+#maxsaldo = 10624      # value-driven 44
 
 signif = []
 n = 50
