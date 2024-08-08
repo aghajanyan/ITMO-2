@@ -19,11 +19,14 @@ from sklearn.model_selection import train_test_split
 #maxsaldoP = 1775     # dataset 23 (positive flow)
 #maxsaldoN = 888     # dataset 23 (negative flow)
 
-maxsaldoP = 1879     # dataset 24 (positive flow)
-maxsaldoN = 888     # dataset 24 (negative flow)
+#maxsaldoP = 1879     # dataset 24 (positive flow)
+#maxsaldoN = 888     # dataset 24 (negative flow)
 
-positive = pd.read_csv("superdataset-24 (positive flow).csv")
-negative = pd.read_csv("superdataset-24 (negative flow).csv")
+maxsaldoP = 1954      # value-driven 43 (positive flow)
+maxsaldoN = 1148     # value-driven 43 (negative flow)
+
+positive = pd.read_csv("superdataset-43 (positive flow).csv")
+negative = pd.read_csv("superdataset-43 (negative flow).csv")
 
 #negative = negative[negative.columns.drop('consnewareas')]
 #positive = positive[positive.columns.drop('consnewareas')]
@@ -58,7 +61,7 @@ for k in range(n):
     #подготовка входных и выходных данных для обучения классификатора
     #объединить входы негатива и позитива
     classdata = []
-    for i in range(trainin2.shape[0]):
+    for i in range(trainin1.shape[0]):
         classdata.append(np.append(trainin1[i], [-abs(trainout1[i, 0]), 0]))  # 0 - для отрицательного сальдо
         if i < trainin2.shape[0] - 1:
             classdata.append(np.append(trainin2[i], [trainout2[i, 0], 1]))  # 1 - для положительного сальдо
@@ -79,7 +82,7 @@ for k in range(n):
 
     #тоже самое для тестовой выборки
     classdatatest = []
-    for i in range(testin2.shape[0]):
+    for i in range(testin1.shape[0]):
         classdatatest.append(np.append(testin1[i], [-abs(testout1[i, 0]), 0]))
         if i < testin2.shape[0] - 1:
             classdatatest.append(np.append(testin2[i], [testout2[i, 0], 1]))
