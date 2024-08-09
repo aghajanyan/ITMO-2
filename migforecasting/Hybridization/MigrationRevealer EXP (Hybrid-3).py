@@ -138,8 +138,8 @@ for k in range(n):
         else:
             testout4[i] = testout4[i] * maxsaldoN
 
-    #hybriderror = mean_squared_error((testout4 / maxsaldoP), (hybridpred / maxsaldoP))
-    hybriderror = mean_absolute_error(testout4, hybridpred)
+    hybriderror = mean_squared_error((testout4 / maxsaldoP), (hybridpred / maxsaldoP))
+    #hybriderror = mean_absolute_error(testout4, hybridpred)
 
     #оценка точности на тренировочной выборке
     prednegativetrain = model1.predict(trainin3)
@@ -164,8 +164,8 @@ for k in range(n):
         else:
             trainout4[i] = trainout4[i] * maxsaldoN
 
-    #hybriderrortrain = mean_squared_error((trainout4 / maxsaldoP), (hybridpredtrain / maxsaldoP))
-    hybriderrortrain = mean_absolute_error(trainout4, hybridpredtrain)
+    hybriderrortrain = mean_squared_error((trainout4 / maxsaldoP), (hybridpredtrain / maxsaldoP))
+    #hybriderrortrain = mean_absolute_error(trainout4, hybridpredtrain)
 
     # запись ошибки
     hybridtest.append(hybriderror)
