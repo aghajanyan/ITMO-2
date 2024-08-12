@@ -11,16 +11,17 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import f1_score, roc_auc_score, roc_curve, auc
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+import seaborn as sns
 
 #перевод из нормализованного диапазона в реальное
-maxsaldoP = 10001    # dataset 20 (also positive flow)
-maxsaldoN = 2854     # negative flow (dataset 20)
+#maxsaldoP = 10001    # dataset 20 (also positive flow)
+#maxsaldoN = 2854     # negative flow (dataset 20)
 
-positive = pd.read_csv("superdataset-21 (positive flow).csv")
-negative = pd.read_csv("superdataset-21 (negative flow).csv")
+maxsaldoP = 1954      # value-driven 43 (positive flow)
+maxsaldoN = 1148     # value-driven 43 (negative flow)
 
-negative = negative[negative.columns.drop('consnewareas')]
-positive = positive[positive.columns.drop('consnewareas')]
+positive = pd.read_csv("superdataset-43 (positive flow).csv")
+negative = pd.read_csv("superdataset-43 (negative flow).csv")
 
 # перетасовка
 negative = negative.sample(frac=1)
@@ -52,6 +53,11 @@ for i in range(trainin1.shape[0]):
 
 classdata = pd.DataFrame(classdata)
 classdata = classdata.sample(frac=1)    # перетасовка
+
+#Корреляционная матрица Пирсона
+cor = classdata.corr()
+sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
+plt.show()
 
 # разделение входных и выходных данных
 trainout3 = classdata[[classdata.shape[1] - 1]]
