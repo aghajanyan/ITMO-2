@@ -19,14 +19,14 @@ from sklearn.model_selection import train_test_split
 #maxsaldoP = 1775     # dataset 23 (positive flow)
 #maxsaldoN = 888     # dataset 23 (negative flow)
 
-#maxsaldoP = 1879     # dataset 24 (positive flow)
-#maxsaldoN = 888     # dataset 24 (negative flow)
+maxsaldoP = 1879     # dataset 24 (positive flow)
+maxsaldoN = 888     # dataset 24 (negative flow)
 
-maxsaldoP = 1954      # value-driven 43 (positive flow)
-maxsaldoN = 1148     # value-driven 43 (negative flow)
+#maxsaldoP = 1954      # value-driven 43 (positive flow)
+#maxsaldoN = 1148     # value-driven 43 (negative flow)
 
-positive = pd.read_csv("superdataset-43 (positive flow).csv")
-negative = pd.read_csv("superdataset-43 (negative flow).csv")
+positive = pd.read_csv("superdataset-24 (positive flow).csv")
+negative = pd.read_csv("superdataset-24 (negative flow).csv")
 
 #negative = negative[negative.columns.drop('consnewareas')]
 #positive = positive[positive.columns.drop('consnewareas')]
