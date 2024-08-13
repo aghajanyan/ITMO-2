@@ -35,16 +35,18 @@ def MLS(x, y):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
+maxsaldo = 1080      # dataset 25
 #maxsaldo = 2854     # negative flow (dataset 20)
 #maxsaldo = 3146     # value-driven (40-series) + positive flow
 #maxsaldo = 3979     # value-driven negative flow (40 series)
 #maxsaldo = 23444   # value-driven (42, big cities only)
-maxsaldo = 845      # value-driven 43
+#maxsaldo = 845      # value-driven 43
+
 
 
 #"superdataset/training ready/superdataset-13.csv"
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-43.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-25.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
@@ -122,11 +124,17 @@ features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 're
 features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
             'library', 'cultureorg', 'musartschool']
 """
-features = ['foodseats', 'sportsvenue', 'servicesnum', 'library', 'cultureorg', 'musartschool']
+features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompanies']
 
 important = model.feature_importances_
 
-plt.barh(features, important)
+forplot = pd.DataFrame(data=important, index=features)
+
+forplot = forplot.sort_values(by=[0])
+
+plt.barh(forplot.index, forplot[0])
 plt.show()
 
 print("MAPE (train): ", errortrain)
