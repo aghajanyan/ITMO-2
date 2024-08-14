@@ -44,6 +44,8 @@ superdataset-26.csv - 2866 examples, отличается от датасета 
 
 superdataset-27.csv - 5795 examples, отличается от датасета 24 тем, что добавлен признак visiblecompanies
 
+superdataset-28.csv - 4368 examples, отличается от датасета 24 тем, что добавлен признак goodcompincome
+
 superdataset-31.csv - 894 examples, отличается от датасета 13 тем, что в датасет включены только города с населнием свыше 100 тыс.
 
 superdataset-40.csv - 1925 examples, только образования меньше 100 тыс. и на основе ценностно-ориентированных признаков: 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres'

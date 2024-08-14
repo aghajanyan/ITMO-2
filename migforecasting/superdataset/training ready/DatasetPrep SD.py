@@ -173,7 +173,7 @@ def nannumber(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'goodcompincome']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -230,7 +230,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbyinf(rawdata, thisrubfeatures)
+#rawdata = normbyinf(rawdata, thisrubfeatures)
 
 x = [1] * len(rawdata['popsize'])
 y = list(rawdata['popsize'])
@@ -267,11 +267,13 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 """
 
-visiblecompanies = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/visiblecompanies (allmun).csv")
-visiblecompanies = visiblecompanies[visiblecompanies.columns.drop('name')]
+goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
+goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
 
-rawdata = rawdata.merge(visiblecompanies, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
+
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -290,7 +292,7 @@ examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'visiblecompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompincome']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -322,7 +324,7 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'visiblecompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompincome']
 
 examples = pd.DataFrame(examples, columns=features)
 
