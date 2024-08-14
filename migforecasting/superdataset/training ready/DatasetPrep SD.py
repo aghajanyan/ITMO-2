@@ -230,7 +230,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 x = [1] * len(rawdata['popsize'])
 y = list(rawdata['popsize'])
@@ -267,10 +267,10 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 """
 
-badcompanies = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/badcompanies (allmun).csv")
-badcompanies = badcompanies[badcompanies.columns.drop('name')]
+visiblecompanies = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/visiblecompanies (allmun).csv")
+visiblecompanies = visiblecompanies[visiblecompanies.columns.drop('name')]
 
-rawdata = rawdata.merge(badcompanies, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.merge(visiblecompanies, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 
 examples = []
@@ -290,7 +290,7 @@ examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'badcompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'visiblecompanies']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -322,10 +322,10 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'badcompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'visiblecompanies']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-26.csv", index=False)
+examples.to_csv("superdataset-27.csv", index=False)
 
 print('Done')
