@@ -261,10 +261,10 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 """
 
-goodcompanies = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompanies (allmun).csv")
-goodcompanies = goodcompanies[goodcompanies.columns.drop('name')]
+badcompanies = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/badcompanies (allmun).csv")
+badcompanies = badcompanies[badcompanies.columns.drop('name')]
 
-rawdata = rawdata.merge(goodcompanies, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.merge(badcompanies, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 
 
@@ -286,7 +286,7 @@ examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'badcompanies']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -318,10 +318,10 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompanies']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'badcompanies']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-25.csv", index=False)
+examples.to_csv("superdataset-26.csv", index=False)
 
 print('Done')
