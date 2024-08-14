@@ -230,7 +230,13 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = normbyinf(rawdata, thisrubfeatures)
+#rawdata = normbyinf(rawdata, thisrubfeatures)
+
+x = [1] * len(rawdata['popsize'])
+y = list(rawdata['popsize'])
+
+plt.plot(x, y, 'o', mfc='none', color='black')
+plt.show()
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
@@ -266,8 +272,6 @@ badcompanies = badcompanies[badcompanies.columns.drop('name')]
 
 rawdata = rawdata.merge(badcompanies, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
-
-
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
