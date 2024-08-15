@@ -298,6 +298,19 @@ examples = pd.DataFrame(examples, columns=features)
 
 examples = remove_outliers(examples)
 
+# анализ признаков
+avg = examples.mean()
+minmin = examples.min()
+maxmax = examples.max()
+
+avg = pd.DataFrame(avg, columns=['avg'])
+minmin = pd.DataFrame(minmin, columns=['min'])
+maxmax = pd.DataFrame(maxmax, columns=['max'])
+avg = avg.join(minmin)
+avg = avg.join(maxmax)
+
+avg.to_excel('FeatureaAalysis.xlsx')
+
 examples = np.array(examples)
 
 # нормализация от 0 до 1
