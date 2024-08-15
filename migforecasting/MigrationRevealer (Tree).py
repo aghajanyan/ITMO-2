@@ -19,7 +19,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 
-'''Наименьшие квадраты для одной переменной'''
+#Наименьшие квадраты для одной переменной
 def MLS(x, y):
     x = np.array(x).astype(float)
     y = np.array(y).astype(float)
@@ -44,9 +44,6 @@ maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 23444   # value-driven (42, big cities only)
 #maxsaldo = 845      # value-driven 43
 
-
-
-#"superdataset/training ready/superdataset-13.csv"
 # Получение данных
 rawdata = pd.read_csv("superdataset/training ready/superdataset-28.csv")
 
@@ -73,7 +70,8 @@ errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
 a, b = MLS(testout, predtest)
 
-# вывод результатов
+# ВЫВОД РЕЗУЛЬТАТОВ
+# графики отклонения реального значения от прогнозируемого
 scale = np.linspace(trainout.min() * maxsaldo, trainout.max() * maxsaldo, 100)
 plt.scatter(testout * maxsaldo, predtest * maxsaldo, c='purple', alpha=.3, label='Testing set')
 plt.plot(scale, scale, c='green', label='Ideal')
@@ -94,46 +92,17 @@ plt.ylabel("Миграционное сальдо")
 plt.title("Прогноз на тестовой выборке")
 plt.show()
 
-
 #Корреляционная матрица Пирсона
 cor = rawdata.corr()
 sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
 
-
-"""
-features = ['popsize', 'avgemployers', 'unemployed', 'avgsalary', 'livarea',
-            'beforeschool', 'docsperpop', 'bedsperpop', 'cliniccap',
-            'invests', 'funds', 'companies', 'factoriescap',
-            'conscap', 'consnewareas', 'consnewapt', 'retailturnover',
-            'foodservturnover']
-    
-            
-features = ['Числ. насл.', 'Ср. кол-во. раб.', 'Безраб.', 'Ср. з/п', 'Площ. на чел.',
-            'Дошкол.', 'Врачей на чел.', 'Коек на чел.', 'Мощ. клиник',
-            'Инвест.', 'Фонды', 'Предприятия', 'Мощ. промыш.',
-            'Объемы строит.', 'Постр. жил. площ.', 'Постр. кварт.', 'Оборот розницы',
-            'Оборот общепит.', 'Широта', 'Долгота', 'Доллар']
-
-features = ['f-1', 'f-2', 'f-3', 'f-4', 'f-5', 'f-6', 'f-7', 'f-8', 'f-9',
-            'f-10', 'f-11', 'f-12', 'f-13', 'f-14', 'f-15', 'f-16', 'f-17',
-            'f-18', 'f-19', 'f-20', 'f-21']
-
-features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
-
-features = ['foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
-            'library', 'cultureorg', 'musartschool']
-"""
-features = ['popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'visiblecompanies']
+# Значимость по критерию Джинни (сортировка, получение название признаков из датафрейма)
+rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 important = model.feature_importances_
 
-forplot = pd.DataFrame(data=important, index=features)
-
+forplot = pd.DataFrame(data=important, index=rawdata.columns)
 forplot = forplot.sort_values(by=[0])
 
 plt.barh(forplot.index, forplot[0])
