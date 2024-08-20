@@ -147,7 +147,7 @@ def onlycities(data):
 def delnegorpos(data):
     # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
-        if row['saldo'] < 0:
+        if row['saldo'] > 0:
             data = data.drop(index)
 
     # убрать отрицательный знак
@@ -173,7 +173,7 @@ def nannumber(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'goodcompincome']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -243,7 +243,7 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
-#rawdata = delnegorpos(rawdata)
+rawdata = delnegorpos(rawdata)
 
 """
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -267,11 +267,11 @@ rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 """
 
-goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
-goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
+#goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
+#goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
 
-rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
-rawdata = rawdata.dropna()
+#rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.dropna()
 
 rawdata = normbyinf(rawdata, thisrubfeatures)
 
@@ -292,7 +292,7 @@ examples = np.delete(examples, 0, 1)  # удаляем октмо
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompincome']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -309,7 +309,7 @@ maxmax = pd.DataFrame(maxmax, columns=['max'])
 avg = avg.join(minmin)
 avg = avg.join(maxmax)
 
-avg.to_excel('FeatureaAalysis.xlsx')
+avg.to_excel('FeatureAalysis.xlsx')
 
 examples = np.array(examples)
 
