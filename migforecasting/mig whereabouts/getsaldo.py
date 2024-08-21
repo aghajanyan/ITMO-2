@@ -19,14 +19,15 @@ for i in range(len(inflow)):
     tmp.append(inflow[i, 0])
     tmp.append(inflow[i, 1])
     tmp.append(inflow[i, 2])
-    tmp.append(inflow[i, 3] - inflow[i, 4])
+    tmp.append(inflow[i, 4])
+    tmp.append(inflow[i, 3] - inflow[i, 5])
     saldo.append(np.array(tmp))
     tmp.clear()
 
-titles = ['oktmo', 'name', 'year', 'saldo']
+titles = ['oktmo', 'name', 'year', 'whereabouts', 'saldo']
 
 saldo = pd.DataFrame(saldo, columns=titles)
 
-saldo.to_csv("saldo 2008 (allmun).csv", index=False)
+saldo.to_csv("saldo LO for AK.csv", index=False)
 
 print('ok')
