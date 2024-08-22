@@ -11,24 +11,35 @@ saldo = saldo.dropna()
 
 saldo = np.array(saldo)
 
-prepdata = []
-total = 0
-inreg = 0
-outreg = 0
-out = 0
+inregmas = []
+outregmas = []
+outmas = []
 for i in range(len(saldo)):
     if saldo[i, 3] == 'Межрегиональная':
-        outreg += saldo[i, 4]
-        total += saldo[i, 4]
+        outregmas.append(saldo[i])
     if saldo[i, 3] == 'Внутрирегиональная':
-        inreg += saldo[i, 4]
-        total += saldo[i, 4]
+        inregmas.append(saldo[i])
     if saldo[i, 3] == 'Международная':
-        out += saldo[i, 4]
-        total += saldo[i, 4]
+        outmas.append(saldo[i])
 
-inregavg = inreg / total
-outreg = outreg / total
-out = out / total
+titles = ['oktmo', 'name', 'year', 'whereabouts', 'saldo']
+outregmas = pd.DataFrame(outregmas, columns=titles)
+inregmas = pd.DataFrame(inregmas, columns=titles)
+outmas = pd.DataFrame(outmas, columns=titles)
+
+outregmas = outregmas.sort_values(by=['oktmo', 'year'])
+
+
+inregavg = 0
+outregavg = 0
+outavg = 0
+
+total = outregmas['saldo'].sum() + inregmas['saldo'].sum() + outmas['saldo'].sum()
+inregavg = inregmas['saldo'].sum() / total
+outregavg = outregmas['saldo'].sum() / total
+outavg = outmas['saldo'].sum() / total
+
 
 print('ok')
+
+features = ['oktmo', 'name', 'regional', 'national', 'international']
