@@ -16,11 +16,11 @@ inregmas = []
 outregmas = []
 outmas = []
 for i in range(len(saldo)):
-    if saldo[i, 3] == 'Межрегиональная':
+    if saldo[i, 3] == 'Межрегиональная' and saldo[i, 2] > 2019:
         outregmas.append(saldo[i])
-    if saldo[i, 3] == 'Внутрирегиональная':
+    if saldo[i, 3] == 'Внутрирегиональная' and saldo[i, 2] > 2019:
         inregmas.append(saldo[i])
-    if saldo[i, 3] == 'Международная':
+    if saldo[i, 3] == 'Международная' and saldo[i, 2] > 2019:
         outmas.append(saldo[i])
 
 titles = ['oktmo', 'name', 'year', 'whereabouts', 'saldo']
@@ -85,6 +85,6 @@ for i in range(len(outregmas) - 1):
         outavg = 0
         total = 0
 
-final.to_csv('migprop (avgalltime).csv', index=False)
+final.to_csv('migprop (avg 3years).csv', index=False)
 
 print('ok')
