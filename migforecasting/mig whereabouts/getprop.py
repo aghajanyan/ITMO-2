@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # получение исходных данных
-saldo = pd.read_csv("saldo LO for AK.csv")
+saldo = pd.read_csv("saldo employable LO.csv")
 
-#saldo['saldo'] = saldo['saldo'].abs()
+saldo['saldo'] = saldo['saldo'].abs()
 saldo = saldo.dropna()
 saldo = np.array(saldo)
 
@@ -29,11 +29,11 @@ inregmas = []
 outregmas = []
 outmas = []
 for i in range(len(saldo)):
-    if saldo[i, 3] == 'Межрегиональная' and saldo[i, 2] > 2019:
+    if saldo[i, 3] == 'Межрегиональная': #and saldo[i, 2] > 2019:
         outregmas.append(saldo[i])
-    if saldo[i, 3] == 'Внутрирегиональная' and saldo[i, 2] > 2019:
+    if saldo[i, 3] == 'Внутрирегиональная': #and saldo[i, 2] > 2019:
         inregmas.append(saldo[i])
-    if saldo[i, 3] == 'Международная' and saldo[i, 2] > 2019:
+    if saldo[i, 3] == 'Международная': #and saldo[i, 2] > 2019:
         outmas.append(saldo[i])
 
 titles = ['oktmo', 'name', 'year', 'whereabouts', 'saldo']
@@ -50,6 +50,28 @@ total = outregmas['saldo'].sum() + inregmas['saldo'].sum() + outmas['saldo'].sum
 inregavg = inregmas['saldo'].sum() / total
 outregavg = outregmas['saldo'].sum() / total
 outavg = outmas['saldo'].sum() / total
+
+"""
+# средняя для Ленобласти для трудоспособных (вычислить от общего числа всей миграции)
+total = pd.read_csv("total saldo.csv")
+total['total saldo'] = total['total saldo'].abs()
+total = total[total.columns.drop('whereabouts')]
+total = total[total.columns.drop('name')]
+
+avgdistemp = outregmas.merge(total, on=['oktmo', 'year'], how='left')
+avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
+avgdistemp = avgdistemp.merge(inregmas, on=['oktmo', 'year'], how='left')
+avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
+avgdistemp = avgdistemp.merge(outmas, on=['oktmo', 'year'], how='left')
+avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
+
+avgdistemp = avgdistemp.dropna()
+
+total = avgdistemp['total saldo'].sum()
+inregavg = avgdistemp['saldo_y'].sum() / total
+outregavg = avgdistemp['saldo_x'].sum() / total
+outavg = avgdistemp['saldo'].sum() / total
+"""
 
 # формирование файла с долями направления миграции по всем поселениям (+ ленобласть)
 titles = ['oktmo', 'name', 'regional', 'national', 'international']
@@ -98,6 +120,6 @@ for i in range(len(outregmas) - 1):
         outavg = 0
         total = 0
 
-final.to_csv('migprop (avg 3years).csv', index=False)
+final.to_csv('migprop employable (avg alltime).csv', index=False)
 
 print('ok')
