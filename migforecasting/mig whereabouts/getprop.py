@@ -7,9 +7,22 @@ import pandas as pd
 # получение исходных данных
 saldo = pd.read_csv("saldo LO for AK.csv")
 
-saldo['saldo'] = saldo['saldo'].abs()
+#saldo['saldo'] = saldo['saldo'].abs()
 saldo = saldo.dropna()
 saldo = np.array(saldo)
+
+#total
+"""
+tot = []
+for i in range(len(saldo)):
+    if saldo[i, 3] == 'Миграция, всего':
+        tot.append(saldo[i])
+
+tot = np.array(tot)
+titles = ['oktmo', 'name', 'year', 'whereabouts', 'total saldo']
+tot = pd.DataFrame(tot, columns=titles)
+tot.to_csv('total saldo.csv', index=False)
+"""
 
 # разбивка на отдельные массивы согласно трём направлениям
 inregmas = []
