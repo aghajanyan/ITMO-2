@@ -11,19 +11,6 @@ saldo['saldo'] = saldo['saldo'].abs()
 saldo = saldo.dropna()
 saldo = np.array(saldo)
 
-#total
-"""
-tot = []
-for i in range(len(saldo)):
-    if saldo[i, 3] == 'Миграция, всего':
-        tot.append(saldo[i])
-
-tot = np.array(tot)
-titles = ['oktmo', 'name', 'year', 'whereabouts', 'total saldo']
-tot = pd.DataFrame(tot, columns=titles)
-tot.to_csv('total saldo.csv', index=False)
-"""
-
 # разбивка на отдельные массивы согласно трём направлениям
 inregmas = []
 outregmas = []
@@ -63,7 +50,7 @@ avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
 avgdistemp = avgdistemp.merge(inregmas, on=['oktmo', 'year'], how='left')
 avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
 avgdistemp = avgdistemp.merge(outmas, on=['oktmo', 'year'], how='left')
-avgdistemp = avgdistemp[avgdistemp.columns.drop(['name', 'whereabouts'])]
+avgdistemp = avgdistemp[avgdistemp.columns.drop(['whereabouts'])]
 
 avgdistemp = avgdistemp.dropna()
 
@@ -97,6 +84,7 @@ inregavg = 0
 outregavg = 0
 outavg = 0
 total = 0
+
 # вычисление долей направления для всех поселений
 for i in range(len(outregmas) - 1):
     if outregmas[i, 0] == outregmas[i + 1, 0]:
