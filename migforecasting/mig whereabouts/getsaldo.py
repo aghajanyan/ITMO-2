@@ -4,8 +4,8 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
-inflow = pd.read_csv("inflow employable LO.csv")
-outflow = pd.read_csv("outflow employable LO.csv")
+inflow = pd.read_csv("inflow LO.csv")
+outflow = pd.read_csv("outflow LO.csv")
 
 outflow = outflow[outflow.columns.drop('name')]
 
@@ -28,6 +28,6 @@ titles = ['oktmo', 'name', 'year', 'whereabouts', 'saldo']
 
 saldo = pd.DataFrame(saldo, columns=titles)
 
-saldo.to_csv("saldo employable LO.csv", index=False)
+saldo.to_csv("saldo LO.csv", index=False)
 
 print('ok')
