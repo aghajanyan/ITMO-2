@@ -17,11 +17,14 @@ import seaborn as sns
 #maxsaldoP = 10001    # dataset 20 (also positive flow)
 #maxsaldoN = 2854     # negative flow (dataset 20)
 
-maxsaldoP = 1954      # value-driven 43 (positive flow)
-maxsaldoN = 1148     # value-driven 43 (negative flow)
+#maxsaldoP = 1954      # value-driven 43 (positive flow)
+#maxsaldoN = 1148     # value-driven 43 (negative flow)
 
-positive = pd.read_csv("superdataset-43 (positive flow).csv")
-negative = pd.read_csv("superdataset-43 (negative flow).csv")
+maxsaldoP = 854     # dataset 24-2 (positive flow)
+maxsaldoN = 1046    # dataset 24-2 (negative flow)
+
+positive = pd.read_csv("superdataset-24-2 (positive flow).csv")
+negative = pd.read_csv("superdataset-24-2 (negative flow).csv")
 
 # перетасовка
 negative = negative.sample(frac=1)

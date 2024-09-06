@@ -147,7 +147,7 @@ def onlycities(data):
 def delnegorpos(data):
     # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
-        if row['saldo'] > 0:
+        if row['saldo'] < 0:
             data = data.drop(index)
 
     # убрать отрицательный знак
@@ -232,6 +232,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 #rawdata = normbyinf(rawdata, thisrubfeatures)
 
+# визуальный анализ распределения конкретного признака
 x = [1] * len(rawdata['popsize'])
 y = list(rawdata['popsize'])
 
@@ -243,7 +244,7 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 
-rawdata = delnegorpos(rawdata)
+#rawdata = delnegorpos(rawdata)
 
 """
 rawdata = rawdata[rawdata.columns.drop('popsize')]
@@ -266,12 +267,13 @@ musartschool = musartschool[musartschool.columns.drop('name')]
 rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 """
+"""
+goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
+goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
 
-#goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
-#goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
-
-#rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
-#rawdata = rawdata.dropna()
+rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.dropna()
+"""
 
 rawdata = normbyinf(rawdata, thisrubfeatures)
 
@@ -298,6 +300,7 @@ examples = pd.DataFrame(examples, columns=features)
 
 examples = remove_outliers(examples)
 
+"""
 # анализ признаков
 avg = examples.mean()
 minmin = examples.min()
@@ -308,8 +311,10 @@ minmin = pd.DataFrame(minmin, columns=['min'])
 maxmax = pd.DataFrame(maxmax, columns=['max'])
 avg = avg.join(minmin)
 avg = avg.join(maxmax)
-
 avg.to_excel('FeatureAalysis.xlsx')
+"""
+
+examples = delnegorpos(examples)
 
 examples = np.array(examples)
 
@@ -337,10 +342,10 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'goodcompincome']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-28.csv", index=False)
+examples.to_csv("superdataset-24-2 (positive flow).csv", index=False)
 
 print('Done')

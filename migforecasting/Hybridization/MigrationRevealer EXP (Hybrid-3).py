@@ -19,14 +19,17 @@ from sklearn.model_selection import train_test_split
 #maxsaldoP = 1775     # dataset 23 (positive flow)
 #maxsaldoN = 888     # dataset 23 (negative flow)
 
-maxsaldoP = 1879     # dataset 24 (positive flow)
-maxsaldoN = 888     # dataset 24 (negative flow)
+#maxsaldoP = 1879     # dataset 24 (positive flow)
+#maxsaldoN = 888     # dataset 24 (negative flow)
+
+maxsaldoP = 854     # dataset 24-2 (positive flow)
+maxsaldoN = 1046    # dataset 24-2 (negative flow)
 
 #maxsaldoP = 1954      # value-driven 43 (positive flow)
 #maxsaldoN = 1148     # value-driven 43 (negative flow)
 
-positive = pd.read_csv("superdataset-24 (positive flow).csv")
-negative = pd.read_csv("superdataset-24 (negative flow).csv")
+positive = pd.read_csv("superdataset-24-2 (positive flow).csv")
+negative = pd.read_csv("superdataset-24-2 (negative flow).csv")
 
 #negative = negative[negative.columns.drop('consnewareas')]
 #positive = positive[positive.columns.drop('consnewareas')]
@@ -138,8 +141,8 @@ for k in range(n):
         else:
             testout4[i] = testout4[i] * maxsaldoN
 
-    hybriderror = mean_squared_error((testout4 / maxsaldoP), (hybridpred / maxsaldoP))
-    #hybriderror = mean_absolute_error(testout4, hybridpred)
+    #hybriderror = mean_squared_error((testout4 / maxsaldoP), (hybridpred / maxsaldoP))
+    hybriderror = mean_absolute_error(testout4, hybridpred)
 
     #оценка точности на тренировочной выборке
     prednegativetrain = model1.predict(trainin3)
@@ -164,8 +167,8 @@ for k in range(n):
         else:
             trainout4[i] = trainout4[i] * maxsaldoN
 
-    hybriderrortrain = mean_squared_error((trainout4 / maxsaldoP), (hybridpredtrain / maxsaldoP))
-    #hybriderrortrain = mean_absolute_error(trainout4, hybridpredtrain)
+    #hybriderrortrain = mean_squared_error((trainout4 / maxsaldoP), (hybridpredtrain / maxsaldoP))
+    hybriderrortrain = mean_absolute_error(trainout4, hybridpredtrain)
 
     # запись ошибки
     hybridtest.append(hybriderror)
