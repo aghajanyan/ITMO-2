@@ -144,14 +144,18 @@ def onlycities(data):
                 data = data.drop(index)
 
 
-def delnegorpos(data):
+def delnegorpos(data, sign):
     # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
-        if row['saldo'] < 0:
-            data = data.drop(index)
+        if sign == 0:
+            if row['saldo'] < 0:
+                data = data.drop(index)
+        else:
+            if row['saldo'] > 0:
+                data = data.drop(index)
 
     # убрать отрицательный знак
-    data['saldo'] = data['saldo'].abs()
+    #data['saldo'] = data['saldo'].abs()
 
     return data
 
@@ -314,9 +318,19 @@ avg = avg.join(maxmax)
 avg.to_excel('FeatureAalysis.xlsx')
 """
 
-examples = delnegorpos(examples)
+# создание сбалансированной выборки (одинаковое количество положительные и отрицательных примеров)
+examples = examples.sample(frac=1)
+examplespos = delnegorpos(examples, 0)     # 0 - убриает отрицательные, 1 - положительные
+examplesneg = delnegorpos(examples, 1)     # 0 - убриает отрицательные, 1 - положительные
 
-examples = np.array(examples)
+examplesneg = np.array(examplesneg)
+examplespos = np.array(examplespos)
+balanced = []
+for i in range(len(examplespos)):
+    balanced.append(examplesneg[i])
+    balanced.append(examplespos[i])
+
+examples = np.array(balanced)
 
 # нормализация от 0 до 1
 examples = normbymax(examples)
@@ -346,6 +360,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24-2 (positive flow).csv", index=False)
+examples.to_csv("superdataset-24 balanced.csv", index=False)
 
 print('Done')
