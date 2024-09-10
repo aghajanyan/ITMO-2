@@ -31,6 +31,21 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
+# Разбиение прогноза по вероятным направлениям мигрирования
+def migprop(model, data, maxsaldo):
+    proprates = pd.read_csv("mig whereabouts/migprop (avgalltime).csv")
+    pred = model.predict(data)
+    pred = pred * maxsaldo
+
+    pred = pred.reshape(-1, 1)
+    prop = [['regional', 'national', 'international']]
+    for i in range(len(pred)):
+        prop.append([pred[i] * proprates.iloc[0, 2],
+                     pred[i] * proprates.iloc[0, 3],
+                     pred[i] * proprates.iloc[0, 4]])
+
+    return prop
+
 #maxsaldo = 26466
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
@@ -45,7 +60,7 @@ maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 845      # value-driven 43
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-28.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 balanced.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 
@@ -69,6 +84,8 @@ predtest = model.predict(testin)
 errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
 a, b = MLS(testout, predtest)
+
+migprop(model, testin, maxsaldo)
 
 # ВЫВОД РЕЗУЛЬТАТОВ
 # графики отклонения реального значения от прогнозируемого
@@ -110,3 +127,4 @@ plt.show()
 
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
+
