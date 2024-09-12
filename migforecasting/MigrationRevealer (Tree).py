@@ -50,7 +50,8 @@ def migprop(model, data, maxsaldo):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-maxsaldo = 1080      # dataset 25, 28
+maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 1277     # dataset 26
 #maxsaldo = 951     # dataset 27
 #maxsaldo = 2854     # negative flow (dataset 20)
