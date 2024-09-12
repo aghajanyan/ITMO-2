@@ -183,6 +183,11 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
+inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
+inflow = inflow[inflow .columns.drop('name')]
+rawdata = rawdata.merge(inflow, on=['oktmo', 'year'], how='left')
+rawdata = rawdata[rawdata.columns.drop('saldo')]
+
 dataset = []
 """
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
@@ -234,14 +239,21 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
+cols = ['oktmo', 'name', 'year', 'inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+        'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
+rawdata = rawdata[cols]
+
+
 #rawdata = normbyinf(rawdata, thisrubfeatures)
 
 # визуальный анализ распределения конкретного признака
-x = [1] * len(rawdata['popsize'])
-y = list(rawdata['popsize'])
+#x = [1] * len(rawdata['popsize'])
+#y = list(rawdata['popsize'])
 
-plt.plot(x, y, 'o', mfc='none', color='black')
-plt.show()
+#plt.plot(x, y, 'o', mfc='none', color='black')
+#plt.show()
 
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
@@ -296,7 +308,7 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -318,6 +330,7 @@ avg = avg.join(maxmax)
 avg.to_excel('FeatureAalysis.xlsx')
 """
 
+"""
 # создание сбалансированной выборки (одинаковое количество положительные и отрицательных примеров)
 examples = examples.sample(frac=1)
 examplespos = delnegorpos(examples, 0)     # 0 - убриает отрицательные, 1 - положительные
@@ -331,7 +344,8 @@ for i in range(len(examplespos)):
     balanced.append(examplespos[i])
 
 examples = np.array(balanced)
-
+"""
+examples = np.array(examples)
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
@@ -354,12 +368,12 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 balanced.csv", index=False)
+examples.to_csv("superdataset-24 inflow.csv", index=False)
 
 print('Done')
