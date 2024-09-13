@@ -11,9 +11,9 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24 balanced.csv")
+rawdata = pd.read_csv("datasets/superdataset-24 inflow.csv")
 
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
 #rawdata = rawdata[rawdata.columns.drop('museums')]
 
@@ -26,7 +26,7 @@ resulttrain = []
 #maxsaldo = 848     # dataset 23
 #maxsaldo = 1775     # dataset 23 (positive flow)
 #maxsaldo = 888     # dataset 23 (negative flow)
-maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 1879     # dataset 24 (positive flow)
 #maxsaldo = 888     # dataset 24 (negative flow)
 #maxsaldo = 854     # dataset 24-2 (positive flow)
@@ -41,14 +41,17 @@ maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 1954      # value-driven 43 (positive flow)
 #maxsaldo = 10624      # value-driven 44
 
+maxsaldo = 3933     # dataset 24 inflow
+#maxsaldo = 4087     # dataset 24 outflow
+
 signif = []
 n = 50
 for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
-    datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
-    datasetout = np.array(rawdata[['saldo']])
+    datasetin = np.array(rawdata[rawdata.columns.drop('inflow')])
+    datasetout = np.array(rawdata[['inflow']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
@@ -59,10 +62,10 @@ for k in range(n):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout, predtrain) #* maxsaldo
+    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout, predtest) #* maxsaldo
+    errortest = mean_absolute_error(testout, predtest) * maxsaldo
 
     # запись ошибки
     resulttrain.append(errortrain)

@@ -60,18 +60,20 @@ def migprop(model, data, maxsaldo):
 #maxsaldo = 23444   # value-driven (42, big cities only)
 #maxsaldo = 845      # value-driven 43
 
-maxsaldo = 3933     # dataset 24 inflow
+#maxsaldo = 3933     # dataset 24 inflow
+maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 inflow.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 outflow.csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
-datasetin = np.array(rawdata[rawdata.columns.drop('inflow')])
-datasetout = np.array(rawdata[['inflow']])
+datasetin = np.array(rawdata[rawdata.columns.drop('outflow')])
+datasetout = np.array(rawdata[['outflow']])
 
 # разбиение на обучающую и тестовую выборку
 trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
@@ -118,7 +120,7 @@ sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
 
 # Значимость по критерию Джинни (сортировка, получение название признаков из датафрейма)
-rawdata = rawdata[rawdata.columns.drop('inflow')]
+rawdata = rawdata[rawdata.columns.drop('outflow')]
 
 important = model.feature_importances_
 
