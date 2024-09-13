@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-data = pd.read_csv("inflow (allmun).csv")
+data = pd.read_csv("outflow (allmun).csv")
 
 data = data.sort_values(by=['oktmo', 'year'])
 corrset = []
@@ -22,13 +22,13 @@ while i < data.shape[0]:
                 corrset.pop()
     i+=1
 
-titles = ['oktmo', 'name', 'year', 'inflow']
+titles = ['oktmo', 'name', 'year', 'outflow']
 
 corrset = pd.DataFrame(corrset, columns=titles)
 
 corrset = corrset.drop_duplicates()
 
-corrset.to_csv("inflow (allmun).csv", index=False)
+corrset.to_csv("outflow (allmun).csv", index=False)
 
 
 print('whats up')

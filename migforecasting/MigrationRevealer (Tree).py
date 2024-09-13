@@ -50,7 +50,7 @@ def migprop(model, data, maxsaldo):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 1277     # dataset 26
 #maxsaldo = 951     # dataset 27
@@ -60,16 +60,18 @@ maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 23444   # value-driven (42, big cities only)
 #maxsaldo = 845      # value-driven 43
 
-# Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 balanced.csv")
+maxsaldo = 3933     # dataset 24 inflow
 
-#rawdata = rawdata[rawdata.columns.drop('consnewareas')]
+# Получение данных
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 inflow.csv")
+
+rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
-datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
-datasetout = np.array(rawdata[['saldo']])
+datasetin = np.array(rawdata[rawdata.columns.drop('inflow')])
+datasetout = np.array(rawdata[['inflow']])
 
 # разбиение на обучающую и тестовую выборку
 trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
@@ -116,7 +118,7 @@ sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
 
 # Значимость по критерию Джинни (сортировка, получение название признаков из датафрейма)
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+rawdata = rawdata[rawdata.columns.drop('inflow')]
 
 important = model.feature_importances_
 
