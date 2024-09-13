@@ -183,9 +183,9 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
-inflow = inflow[inflow .columns.drop('name')]
-rawdata = rawdata.merge(inflow, on=['oktmo', 'year'], how='left')
+outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
+outflow = outflow[outflow.columns.drop('name')]
+rawdata = rawdata.merge(outflow, on=['oktmo', 'year'], how='left')
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 dataset = []
@@ -239,7 +239,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-cols = ['oktmo', 'name', 'year', 'inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+cols = ['oktmo', 'name', 'year', 'outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
         'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -308,7 +308,7 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -368,12 +368,12 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['inflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 inflow.csv", index=False)
+examples.to_csv("superdataset-24 outflow.csv", index=False)
 
 print('Done')
