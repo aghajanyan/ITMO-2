@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24 inflow.csv")
+rawdata = pd.read_csv("datasets/superdataset-24 outflow.csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
@@ -41,8 +41,8 @@ resulttrain = []
 #maxsaldo = 1954      # value-driven 43 (positive flow)
 #maxsaldo = 10624      # value-driven 44
 
-maxsaldo = 3933     # dataset 24 inflow
-#maxsaldo = 4087     # dataset 24 outflow
+#maxsaldo = 3933     # dataset 24 inflow
+maxsaldo = 4087     # dataset 24 outflow
 
 signif = []
 n = 50
@@ -50,8 +50,8 @@ for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
-    datasetin = np.array(rawdata[rawdata.columns.drop('inflow')])
-    datasetout = np.array(rawdata[['inflow']])
+    datasetin = np.array(rawdata[rawdata.columns.drop('outflow')])
+    datasetout = np.array(rawdata[['outflow']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
