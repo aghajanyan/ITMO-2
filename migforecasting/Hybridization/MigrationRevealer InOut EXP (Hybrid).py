@@ -17,6 +17,8 @@ maxsaldoOut = 4087
 # Получение данных
 rawdata = pd.read_csv("superdataset-24 InOut.csv")
 
+rawdata = rawdata[rawdata.columns.drop('popsize')]
+
 resulttest = []
 resulttrain = []
 
