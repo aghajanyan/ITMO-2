@@ -12,7 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 maxsaldoIn = 3933
-maxsaldoOut = 3087
+maxsaldoOut = 4087
 
 # Получение данных
 rawdata = pd.read_csv("superdataset-24 InOut.csv")
@@ -34,18 +34,26 @@ model1 = RandomForestRegressor(n_estimators=100, random_state=0)
 model1.fit(trainin, trainout1.ravel())
 predinflow = model1.predict(trainin)
 
+model1error = mean_absolute_error(trainout1, predinflow) * maxsaldoIn
+print('Обуч. приток: ', model1error)
+
 # модель 2
 model2 = RandomForestRegressor(n_estimators=100, random_state=0)
 model2.fit(trainin, trainout2.ravel())
 predoutflow = model2.predict(trainin)
 
-errortrain = mean_absolute_error((trainout1 - trainout2), ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+model2error = mean_absolute_error(trainout2, predoutflow) * maxsaldoOut
+print('Обуч. отток: ', model2error)
 
-print(errortrain)
+errortrain = mean_absolute_error(((trainout1 * maxsaldoIn) - (trainout2 * maxsaldoOut)),
+                                 ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+
+print('Обучение сальдо: ', errortrain)
 
 predinflow = model1.predict(testin)
 predoutflow = model2.predict(testin)
 
-errortest = mean_absolute_error((testout1 - testout2), ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
-print(errortest)
+errortest = mean_absolute_error(((testout1 * maxsaldoIn) - (testout2 * maxsaldoOut)),
+                                ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+print('Тест сальдо: ', errortest)
 
