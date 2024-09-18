@@ -46,16 +46,20 @@ for k in range(n):
     model2.fit(trainin, trainout2.ravel())
     predoutflow = model2.predict(trainin)
 
-    errortrain = mean_absolute_error(((trainout1 * maxsaldoIn) - (trainout2 * maxsaldoOut)),
-                                     ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+    #errortrain = mean_absolute_error(((trainout1 * maxsaldoIn) - (trainout2 * maxsaldoOut)),
+                                     #((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+
+    errortrain = mean_squared_error((trainout1 - trainout2), (predinflow - predoutflow))
 
     resulttrain.append(errortrain)
 
     predinflow = model1.predict(testin)
     predoutflow = model2.predict(testin)
 
-    errortest = mean_absolute_error(((testout1 * maxsaldoIn) - (testout2 * maxsaldoOut)),
-                                    ((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+    #errortest = mean_absolute_error(((testout1 * maxsaldoIn) - (testout2 * maxsaldoOut)),
+                                    #((predinflow * maxsaldoIn) - (predoutflow * maxsaldoOut)))
+
+    errortest = mean_squared_error((testout1 - testout2), (predinflow - predoutflow))
 
     resulttest.append(errortest)
 
