@@ -185,10 +185,10 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 
-interreg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo interreg (allmun).csv")
-interreg = interreg[interreg.columns.drop('name')]
+migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
+migtype = migtype[migtype.columns.drop('name')]
 
-rawdata = rawdata.merge(interreg, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
 
 #outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
 #inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
@@ -387,6 +387,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 interreg.csv", index=False)
+examples.to_csv("superdataset-24 reg.csv", index=False)
 
 print('Done')
