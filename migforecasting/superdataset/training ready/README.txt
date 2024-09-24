@@ -50,6 +50,8 @@ superdataset-24 interreg.csv - 7434 examples, отличается от дата
 
 superdataset-24 reg.csv - 7459 examples, отличается от датасета 24 тем, что вместо общего сальдо используется сальдо внутрирегиональной миграции (maxsaldo 512)
 
+superdataset-24 internat.csv - 6255 examples, отличается от датасета 24 тем, что вместо общего сальдо используется сальдо внутрирегиональной миграции (maxsaldo 295)
+
 superdataset-25.csv - 4667 examples, отличается от датасета 24 тем, что добавлен признак goodcompanies
 
 superdataset-26.csv - 2866 examples, отличается от датасета 24 тем, что добавлен признак badcompanies
