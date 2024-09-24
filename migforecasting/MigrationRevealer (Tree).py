@@ -64,7 +64,7 @@ def migprop(model, data, maxsaldo):
 maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 outflow.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 balanced.csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('beforeschool')]

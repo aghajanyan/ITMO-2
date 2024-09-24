@@ -4,18 +4,18 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
-n = 2007
+n = 2010
 examples = []
-for k in range(15):
+for k in range(12):
     n+=1
-    data = pd.read_csv("outflow/outflow "+str(n)+" (allmun).csv")
+    data = pd.read_csv("internat/saldo/saldo internat "+str(n)+" (allmun).csv")
     for i in range(data.shape[0]):
         examples.append(data.iloc[i])
 
 examples = np.array(examples)
-titles = ['oktmo', 'name', 'year', 'outflow']
+titles = ['oktmo', 'name', 'year', 'saldo']
 examples = pd.DataFrame(examples, columns=titles)
-examples.to_csv("outflow (allmun).csv", index=False)
+examples.to_csv("saldo internat (allmun).csv", index=False)
 
 """
     #удаление NAN значений из выборки

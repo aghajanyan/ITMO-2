@@ -183,15 +183,22 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
-inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
-
-outflow = outflow[outflow.columns.drop('name')]
-inflow = inflow[inflow.columns.drop('name')]
-
-rawdata = rawdata.merge(outflow, on=['oktmo', 'year'], how='left')
-rawdata = rawdata.merge(inflow, on=['oktmo', 'year'], how='left')
 rawdata = rawdata[rawdata.columns.drop('saldo')]
+
+interreg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo interreg (allmun).csv")
+interreg = interreg[interreg.columns.drop('name')]
+
+rawdata = rawdata.merge(interreg, on=['oktmo', 'year'], how='left')
+
+#outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
+#inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
+
+#outflow = outflow[outflow.columns.drop('name')]
+#inflow = inflow[inflow.columns.drop('name')]
+
+#rawdata = rawdata.merge(outflow, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(inflow, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 dataset = []
 """
@@ -244,7 +251,7 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-cols = ['oktmo', 'name', 'year', 'inflow', 'outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
         'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -304,8 +311,8 @@ examples = []
 for i in range(len(rawdata) - 1):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
         if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:  # прогноз только на год вперед
-            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow
-            rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow
+            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo
+            #rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow
             examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -314,7 +321,7 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['inflow', 'outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -374,12 +381,12 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['inflow', 'outflow', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
             'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 inandout.csv", index=False)
+examples.to_csv("superdataset-24 interreg.csv", index=False)
 
 print('Done')
