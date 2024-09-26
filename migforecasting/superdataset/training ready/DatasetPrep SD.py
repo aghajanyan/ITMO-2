@@ -185,7 +185,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 rawdata = rawdata[rawdata.columns.drop('saldo')]
 
-migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
+migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
 migtype = migtype[migtype.columns.drop('name')]
 
 rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
@@ -342,7 +342,6 @@ avg = avg.join(minmin)
 avg = avg.join(maxmax)
 avg.to_excel('FeatureAalysis.xlsx')
 """
-
 """
 # создание сбалансированной выборки (одинаковое количество положительные и отрицательных примеров)
 examples = examples.sample(frac=1)
@@ -358,6 +357,7 @@ for i in range(len(examplespos)):
 
 examples = np.array(balanced)
 """
+
 examples = np.array(examples)
 # нормализация от 0 до 1
 examples = normbymax(examples)
@@ -387,6 +387,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 internat.csv", index=False)
+examples.to_csv("superdataset-24 reg balanced.csv", index=False)
 
 print('Done')

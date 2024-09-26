@@ -51,9 +51,9 @@ def migprop(model, data, maxsaldo):
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
 #maxsaldo = 854     # dataset 24 (also balanced)
-#maxsaldo = 347      # dataset 24 interreg
-#maxsaldo = 512     # dataset 24 reg
-maxsaldo = 295     # dataset 24 internat
+maxsaldo = 347      # dataset 24 interreg (also balanced)
+#maxsaldo = 512     # dataset 24 reg (also balanced)
+#maxsaldo = 295     # dataset 24 internat
 #maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 1277     # dataset 26
 #maxsaldo = 951     # dataset 27
@@ -67,7 +67,7 @@ maxsaldo = 295     # dataset 24 internat
 #maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 internat.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 interreg balanced.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
