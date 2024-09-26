@@ -54,6 +54,8 @@ superdataset-24 internat.csv - 6255 examples, отличается от дата
 
 superdataset-24 internat balanced.csv - 3700 examples, отличается от датасета 24 internat тем, что использ. одинаковое количество примеров с отриц. и полож. сальдо (maxsaldo 294)
 
+superdataset-24 interreg balanced.csv - 3216 examples, отличается от датасета 24 interreg тем, что использ. одинаковое количество примеров с отриц. и полож. сальдо (maxsaldo 347)
+
 superdataset-25.csv - 4667 examples, отличается от датасета 24 тем, что добавлен признак goodcompanies
 
 superdataset-26.csv - 2866 examples, отличается от датасета 24 тем, что добавлен признак badcompanies
