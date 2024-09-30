@@ -6,10 +6,12 @@ import pandas as pd
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from sklearn.decomposition import PCA
 
 
 data = pd.read_csv("superdataset-24 2022-clust.csv")
 
+"""
 error = []
 tmper = []
 N = range(2, 11)    # количество кластеров
@@ -35,5 +37,30 @@ plt.plot(N, error)
 plt.xlabel("Number of clusters")
 plt.ylabel("Error")
 plt.show()
+"""
 
-print(error)
+k = 3
+data = data.sample(frac=1)  # перетасовка
+clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
+clust_model.fit(data)
+
+data['clust'] = clust_model.labels_
+
+# трансформация в 2D методом компонент
+pca = PCA(2)
+pca2 = pca.fit_transform(data)
+
+data['x'] = pca2[:, 0]
+data['y'] = pca2[:, 1]
+
+clusts = []
+for i in range(k):
+    clusts.append(data[data['clust'] == i])
+
+for i in range(k):
+    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster "+str(i)+"")
+
+plt.title("Разбиение данных на "+str(k)+" кластера")
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.show()
