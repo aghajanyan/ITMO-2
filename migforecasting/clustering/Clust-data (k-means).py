@@ -9,18 +9,23 @@ from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 
 
-def analyzer(clusts, N):
+def analyzer(clusts):
     med = []
-    minmin = []
-    maxmax = []
     negprop = []
     for i in range(len(clusts)):
         med.append(clusts[i]['saldo'].median() * maxsaldo)
-        minmin.append(clusts[i]['saldo'].min() * maxsaldo)
-        maxmax.append(clusts[i]['saldo'].max() * maxsaldo)
-        negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
+        plt.bar(i, med[i], width=0.3, label="Cluster " + str(i) + "")
 
-    plt.bar(N, negprop, width=0.3)
+    plt.title("Медианное значение сальдо в кластере")
+    plt.legend()
+    plt.show()
+
+    for i in range(len(clusts)):
+        negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
+        plt.bar(i, negprop[i], width=0.3, label="Cluster " + str(i) + "")
+
+    plt.title("Доля отрицательного сальдо в кластере")
+    plt.legend()
     plt.show()
 
 
@@ -57,7 +62,6 @@ plt.show()
 """
 
 k = 3
-N = range(2, k + 2)
 
 data = data.sample(frac=1)  # перетасовка
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
@@ -76,7 +80,7 @@ clusts = []
 for i in range(k):
     clusts.append(data[data['clust'] == i])
 
-analyzer(clusts, N)
+analyzer(clusts)
 
 for i in range(k):
     plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
