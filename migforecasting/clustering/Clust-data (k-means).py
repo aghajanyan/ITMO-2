@@ -9,6 +9,23 @@ from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 
 
+def analyzer(clusts, N):
+    med = []
+    minmin = []
+    maxmax = []
+    negprop = []
+    for i in range(len(clusts)):
+        med.append(clusts[i]['saldo'].median() * maxsaldo)
+        minmin.append(clusts[i]['saldo'].min() * maxsaldo)
+        maxmax.append(clusts[i]['saldo'].max() * maxsaldo)
+        negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
+
+    plt.bar(N, negprop, width=0.3)
+    plt.show()
+
+
+maxsaldo = 687  # 24 (2022-clust)
+
 data = pd.read_csv("superdataset-24 2022-clust.csv")
 
 """
@@ -40,6 +57,8 @@ plt.show()
 """
 
 k = 3
+N = range(2, k + 2)
+
 data = data.sample(frac=1)  # перетасовка
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
 clust_model.fit(data)
@@ -57,10 +76,15 @@ clusts = []
 for i in range(k):
     clusts.append(data[data['clust'] == i])
 
-for i in range(k):
-    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster "+str(i)+"")
+analyzer(clusts, N)
 
-plt.title("Разбиение данных на "+str(k)+" кластера")
+for i in range(k):
+    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
+
+plt.legend()
+plt.title("Разбиение данных на " + str(k) + " кластера")
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.show()
+
+print('done')
