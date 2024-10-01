@@ -7,25 +7,28 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
+import seaborn as sns
 
 
-def analyzer(clusts):
-    med = []
-    negprop = []
-    for i in range(len(clusts)):
-        med.append(clusts[i]['saldo'].median() * maxsaldo)
-        plt.bar(i, med[i], width=0.3, label="Cluster " + str(i) + "")
+def analyzer(clusts, data2):
+
+    data2['saldo'] = data2['saldo'] * maxsaldo
+    sns.boxplot(x='clust', y='saldo', data=data2)
 
     plt.title("Медианное значение сальдо в кластере")
-    plt.legend()
+    plt.xlabel('Номер кластера')
+    plt.ylabel('Сальдо')
     plt.show()
 
+    negprop = []
     for i in range(len(clusts)):
         negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
         plt.bar(i, negprop[i], width=0.3, label="Cluster " + str(i) + "")
 
-    plt.title("Доля отрицательного сальдо в кластере")
+    plt.title("Доля поселений с отрицательным сальдо в кластере")
     plt.legend()
+    plt.xlabel('Номер кластера')
+    plt.ylabel('Процент')
     plt.show()
 
 
@@ -61,7 +64,7 @@ plt.ylabel("Error")
 plt.show()
 """
 
-k = 3
+k = 2
 
 data = data.sample(frac=1)  # перетасовка
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
@@ -80,7 +83,7 @@ clusts = []
 for i in range(k):
     clusts.append(data[data['clust'] == i])
 
-analyzer(clusts)
+analyzer(clusts, data)
 
 for i in range(k):
     plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
