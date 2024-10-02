@@ -3,16 +3,25 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.preprocessing import label_binarize, MinMaxScaler
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 import seaborn as sns
+import shap
+
+maxsaldo = 687  # 24 (2022-clust)
+popmax = 102913
+k = 6  # кол-во кластеров
+
+data = pd.read_csv("superdataset-24 2022-clust.csv")
 
 
 # анализ кластеров (медиана, доля отрицательных)
 def analyzer(clusts, data2):
-    data2['saldo'] = data2['saldo'] * maxsaldo
+    # data2['popsize'] = data2['popsize'] * popmax
     sns.boxplot(x='clust', y='saldo', data=data2)
 
     plt.title("Медианное значение сальдо в кластере")
@@ -32,11 +41,21 @@ def analyzer(clusts, data2):
     plt.show()
 
 
-maxsaldo = 687  # 24 (2022-clust) 
+# оценка значимости через классификатор
+def findsignif(data2):
+    y = data2['clust']
+    y = y / (k - 1)     # нормализация
 
-data = pd.read_csv("superdataset-24 2022-clust.csv")
+    data2 = data2[data2.columns.drop('clust')]
 
-k = 4   # кол-во кластеров
+    class_model = RandomForestRegressor(n_estimators=100, random_state=0)
+    class_model.fit(data2, y)
+
+    explainer = shap.TreeExplainer(class_model)
+    shap_values = explainer(data2).values
+
+    shap.summary_plot(shap_values, data2)
+
 
 data = data.sample(frac=1)  # перетасовка
 
@@ -46,6 +65,8 @@ clust_model.fit(data)
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
+
+findsignif(data)
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
