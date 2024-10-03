@@ -12,11 +12,14 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import shap
 
-maxsaldo = 687  # 24 (2022-clust)
-popmax = 102913
-k = 6  # кол-во кластеров
+#maxsaldo = 687  # 24 (2022-clust)
+maxsaldo = 1015  # 24 (alltime-clust)
 
-data = pd.read_csv("superdataset-24 2022-clust.csv")
+#popmax = 102913
+
+k = 7  # кол-во кластеров
+
+data = pd.read_csv("superdataset-VD alltime-clust.csv")
 
 
 # анализ кластеров (медиана, доля отрицательных)

@@ -201,7 +201,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 #rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 dataset = []
-"""
+
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
@@ -227,8 +227,8 @@ rawdata = rawdata[rawdata.columns.drop('roadslen')]
 rawdata = rawdata[rawdata.columns.drop('parks')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
 rawdata = rawdata[rawdata.columns.drop('theatres')]
-"""
 
+"""
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('theatres')]
 rawdata = rawdata[rawdata.columns.drop('museums')]
@@ -244,18 +244,18 @@ rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('servicesnum')]
 rawdata = rawdata[rawdata.columns.drop('funds')]
 rawdata = rawdata[rawdata.columns.drop('factoriescap')]
-
+"""
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-        'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+#cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+       # 'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+      #  'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
-rawdata = rawdata[cols]
+#rawdata = rawdata[cols]
 
 
 #rawdata = normbyinf(rawdata, thisrubfeatures)
@@ -273,14 +273,16 @@ for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
 """
+"""
 # выборка только за определенный год
 for index, row in rawdata.iterrows():
     if row['year'] != 2022:
         rawdata = rawdata.drop(index)
+"""
 
 #rawdata = delnegorpos(rawdata)
 
-"""
+
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 #C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately
@@ -300,7 +302,8 @@ musartschool = musartschool[musartschool.columns.drop('name')]
 
 rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
-"""
+rawdata = rawdata.dropna()
+
 """
 goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
 goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
@@ -309,7 +312,7 @@ rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 """
 
-rawdata = normbyinf(rawdata, thisrubfeatures)
+#rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -327,13 +330,11 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'library', 'cultureorg', 'musartschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples = remove_outliers(examples)
+#examples = remove_outliers(examples)
 
 """
 # анализ признаков
@@ -387,12 +388,10 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'library', 'cultureorg', 'musartschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 2022-clust.csv", index=False)
+examples.to_csv("superdataset-VD alltime-clust.csv", index=False)
 
 print('Done')
