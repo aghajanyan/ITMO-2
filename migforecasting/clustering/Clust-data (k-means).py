@@ -27,6 +27,21 @@ def analyzer(data, clusts):
     minyear = data['year'].min()
     maxyear = data['year'].max()
 
+    data = data.sort_values(by=['oktmo', 'year'])
+    same = 0
+    solid = 0
+    unic_towns = len(pd.unique(data['oktmo']))
+
+    for i in range(len(data) - 1):
+        if data.iloc[i, 0] == data.iloc[i + 1, 0]:
+            if data.iloc[i, 2] != data.iloc[i + 1, 2]:
+                same+=1
+        else:
+            if same == 0:
+                solid+=1
+            else:
+                same = 0
+
     # вычисление кол-во данных за конкретный год в кластере
     cluster_year = []
     tmp = []
