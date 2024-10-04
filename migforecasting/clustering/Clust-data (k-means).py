@@ -19,19 +19,33 @@ maxsaldo = 1015  # 24 (alltime-clust)
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("superdataset-24 alltime-clust.csv")
+data = pd.read_csv("superdataset-24 alltime-clust (oktmo).csv")
 
 
-# анализ кластеров (медиана, доля отрицательных)
-def analyzer(clusts, data2):
-    # data2['popsize'] = data2['popsize'] * popmax
-    sns.boxplot(x='clust', y='saldo', data=data2)
+# анализ кластеров
+def analyzer(data, clusts):
+    minyear = data['year'].min()
+    maxyear = data['year'].max()
 
-    plt.title("Медианное значение сальдо в кластере")
-    plt.xlabel('Номер кластера')
-    plt.ylabel('Сальдо')
-    plt.show()
+    # вычисление кол-во данных за конкретный год в кластере
+    cluster_year = []
+    tmp = []
+    for k in range(len(clusts)):
+        tmp = []
+        for y in range(minyear, maxyear + 1):
+            tmp.append(len(clusts[k][clusts[k]['year'] == y]))
+        cluster_year.append(tmp)
 
+    cluster_year = np.array(cluster_year)
+    cluster_year = pd.DataFrame(cluster_year)
+    cluster_year.to_excel("years in clusters.xlsx")
+
+    data2 = data2.sort_values(by=['oktmo', 'year'])
+    print('ok')
+
+
+# доля поселений с отрицательным сальдо в класетер
+def getnegative(clusts):
     negprop = []
     for i in range(len(clusts)):
         negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
@@ -43,6 +57,15 @@ def analyzer(clusts, data2):
     plt.ylabel('Процент')
     plt.show()
 
+
+# медианное значение сальдо в кластере
+def getmedian(data2):
+    sns.boxplot(x='clust', y='saldo', data=data2)
+
+    plt.title("Медианное значение сальдо в кластере")
+    plt.xlabel('Номер кластера')
+    plt.ylabel('Сальдо')
+    plt.show()
 
 # оценка значимости через классификатор
 def findsignif(data2):
@@ -64,27 +87,33 @@ data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data)
+clust_model.fit(data.iloc[:, 2:])
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
 
-findsignif(data)
+cols = ['oktmo', 'year', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+        'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
-# трансформация в 2D методом компонент
-pca = PCA(2)
-pca2 = pca.fit_transform(data)
-data['x'] = pca2[:, 0]
-data['y'] = pca2[:, 1]
+data = data[cols]
 
 # разделяем кластеры по независимым массивам (массив массивов)
 clusts = []
 for i in range(k):
     clusts.append(data[data['clust'] == i])
 
-# анализ и вывод результатов
+analyzer(data, clusts)
 
-analyzer(clusts, data)
+getnegative(clusts)
+
+#findsignif(data)
+
+# трансформация в 2D методом компонент
+pca = PCA(2)
+pca2 = pca.fit_transform(data)
+data['x'] = pca2[:, 0]
+data['y'] = pca2[:, 1]
 
 for i in range(k):
     plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
