@@ -17,9 +17,9 @@ maxsaldo = 1015  # 24 (alltime-clust)
 
 #popmax = 102913
 
-k = 7  # кол-во кластеров
+k = 6  # кол-во кластеров
 
-data = pd.read_csv("superdataset-VD alltime-clust.csv")
+data = pd.read_csv("superdataset-24 alltime-clust.csv")
 
 
 # анализ кластеров (медиана, доля отрицательных)

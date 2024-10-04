@@ -9,7 +9,7 @@ import copy
 
 def normbymax(trainset):
     tmpp = []
-    for k in range(len(trainset[0])):
+    for k in range(2, len(trainset[0])):
         maxi = trainset[0][k]
         for i in range(len(trainset)):
             if (maxi < trainset[i][k]):
@@ -201,7 +201,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 #rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 dataset = []
-
+"""
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
 rawdata = rawdata[rawdata.columns.drop('foodservturnover')]
 rawdata = rawdata[rawdata.columns.drop('invest')]
@@ -244,18 +244,18 @@ rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('servicesnum')]
 rawdata = rawdata[rawdata.columns.drop('funds')]
 rawdata = rawdata[rawdata.columns.drop('factoriescap')]
-"""
+
 
 # rawdata = rawdata.dropna(thresh=25)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-       # 'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-      #  'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+        'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
-#rawdata = rawdata[cols]
+rawdata = rawdata[cols]
 
 
 #rawdata = normbyinf(rawdata, thisrubfeatures)
@@ -282,7 +282,7 @@ for index, row in rawdata.iterrows():
 
 #rawdata = delnegorpos(rawdata)
 
-
+"""
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 #C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately
@@ -297,14 +297,14 @@ cultureorg = cultureorg[cultureorg.columns.drop('name')]
 
 rawdata = rawdata.merge(cultureorg, on=['oktmo', 'year'], how='left')
 
-musartschool = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/musartschool (allmun).csv")
-musartschool = musartschool[musartschool.columns.drop('name')]
+#musartschool = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/musartschool (allmun).csv")
+#musartschool = musartschool[musartschool.columns.drop('name')]
 
-rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
 
 rawdata = rawdata.dropna()
 
-"""
+
 goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
 goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
 
@@ -312,7 +312,7 @@ rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
 rawdata = rawdata.dropna()
 """
 
-#rawdata = normbyinf(rawdata, thisrubfeatures)
+rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
@@ -326,15 +326,17 @@ for i in range(len(rawdata)):
 
 examples = np.array(examples)
 
-examples = np.delete(examples, 2, 1)  # удаляем год
+#examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
-examples = np.delete(examples, 0, 1)  # удаляем октмо
+#examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'library', 'cultureorg', 'musartschool']
+features = ['oktmo', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+            'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
 
-#examples = remove_outliers(examples)
+examples = remove_outliers(examples)
 
 """
 # анализ признаков
@@ -388,10 +390,13 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'library', 'cultureorg', 'musartschool']
+features = ['oktmo', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+            'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-VD alltime-clust.csv", index=False)
+examples.to_csv("superdataset-24 alltime-clust (oktmo).csv", index=False)
 
 print('Done')
