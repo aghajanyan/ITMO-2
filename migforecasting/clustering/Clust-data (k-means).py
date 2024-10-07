@@ -132,23 +132,31 @@ for i in range(k):
 
 getmedian(data)
 
-#getnegative(clusts)
+getnegative(clusts)
 
 #findsignif(data)
 
+x = [1, 2, 3, 1, 2, 3]
+y = [2, 3, 2, -2, -3, -2]
+
 for i in range(k):
-    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
+    clusts[i]['x'] = x[i]
+    clusts[i]['y'] = y[i]
+    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "", marker='o', s=160)
 
 data = data.sort_values(by=['oktmo', 'year'])
 
+
 count = 0
-for i in range(int(len(data) * 0.3)):
-    if data.iloc[i, 0] == data.iloc[i + 1, 0]:
-        if data.iloc[i, 2] != data.iloc[i + 1, 2]:
-            plt.plot(data.iloc[i:i+2]['x'], data.iloc[i:i+2]['y'], color='grey')
+for i in range(int(len(data) - 1)):
+    if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
+        if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
+            #plt.plot(data.iloc[i:i+2]['x'], data.iloc[i:i+2]['y'], color='grey')
+            plt.plot((x[int(data.iloc[i]['clust'])], x[int(data.iloc[i + 1]['clust'])]),
+                     (y[int(data.iloc[i]['clust'])], y[int(data.iloc[i + 1]['clust'])]), color='grey')
             count+=1
 
-print(count)
+
 plt.legend()
 plt.title("Разбиение данных на " + str(k) + " кластера")
 plt.xlabel('X')
