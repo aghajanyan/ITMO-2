@@ -26,12 +26,12 @@ data = pd.read_csv("superdataset-24 alltime-clust (oktmo).csv")
 def analyzer(data, clusts):
     minyear = data['year'].min()
     maxyear = data['year'].max()
-
     data = data.sort_values(by=['oktmo', 'year'])
     same = 0
     solid = 0
     unic_towns = len(pd.unique(data['oktmo']))
 
+    # вычисление кол-ва поселений, которые не меняют свой кластер за временной промежуток
     for i in range(len(data) - 1):
         if data.iloc[i, 0] == data.iloc[i + 1, 0]:
             if data.iloc[i, 2] != data.iloc[i + 1, 2]:
@@ -55,7 +55,6 @@ def analyzer(data, clusts):
     cluster_year = pd.DataFrame(cluster_year)
     cluster_year.to_excel("years in clusters.xlsx")
 
-    data2 = data2.sort_values(by=['oktmo', 'year'])
     print('ok')
 
 
@@ -81,6 +80,7 @@ def getmedian(data2):
     plt.xlabel('Номер кластера')
     plt.ylabel('Сальдо')
     plt.show()
+
 
 # оценка значимости через классификатор
 def findsignif(data2):
@@ -113,26 +113,42 @@ cols = ['oktmo', 'year', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary
 
 data = data[cols]
 
+data.to_csv("data-cities.csv", index=False)
+
+# трансформация в 2D методом компонент
+pca = PCA(2)
+pca2 = pca.fit_transform(data.iloc[:, 2:])
+data['x'] = pca2[:, 0]
+data['y'] = pca2[:, 1]
+
 # разделяем кластеры по независимым массивам (массив массивов)
 clusts = []
 for i in range(k):
     clusts.append(data[data['clust'] == i])
 
-analyzer(data, clusts)
+# анализ и вывод результатов
 
-getnegative(clusts)
+#analyzer(data, clusts)
+
+getmedian(data)
+
+#getnegative(clusts)
 
 #findsignif(data)
-
-# трансформация в 2D методом компонент
-pca = PCA(2)
-pca2 = pca.fit_transform(data)
-data['x'] = pca2[:, 0]
-data['y'] = pca2[:, 1]
 
 for i in range(k):
     plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
 
+data = data.sort_values(by=['oktmo', 'year'])
+
+count = 0
+for i in range(int(len(data) * 0.3)):
+    if data.iloc[i, 0] == data.iloc[i + 1, 0]:
+        if data.iloc[i, 2] != data.iloc[i + 1, 2]:
+            plt.plot(data.iloc[i:i+2]['x'], data.iloc[i:i+2]['y'], color='grey')
+            count+=1
+
+print(count)
 plt.legend()
 plt.title("Разбиение данных на " + str(k) + " кластера")
 plt.xlabel('X')
