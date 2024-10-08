@@ -113,7 +113,7 @@ cols = ['oktmo', 'year', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary
 
 data = data[cols]
 
-data.to_csv("data-cities.csv", index=False)
+#data.to_csv("data-cities.csv", index=False)
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
@@ -158,6 +158,15 @@ for i in range(int(len(data) - 1)):
 
 relation = dict(sorted(relation.items(), key=lambda item: item[1], reverse=True))
 
+with open('relation.txt', 'w') as f:
+    print(relation, file=f)
+
+for key in relation:
+    cor = key.split('-')
+    plt.plot((x[int(cor[0])], x[int(cor[1])]), (y[int(cor[0])], y[int(cor[1])]),
+             linewidth=(relation[key] * 0.03), color="black")
+
+"""
 count = 0
 for i in range(int(len(data) - 1)):
     if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
@@ -166,7 +175,7 @@ for i in range(int(len(data) - 1)):
             plt.plot((x[int(data.iloc[i]['clust'])], x[int(data.iloc[i + 1]['clust'])]),
                      (y[int(data.iloc[i]['clust'])], y[int(data.iloc[i + 1]['clust'])]), color='grey')
             count+=1
-
+"""
 
 plt.legend()
 plt.title("Разбиение данных на " + str(k) + " кластера")
