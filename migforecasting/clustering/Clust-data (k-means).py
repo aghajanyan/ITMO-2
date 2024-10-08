@@ -130,9 +130,9 @@ for i in range(k):
 
 #analyzer(data, clusts)
 
-getmedian(data)
+#getmedian(data)
 
-getnegative(clusts)
+#getnegative(clusts)
 
 #findsignif(data)
 
@@ -146,6 +146,17 @@ for i in range(k):
 
 data = data.sort_values(by=['oktmo', 'year'])
 
+# вычисление количества пермещений в конкретном направлении между кластерами
+relation = {}
+for i in range(int(len(data) - 1)):
+    if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
+        if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
+            try:
+                relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""]+=1
+            except KeyError:
+                relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""] = 1
+
+relation = dict(sorted(relation.items(), key=lambda item: item[1], reverse=True))
 
 count = 0
 for i in range(int(len(data) - 1)):
