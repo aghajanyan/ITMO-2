@@ -71,6 +71,20 @@ def getnegative(clusts):
     plt.ylabel('Процент')
     plt.show()
 
+    #выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
+    minindex = negprop.index(min(negprop))
+    maxindex = negprop.index(max(negprop))
+
+    bestcities = clusts[minindex]['oktmo'].unique()
+    bestcities = np.sort(bestcities)
+    bestcities = bestcities.reshape(-1, 1)
+
+    worstcities = clusts[maxindex]['oktmo'].unique()
+    worstcities = np.sort(worstcities)
+    worstcities = worstcities.reshape(-1, 1)
+
+    print(bestcities)
+
 
 # медианное значение сальдо в кластере
 def getmedian(data2):
@@ -130,9 +144,9 @@ for i in range(k):
 
 #analyzer(data, clusts)
 
-#getmedian(data)
+getmedian(data)
 
-#getnegative(clusts)
+getnegative(clusts)
 
 #findsignif(data)
 
@@ -157,9 +171,6 @@ for i in range(int(len(data) - 1)):
                 relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""] = 1
 
 relation = dict(sorted(relation.items(), key=lambda item: item[1], reverse=True))
-
-with open('relation.txt', 'w') as f:
-    print(relation, file=f)
 
 for key in relation:
     cor = key.split('-')
