@@ -19,7 +19,7 @@ maxsaldo = 1015  # 24 (alltime-clust)
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("superdataset-24 alltime-clust (oktmo).csv")
+data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 
 
 # анализ кластеров
@@ -33,8 +33,8 @@ def analyzer(data, clusts):
 
     # вычисление кол-ва поселений, которые не меняют свой кластер за временной промежуток
     for i in range(len(data) - 1):
-        if data.iloc[i, 0] == data.iloc[i + 1, 0]:
-            if data.iloc[i, 2] != data.iloc[i + 1, 2]:
+        if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
+            if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
                 same+=1
         else:
             if same == 0:
@@ -75,13 +75,19 @@ def getnegative(clusts):
     minindex = negprop.index(min(negprop))
     maxindex = negprop.index(max(negprop))
 
-    bestcities = clusts[minindex]['oktmo'].unique()
+    bestcities = clusts[minindex]['name'].unique()
     bestcities = np.sort(bestcities)
     bestcities = bestcities.reshape(-1, 1)
 
-    worstcities = clusts[maxindex]['oktmo'].unique()
+    bestcities = pd.DataFrame(bestcities)
+    bestcities.to_csv("bestcities.csv", index=False)
+
+    worstcities = clusts[maxindex]['name'].unique()
     worstcities = np.sort(worstcities)
     worstcities = worstcities.reshape(-1, 1)
+
+    worstcities = pd.DataFrame(worstcities)
+    worstcities.to_csv("worstcities.csv", index=False)
 
     print(bestcities)
 
@@ -116,12 +122,12 @@ data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data.iloc[:, 2:])
+clust_model.fit(data.iloc[:, 3:])
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
 
-cols = ['oktmo', 'year', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
         'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -131,7 +137,7 @@ data = data[cols]
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 2:])
+pca2 = pca.fit_transform(data.iloc[:, 3:])
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
 
