@@ -9,7 +9,7 @@ import copy
 
 def normbymax(trainset):
     tmpp = []
-    for k in range(2, len(trainset[0])):
+    for k in range(3, len(trainset[0])):
         maxi = trainset[0][k]
         for i in range(len(trainset)):
             if (maxi < trainset[i][k]):
@@ -100,8 +100,9 @@ def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
     data = copy.deepcopy(data)
 
     for col in data.columns:
-        data = data[(data[col] < np.quantile(data[col], 0.75) + 4 * sts.iqr(data[col])) &
-                    (data[col] > np.quantile(data[col], 0.25) - 4 * sts.iqr(data[col]))]
+        if col != 'oktmo' and col != 'name' and col != 'year':
+            data = data[(data[col] < np.quantile(data[col], 0.75) + 4 * sts.iqr(data[col])) &
+                        (data[col] > np.quantile(data[col], 0.25) - 4 * sts.iqr(data[col]))]
 
     return data
 
@@ -327,10 +328,10 @@ for i in range(len(rawdata)):
 examples = np.array(examples)
 
 #examples = np.delete(examples, 2, 1)  # удаляем год
-examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
+#examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 #examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['oktmo', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
@@ -390,13 +391,13 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['oktmo', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 alltime-clust (oktmo).csv", index=False)
+examples.to_csv("superdataset-24 alltime-clust (oktmo+name).csv", index=False)
 
 print('Done')
