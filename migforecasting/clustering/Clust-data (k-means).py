@@ -21,6 +21,31 @@ k = 6  # кол-во кластеров
 
 data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 
+best = pd.read_csv("coordinates/coordinates-best.csv")
+worst = pd.read_csv("coordinates/coordinates-worst.csv")
+big = pd.read_csv("coordinates/coordinates-big.csv")
+
+same = pd.merge(best, worst, on=['name'], how='left')
+same = same.dropna()
+
+for index, row in best.iterrows():
+    for i in range(len(same)):
+        if row['name'] == same.iloc[i]['name']:
+            best = best.drop(index)
+
+for index, row in worst.iterrows():
+    for i in range(len(same)):
+        if row['name'] == same.iloc[i]['name']:
+            worst = worst.drop(index)
+
+
+plt.scatter(best['lon'], best['lat'], label="Best", marker='o', color="green")
+plt.scatter(worst['lon'], worst['lat'], label="Worst", marker='o', color="red")
+plt.scatter(big['lon'], big['lat'], label="Big", marker='o', color="black")
+
+plt.legend()
+plt.show()
+
 
 # анализ кластеров
 def analyzer(data, clusts):
