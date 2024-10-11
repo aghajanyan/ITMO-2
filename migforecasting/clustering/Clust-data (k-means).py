@@ -55,20 +55,33 @@ def analyzer(data, clusts):
     minyear = data['year'].min()
     maxyear = data['year'].max()
     data = data.sort_values(by=['oktmo', 'year'])
-    same = 0
+    notsame = 0
     solid = 0
     unic_towns = len(pd.unique(data['oktmo']))
 
     # вычисление кол-ва поселений, которые не меняют свой кластер за временной промежуток
+    # вычисление поселений единажды менявших свой кластер (для анализа факторного изменения)
+    onetimechange = []
+    changeindex = 0
     for i in range(len(data) - 1):
         if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
             if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
-                same += 1
+                notsame += 1
+                if notsame - 1 == 0:
+                    changeindex = i + 1
         else:
-            if same == 0:
+            if notsame == 0:
                 solid += 1
             else:
-                same = 0
+                if notsame == 2 and (data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust']): # перешёл в другой кластер и вернулся обратно
+                    onetimechange.append(data.iloc[changeindex - 1])
+                    onetimechange.append(data.iloc[changeindex])
+                    onetimechange.append(data.iloc[changeindex + 1])
+
+                changeindex = 0
+                notsame = 0
+
+    onetimechange = np.array(onetimechange)
 
     # вычисление кол-во данных за конкретный год в кластере
     cluster_year = []
@@ -116,8 +129,6 @@ def getnegative(clusts):
 
     worstcities = pd.DataFrame(worstcities)
     worstcities.to_csv("worstcities.csv", index=False)
-
-    print(bestcities)
 
 
 # медианное значение сальдо в кластере
@@ -176,11 +187,11 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-# analyzer(data, clusts)
+analyzer(data, clusts)
 
-getmedian(data)
+#getmedian(data)
 
-getnegative(clusts)
+#getnegative(clusts)
 
 # findsignif(data)
 
