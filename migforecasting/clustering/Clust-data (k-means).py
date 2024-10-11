@@ -21,7 +21,6 @@ k = 6  # кол-во кластеров
 
 data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 
-
 # вывод графика с поселениями на карте согласно их реальным координатам
 def townsmap():
     best = pd.read_csv("coordinates/coordinates-best.csv")
@@ -50,6 +49,43 @@ def townsmap():
     plt.show()
 
 
+# анализ движения поселений между кластерами (отслеживание факторного изменения)
+def movementanalyzer(data):
+    notsame = 0
+    onetimechange = []
+    changeindex = 0
+    data = data.sort_values(by=['oktmo', 'year'])
+
+    data = data[data.columns.drop('x')]
+    data = data[data.columns.drop('y')]
+
+    for i in range(len(data) - 1):  # если кластер i и i+1 не совпдатает, тогда notsame +1
+        if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
+            if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
+                notsame += 1
+                if notsame - 1 == 0:
+                    changeindex = i + 1
+        else:
+            # перешёл в другой кластер и вернулся обратно
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust']:
+                onetimechange.append(data.iloc[changeindex - 1])
+                onetimechange.append(data.iloc[changeindex])
+                onetimechange.append(data.iloc[changeindex + 1])
+
+            changeindex = 0
+            notsame = 0
+
+    onetimechange = np.array(onetimechange)
+    vector = []
+    tmp = []
+    # в процессе разработки !!!
+    for i in range(onetimechange.shape[0] - 2):
+        if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
+            vector.append(np.append(onetimechange[i, :4], [0] * 16))
+            for j in range(4, onetimechange.shape[1]):
+                print(onetimechange[i, j])
+
+
 # анализ кластеров
 def analyzer(data, clusts):
     minyear = data['year'].min()
@@ -60,28 +96,15 @@ def analyzer(data, clusts):
     unic_towns = len(pd.unique(data['oktmo']))
 
     # вычисление кол-ва поселений, которые не меняют свой кластер за временной промежуток
-    # вычисление поселений единажды менявших свой кластер (для анализа факторного изменения)
-    onetimechange = []
-    changeindex = 0
     for i in range(len(data) - 1):
         if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
             if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
                 notsame += 1
-                if notsame - 1 == 0:
-                    changeindex = i + 1
         else:
             if notsame == 0:
                 solid += 1
             else:
-                if notsame == 2 and (data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust']): # перешёл в другой кластер и вернулся обратно
-                    onetimechange.append(data.iloc[changeindex - 1])
-                    onetimechange.append(data.iloc[changeindex])
-                    onetimechange.append(data.iloc[changeindex + 1])
-
-                changeindex = 0
                 notsame = 0
-
-    onetimechange = np.array(onetimechange)
 
     # вычисление кол-во данных за конкретный год в кластере
     cluster_year = []
@@ -187,7 +210,9 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-analyzer(data, clusts)
+movementanalyzer(data)
+
+#analyzer(data, clusts)
 
 #getmedian(data)
 
