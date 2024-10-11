@@ -12,39 +12,42 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import shap
 
-#maxsaldo = 687  # 24 (2022-clust)
+# maxsaldo = 687  # 24 (2022-clust)
 maxsaldo = 1015  # 24 (alltime-clust)
 
-#popmax = 102913
+# popmax = 102913
 
 k = 6  # кол-во кластеров
 
 data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 
-best = pd.read_csv("coordinates/coordinates-best.csv")
-worst = pd.read_csv("coordinates/coordinates-worst.csv")
-big = pd.read_csv("coordinates/coordinates-big.csv")
 
-same = pd.merge(best, worst, on=['name'], how='left')
-same = same.dropna()
+# вывод графика с поселениями на карте согласно их реальным координатам
+def townsmap():
+    best = pd.read_csv("coordinates/coordinates-best.csv")
+    worst = pd.read_csv("coordinates/coordinates-worst.csv")
+    big = pd.read_csv("coordinates/coordinates-big.csv")
 
-for index, row in best.iterrows():
-    for i in range(len(same)):
-        if row['name'] == same.iloc[i]['name']:
-            best = best.drop(index)
+    same = pd.merge(best, worst, on=['name'], how='left')
+    same = same.dropna()
 
-for index, row in worst.iterrows():
-    for i in range(len(same)):
-        if row['name'] == same.iloc[i]['name']:
-            worst = worst.drop(index)
+    for index, row in best.iterrows():
+        for i in range(len(same)):
+            if row['name'] == same.iloc[i]['name']:
+                best = best.drop(index)
 
+    for index, row in worst.iterrows():
+        for i in range(len(same)):
+            if row['name'] == same.iloc[i]['name']:
+                worst = worst.drop(index)
 
-plt.scatter(best['lon'], best['lat'], label="Best", marker='o', color="green")
-plt.scatter(worst['lon'], worst['lat'], label="Worst", marker='o', color="red")
-plt.scatter(big['lon'], big['lat'], label="Big", marker='o', color="black")
+    plt.scatter(best['lon'], best['lat'], label="Best", marker='o', color="green")
+    plt.scatter(worst['lon'], worst['lat'], label="Worst", marker='o', color="red")
+    plt.scatter(big['lon'], big['lat'], label="Big", marker='o', color="black")
+    #plt.scatter(same['lon_y'], same['lat_y'], label="Uncertain", marker='o', color="orange")
 
-plt.legend()
-plt.show()
+    plt.legend()
+    plt.show()
 
 
 # анализ кластеров
@@ -60,10 +63,10 @@ def analyzer(data, clusts):
     for i in range(len(data) - 1):
         if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
             if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
-                same+=1
+                same += 1
         else:
             if same == 0:
-                solid+=1
+                solid += 1
             else:
                 same = 0
 
@@ -96,7 +99,7 @@ def getnegative(clusts):
     plt.ylabel('Процент')
     plt.show()
 
-    #выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
+    # выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
     minindex = negprop.index(min(negprop))
     maxindex = negprop.index(max(negprop))
 
@@ -130,7 +133,7 @@ def getmedian(data2):
 # оценка значимости через классификатор
 def findsignif(data2):
     y = data2['clust']
-    y = y / (k - 1)     # нормализация
+    y = y / (k - 1)  # нормализация
 
     data2 = data2[data2.columns.drop('clust')]
 
@@ -158,7 +161,7 @@ cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'a
 
 data = data[cols]
 
-#data.to_csv("data-cities.csv", index=False)
+# data.to_csv("data-cities.csv", index=False)
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
@@ -173,13 +176,13 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-#analyzer(data, clusts)
+# analyzer(data, clusts)
 
 getmedian(data)
 
 getnegative(clusts)
 
-#findsignif(data)
+# findsignif(data)
 
 x = [1, 2, 3, 1, 2, 3]
 y = [2, 3, 2, -2, -3, -2]
@@ -197,7 +200,7 @@ for i in range(int(len(data) - 1)):
     if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
         if data.iloc[i]['clust'] != data.iloc[i + 1]['clust']:
             try:
-                relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""]+=1
+                relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""] += 1
             except KeyError:
                 relation["" + str(int(data.iloc[i]['clust'])) + "-" + str(int(data.iloc[i + 1]['clust'])) + ""] = 1
 
