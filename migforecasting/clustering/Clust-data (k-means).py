@@ -81,6 +81,7 @@ def movementanalyzer(data):
     # векторное представление примеров на основе изменения факторов к предыдущему году
     for i in range(onetimechange.shape[0] - 2):
         if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
+            vector.append([''] * 20)
             vector.append(np.append(onetimechange[i, :4], [0] * 16))
             for k in range(2):
                 for j in range(4, onetimechange.shape[1]):
@@ -96,6 +97,7 @@ def movementanalyzer(data):
 
     vector = np.array(vector)
     vector = pd.DataFrame(vector, columns=data.columns)
+    vector.to_excel("vector of movement.xlsx", index=False)
 
 
 # анализ кластеров
