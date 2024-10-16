@@ -21,6 +21,7 @@ k = 6  # кол-во кластеров
 
 data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 
+
 # вывод графика с поселениями на карте согласно их реальным координатам
 def townsmap():
     best = pd.read_csv("coordinates/coordinates-best.csv")
@@ -47,6 +48,54 @@ def townsmap():
 
     plt.legend()
     plt.show()
+
+
+# векторное представление примеров на основе изменения факторов к предыдущему году
+def vectorforprev(onetimechange):
+    vector = []
+    tmp = []
+    for i in range(onetimechange.shape[0] - 2):
+        if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
+            vector.append([''] * 20)
+            vector.append(np.append(onetimechange[i, :4], [0] * 16))
+            for k in range(2):
+                for j in range(4, onetimechange.shape[1]):
+                    if onetimechange[i + k, j] == onetimechange[i + k + 1, j]:
+                        tmp.append(0)
+                    else:
+                        if onetimechange[i + k, j] < onetimechange[i + k + 1, j]:
+                            tmp.append(1)
+                        else:
+                            tmp.append(-1)
+                vector.append(np.append(onetimechange[i + k + 1, :4], tmp))
+                tmp = []
+
+    return vector
+
+
+# векторное представление примеров на основе изменения факторов от переходного года
+def vectorforcenter(onetimechange):
+    vector = []
+    tmp = []
+    for i in range(onetimechange.shape[0] - 2):
+        if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
+            vector.append([''] * 20)
+            for k in range(3):
+                if k == 1:
+                    vector.append(np.append(onetimechange[i + 1, :4], [0] * 16))
+                else:
+                    for j in range(4, onetimechange.shape[1]):
+                        if onetimechange[i + 1, j] == onetimechange[i + k, j]:
+                            tmp.append(0)
+                        else:
+                            if onetimechange[i + 1, j] < onetimechange[i + k, j]:
+                                tmp.append(1)
+                            else:
+                                tmp.append(-1)
+                    vector.append(np.append(onetimechange[i + k, :4], tmp))
+                    tmp = []
+
+    return vector
 
 
 # анализ движения поселений между кластерами (отслеживание факторного изменения)
@@ -76,28 +125,12 @@ def movementanalyzer(data):
             notsame = 0
 
     onetimechange = np.array(onetimechange)
-    vector = []
-    tmp = []
-    # векторное представление примеров на основе изменения факторов к предыдущему году
-    for i in range(onetimechange.shape[0] - 2):
-        if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
-            vector.append([''] * 20)
-            vector.append(np.append(onetimechange[i, :4], [0] * 16))
-            for k in range(2):
-                for j in range(4, onetimechange.shape[1]):
-                    if onetimechange[i + k, j] == onetimechange[i + k + 1, j]:
-                        tmp.append(0)
-                    else:
-                        if onetimechange[i + k, j] < onetimechange[i + k + 1, j]:
-                            tmp.append(1)
-                        else:
-                            tmp.append(-1)
-                vector.append(np.append(onetimechange[i + k + 1, :4], tmp))
-                tmp = []
+
+    vector = vectorforcenter(onetimechange)
 
     vector = np.array(vector)
     vector = pd.DataFrame(vector, columns=data.columns)
-    vector.to_excel("vector of movement.xlsx", index=False)
+    vector.to_excel("vector of movement-2.xlsx", index=False)
 
 
 # анализ кластеров
