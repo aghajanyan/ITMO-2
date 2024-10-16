@@ -99,7 +99,7 @@ def vectorforcenter(onetimechange):
 
 
 # анализ движения поселений между кластерами (отслеживание факторного изменения)
-def movementanalyzer(data):
+def movementanalyzer(data, clusts):
     notsame = 0
     onetimechange = []
     changeindex = 0
@@ -107,6 +107,8 @@ def movementanalyzer(data):
 
     data = data[data.columns.drop('x')]
     data = data[data.columns.drop('y')]
+
+    minindex = getnegative(clusts)
 
     for i in range(len(data) - 1):  # если кластер i и i+1 не совпдатает, тогда notsame +1
         if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
@@ -116,7 +118,7 @@ def movementanalyzer(data):
                     changeindex = i + 1
         else:
             # перешёл в другой кластер и вернулся обратно
-            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust']:
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex + 1]['clust'] == minindex:
                 onetimechange.append(data.iloc[changeindex - 1])
                 onetimechange.append(data.iloc[changeindex])
                 onetimechange.append(data.iloc[changeindex + 1])
@@ -169,8 +171,18 @@ def analyzer(data, clusts):
     print('ok')
 
 
-# доля поселений с отрицательным сальдо в класетер
+# получение номера кластера с наименьшим количеством отрицательных сальдо
 def getnegative(clusts):
+    negprop = []
+    for i in range(len(clusts)):
+        negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
+        plt.bar(i, negprop[i], width=0.3, label="Cluster " + str(i) + "")
+
+    return negprop.index(min(negprop))
+
+
+# доля поселений с отрицательным сальдо в класетер
+def negativeanalyzer(clusts):
     negprop = []
     for i in range(len(clusts)):
         negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
@@ -257,11 +269,11 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-movementanalyzer(data)
+getmedian(data)
+
+movementanalyzer(data, clusts)
 
 #analyzer(data, clusts)
-
-#getmedian(data)
 
 #getnegative(clusts)
 
