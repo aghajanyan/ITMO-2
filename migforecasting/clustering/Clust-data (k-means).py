@@ -118,7 +118,7 @@ def movementanalyzer(data, clusts):
                     changeindex = i + 1
         else:
             # перешёл в другой кластер и вернулся обратно
-            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex + 1]['clust'] == minindex:
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex]['clust'] == minindex:
                 onetimechange.append(data.iloc[changeindex - 1])
                 onetimechange.append(data.iloc[changeindex])
                 onetimechange.append(data.iloc[changeindex + 1])
@@ -132,7 +132,7 @@ def movementanalyzer(data, clusts):
 
     vector = np.array(vector)
     vector = pd.DataFrame(vector, columns=data.columns)
-    vector.to_excel("vector of movement-2.xlsx", index=False)
+    vector.to_excel("vector of movement-3.xlsx", index=False)
 
 
 # анализ кластеров
