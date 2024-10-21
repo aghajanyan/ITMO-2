@@ -98,6 +98,29 @@ def vectorforcenter(onetimechange):
     return vector
 
 
+# векторное представление примеров на основе изменения факторов от переходного года (процентная доля изменения)
+def vectorforcenterprop(onetimechange):
+    vector = []
+    tmp = []
+    for i in range(onetimechange.shape[0] - 2):
+        if onetimechange[i, 0] == onetimechange[i + 1, 0] == onetimechange[i + 2, 0]:
+            vector.append([''] * 20)
+            for k in range(3):
+                if k == 1:
+                    vector.append(np.append(onetimechange[i + 1, :4], [0] * 16))
+                else:
+                    for j in range(4, onetimechange.shape[1]):
+                        if onetimechange[i + 1, j] == onetimechange[i + k, j]:
+                            tmp.append(0)
+                        else:
+                            tmp.append(float(onetimechange[i + k, j] / onetimechange[i + 1, j]))
+
+                    vector.append(np.append(onetimechange[i + k, :4], tmp))
+                    tmp = []
+
+    return vector
+
+
 # анализ движения поселений между кластерами (отслеживание факторного изменения)
 def movementanalyzer(data, clusts):
     notsame = 0
@@ -118,7 +141,7 @@ def movementanalyzer(data, clusts):
                     changeindex = i + 1
         else:
             # перешёл в другой кластер и вернулся обратно
-            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex]['clust'] == minindex:
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex - 1]['clust'] == minindex:
                 onetimechange.append(data.iloc[changeindex - 1])
                 onetimechange.append(data.iloc[changeindex])
                 onetimechange.append(data.iloc[changeindex + 1])
@@ -128,11 +151,11 @@ def movementanalyzer(data, clusts):
 
     onetimechange = np.array(onetimechange)
 
-    vector = vectorforcenter(onetimechange)
+    vector = vectorforcenterprop(onetimechange)
 
     vector = np.array(vector)
     vector = pd.DataFrame(vector, columns=data.columns)
-    vector.to_excel("vector of movement-3.xlsx", index=False)
+    vector.to_excel("vector of movement-4.xlsx", index=False)
 
 
 # анализ кластеров
