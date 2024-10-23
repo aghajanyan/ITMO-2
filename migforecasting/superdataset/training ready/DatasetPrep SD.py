@@ -19,6 +19,15 @@ def normbymax(trainset):
 
         for j in range(len(trainset)):
             trainset[j][k] = trainset[j][k] / maxi
+
+    features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
+                'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod',
+                'hospitals', 'beforeschool']
+
+    tmpp = np.array(tmpp)
+    tmpp = pd.DataFrame([tmpp], columns=features)
+    tmpp.to_csv("fornorm.csv", index=False)
+
     return trainset
 
 
