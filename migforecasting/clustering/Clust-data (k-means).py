@@ -113,7 +113,7 @@ def vectorforcenterprop(onetimechange):
                         if onetimechange[i + 1, j] == onetimechange[i + k, j]:
                             tmp.append(0)
                         else:
-                            tmp.append(float(onetimechange[i + k, j] / onetimechange[i + 1, j]))
+                            tmp.append(float(onetimechange[i + k, j] / onetimechange[i + 1, j]) - 1)
 
                     vector.append(np.append(onetimechange[i + k, :4], tmp))
                     tmp = []
@@ -141,7 +141,7 @@ def movementanalyzer(data, clusts):
                     changeindex = i + 1
         else:
             # перешёл в другой кластер и вернулся обратно
-            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex - 1]['clust'] == minindex:
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex]['clust'] == minindex:
                 onetimechange.append(data.iloc[changeindex - 1])
                 onetimechange.append(data.iloc[changeindex])
                 onetimechange.append(data.iloc[changeindex + 1])
@@ -158,7 +158,34 @@ def movementanalyzer(data, clusts):
     vector.to_excel("vector of movement-4.xlsx", index=False)
 
 
-# анализ кластеров
+# анализ факторов в кластере (медиана, макс, мин)
+def clustsfeatures(clusts):
+    norm = pd.read_csv("fornorm.csv")
+
+    final = []
+    tmp = []
+    for k in range(len(clusts)):
+        tmp.append(k)
+        for col in clusts[k]:
+            try:
+                tmp.append(clusts[k][col].median() * norm.iloc[0][col])
+            except KeyError:
+                pass
+            except TypeError:
+                pass
+
+        final.append(tmp)
+        final.append([''] * 17)
+        tmp = []
+
+    final = np.array(final)
+    features = list(norm.columns)
+    features.insert(0, 'clust')
+    final = pd.DataFrame(final, columns=features)
+    final.to_excel("median of clusters.xlsx", index=False)
+
+
+# анализ кластеров по временному периоду
 def analyzer(data, clusts):
     minyear = data['year'].min()
     maxyear = data['year'].max()
@@ -294,7 +321,9 @@ for i in range(k):
 
 getmedian(data)
 
-movementanalyzer(data, clusts)
+clustsfeatures(clusts)
+
+#movementanalyzer(data, clusts)
 
 #analyzer(data, clusts)
 
