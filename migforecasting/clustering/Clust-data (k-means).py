@@ -178,11 +178,39 @@ def clustsfeatures(clusts):
         final.append([''] * 17)
         tmp = []
 
+    for k in range(len(clusts)):
+        tmp.append(k)
+        for col in clusts[k]:
+            try:
+                tmp.append(clusts[k][col].max() * norm.iloc[0][col])
+            except KeyError:
+                pass
+            except TypeError:
+                pass
+
+        final.append(tmp)
+        final.append([''] * 17)
+        tmp = []
+
+    for k in range(len(clusts)):
+        tmp.append(k)
+        for col in clusts[k]:
+            try:
+                tmp.append(clusts[k][col].min() * norm.iloc[0][col])
+            except KeyError:
+                pass
+            except TypeError:
+                pass
+
+        final.append(tmp)
+        final.append([''] * 17)
+        tmp = []
+
     final = np.array(final)
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters.xlsx", index=False)
+    final.to_excel("median of clusters-1.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
