@@ -12,15 +12,6 @@ from sklearn.decomposition import PCA
 import seaborn as sns
 import shap
 
-# maxsaldo = 687  # 24 (2022-clust)
-maxsaldo = 1015  # 24 (alltime-clust)
-
-# popmax = 102913
-
-k = 6  # кол-во кластеров
-
-data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
-
 
 # вывод графика с поселениями на карте согласно их реальным координатам
 def townsmap():
@@ -159,8 +150,17 @@ def movementanalyzer(data, clusts):
 
 
 # анализ факторов в кластере (медиана, макс, мин)
-def clustsfeatures(clusts):
+def clustsfeatures(clusts, centroids):
     norm = pd.read_csv("fornorm.csv")
+
+    for i in range(centroids.shape[0]):
+        for j in range(centroids.shape[1]):
+            centroids[i, j] = centroids[i, j] * norm.iloc[0, j + 1]
+
+    centroids = np.array(centroids)
+    features = list(norm.columns)
+    centroids = pd.DataFrame(centroids, columns=features[1:])
+    centroids.to_excel("centroids.xlsx", index=False)
 
     final = []
     tmp = []
@@ -210,7 +210,7 @@ def clustsfeatures(clusts):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters-1.xlsx", index=False)
+    final.to_excel("median of clusters-2.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -271,7 +271,7 @@ def negativeanalyzer(clusts):
     plt.xlabel('Номер кластера')
     plt.ylabel('Процент')
     plt.show()
-
+    """
     # выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
     minindex = negprop.index(min(negprop))
     maxindex = negprop.index(max(negprop))
@@ -289,6 +289,7 @@ def negativeanalyzer(clusts):
 
     worstcities = pd.DataFrame(worstcities)
     worstcities.to_csv("worstcities.csv", index=False)
+    """
 
 
 # медианное значение сальдо в кластере
@@ -317,11 +318,24 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
+# maxsaldo = 687  # 24 (2022-clust)
+maxsaldo = 1015  # 24 (alltime-clust)
+
+# popmax = 102913
+
+k = 6  # кол-во кластеров
+
+data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
+
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data.iloc[:, 3:])
+clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+
+print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
+
+centroids = clust_model.cluster_centers_
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
@@ -336,7 +350,7 @@ data = data[cols]
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 3:])
+pca2 = pca.fit_transform(data.iloc[:, 4:])  # 4 - без сальдо
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
 
@@ -349,7 +363,9 @@ for i in range(k):
 
 getmedian(data)
 
-clustsfeatures(clusts)
+negativeanalyzer(clusts)
+
+clustsfeatures(clusts, centroids)
 
 #movementanalyzer(data, clusts)
 
@@ -357,10 +373,18 @@ clustsfeatures(clusts)
 
 #getnegative(clusts)
 
-# findsignif(data)
+#findsignif(data)
 
 x = [1, 2, 3, 1, 2, 3]
 y = [2, 3, 2, -2, -3, -2]
+
+for i in range(k):
+    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster "+str(i)+"")
+
+plt.title("Разбиение данных на "+str(k)+" кластера")
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.show()
 
 for i in range(k):
     clusts[i]['x'] = x[i]
@@ -369,7 +393,7 @@ for i in range(k):
 
 data = data.sort_values(by=['oktmo', 'year'])
 
-# вычисление количества пермещений в конкретном направлении между кластерами
+# вычисление количества перемещений в конкретном направлении между кластерами
 relation = {}
 for i in range(int(len(data) - 1)):
     if data.iloc[i]['oktmo'] == data.iloc[i + 1]['oktmo']:
