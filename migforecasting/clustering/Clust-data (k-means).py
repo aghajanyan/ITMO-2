@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import label_binarize, MinMaxScaler
 
 from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 import seaborn as sns
@@ -175,9 +176,9 @@ def clustsfeatures(clusts, centroids):
                 pass
 
         final.append(tmp)
-        final.append([''] * 17)
         tmp = []
 
+    final.append([''] * 17)
     for k in range(len(clusts)):
         tmp.append(k)
         for col in clusts[k]:
@@ -189,9 +190,9 @@ def clustsfeatures(clusts, centroids):
                 pass
 
         final.append(tmp)
-        final.append([''] * 17)
         tmp = []
 
+    final.append([''] * 17)
     for k in range(len(clusts)):
         tmp.append(k)
         for col in clusts[k]:
@@ -203,14 +204,13 @@ def clustsfeatures(clusts, centroids):
                 pass
 
         final.append(tmp)
-        final.append([''] * 17)
         tmp = []
 
     final = np.array(final)
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters-2.xlsx", index=False)
+    final.to_excel("median of clusters-3.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -318,11 +318,6 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-# maxsaldo = 687  # 24 (2022-clust)
-maxsaldo = 1015  # 24 (alltime-clust)
-
-# popmax = 102913
-
 k = 6  # кол-во кластеров
 
 data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
@@ -330,12 +325,15 @@ data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
-clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+#clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
+#clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+
+clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
+clust_model.fit_predict(data.iloc[:, 4:])
 
 print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
 
-centroids = clust_model.cluster_centers_
+#centroids = clust_model.cluster_centers_
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
@@ -365,7 +363,7 @@ getmedian(data)
 
 negativeanalyzer(clusts)
 
-clustsfeatures(clusts, centroids)
+#clustsfeatures(clusts, centroids)
 
 #movementanalyzer(data, clusts)
 
