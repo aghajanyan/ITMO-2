@@ -36,7 +36,7 @@ def townsmap():
     plt.scatter(best['lon'], best['lat'], label="Best", marker='o', color="green")
     plt.scatter(worst['lon'], worst['lat'], label="Worst", marker='o', color="red")
     plt.scatter(big['lon'], big['lat'], label="Big", marker='o', color="black")
-    #plt.scatter(same['lon_y'], same['lat_y'], label="Uncertain", marker='o', color="orange")
+    # plt.scatter(same['lon_y'], same['lat_y'], label="Uncertain", marker='o', color="orange")
 
     plt.legend()
     plt.show()
@@ -133,7 +133,8 @@ def movementanalyzer(data, clusts):
                     changeindex = i + 1
         else:
             # перешёл в другой кластер и вернулся обратно
-            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and data.iloc[changeindex]['clust'] == minindex:
+            if notsame == 2 and data.iloc[changeindex - 1]['clust'] == data.iloc[changeindex + 1]['clust'] and \
+                    data.iloc[changeindex]['clust'] == minindex:
                 onetimechange.append(data.iloc[changeindex - 1])
                 onetimechange.append(data.iloc[changeindex])
                 onetimechange.append(data.iloc[changeindex + 1])
@@ -148,6 +149,21 @@ def movementanalyzer(data, clusts):
     vector = np.array(vector)
     vector = pd.DataFrame(vector, columns=data.columns)
     vector.to_excel("vector of movement-4.xlsx", index=False)
+
+
+# сохранить данные по всем кластерам в эксель файле (без нормализации)
+def saveallclusters(clusts):
+    norm = pd.read_csv("fornorm.csv")
+
+    writer = pd.ExcelWriter("Clusters.xlsx")
+    for k in range(2):
+        for col in norm:
+            clusts[k][col] = clusts[k][col] * norm.iloc[0][col]
+
+        clusts[k] = clusts[k].sort_values(by=['oktmo', 'year'])
+        clusts[k].to_excel(writer, sheet_name="Cluster " + str(k) + "", index=False)
+
+    writer.close()
 
 
 # анализ факторов в кластере (медиана, макс, мин)
@@ -325,15 +341,15 @@ data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
-#clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-#clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+# clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
+# clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
 
 clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
 clust_model.fit_predict(data.iloc[:, 4:])
 
 print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
 
-#centroids = clust_model.cluster_centers_
+# centroids = clust_model.cluster_centers_
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
@@ -359,27 +375,31 @@ for i in range(k):
 
 # анализ и вывод результатов
 
+saveallclusters(clusts)
+
 getmedian(data)
 
 negativeanalyzer(clusts)
 
-#clustsfeatures(clusts, centroids)
+clustsfeatures(clusts, centroids)
 
-#movementanalyzer(data, clusts)
+saveallclusters(clusts)
 
-#analyzer(data, clusts)
+# movementanalyzer(data, clusts)
 
-#getnegative(clusts)
+# analyzer(data, clusts)
 
-#findsignif(data)
+# getnegative(clusts)
+
+# findsignif(data)
 
 x = [1, 2, 3, 1, 2, 3]
 y = [2, 3, 2, -2, -3, -2]
 
 for i in range(k):
-    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster "+str(i)+"")
+    plt.scatter(clusts[i]['x'], clusts[i]['y'], label="Cluster " + str(i) + "")
 
-plt.title("Разбиение данных на "+str(k)+" кластера")
+plt.title("Разбиение данных на " + str(k) + " кластера")
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.show()
