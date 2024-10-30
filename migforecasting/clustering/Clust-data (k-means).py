@@ -156,7 +156,7 @@ def saveallclusters(clusts):
     norm = pd.read_csv("fornorm.csv")
 
     writer = pd.ExcelWriter("Clusters.xlsx")
-    for k in range(2):
+    for k in range(len(clusts)):
         for col in norm:
             clusts[k][col] = clusts[k][col] * norm.iloc[0][col]
 
@@ -183,13 +183,8 @@ def clustsfeatures(clusts, centroids):
     tmp = []
     for k in range(len(clusts)):
         tmp.append(k)
-        for col in clusts[k]:
-            try:
-                tmp.append(clusts[k][col].median() * norm.iloc[0][col])
-            except KeyError:
-                pass
-            except TypeError:
-                pass
+        for col in norm:
+            tmp.append(clusts[k][col].median() * norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
@@ -197,13 +192,8 @@ def clustsfeatures(clusts, centroids):
     final.append([''] * 17)
     for k in range(len(clusts)):
         tmp.append(k)
-        for col in clusts[k]:
-            try:
-                tmp.append(clusts[k][col].max() * norm.iloc[0][col])
-            except KeyError:
-                pass
-            except TypeError:
-                pass
+        for col in norm:
+            tmp.append(clusts[k][col].max() * norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
@@ -211,13 +201,8 @@ def clustsfeatures(clusts, centroids):
     final.append([''] * 17)
     for k in range(len(clusts)):
         tmp.append(k)
-        for col in clusts[k]:
-            try:
-                tmp.append(clusts[k][col].min() * norm.iloc[0][col])
-            except KeyError:
-                pass
-            except TypeError:
-                pass
+        for col in norm:
+            tmp.append(clusts[k][col].min() * norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
@@ -341,15 +326,15 @@ data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
-# clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-# clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
+clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
 
-clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
-clust_model.fit_predict(data.iloc[:, 4:])
+#clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
+#clust_model.fit_predict(data.iloc[:, 4:])
 
 print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
 
-# centroids = clust_model.cluster_centers_
+centroids = clust_model.cluster_centers_
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
@@ -375,7 +360,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-saveallclusters(clusts)
+#saveallclusters(clusts)
 
 getmedian(data)
 
@@ -383,7 +368,7 @@ negativeanalyzer(clusts)
 
 clustsfeatures(clusts, centroids)
 
-saveallclusters(clusts)
+#saveallclusters(clusts)
 
 # movementanalyzer(data, clusts)
 
