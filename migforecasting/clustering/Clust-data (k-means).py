@@ -153,7 +153,7 @@ def movementanalyzer(data, clusts):
 
 # сохранить данные по всем кластерам в эксель файле (без нормализации)
 def saveallclusters(clusts):
-    norm = pd.read_csv("fornorm.csv")
+    norm = pd.read_csv("datasets/fornorm.csv")
 
     writer = pd.ExcelWriter("Clusters.xlsx")
     for k in range(len(clusts)):
@@ -168,7 +168,7 @@ def saveallclusters(clusts):
 
 # анализ факторов в кластере (медиана, макс, мин)
 def clustsfeatures(clusts, centroids):
-    norm = pd.read_csv("fornorm.csv")
+    norm = pd.read_csv("datasets/fornorm.csv")
 
     for i in range(centroids.shape[0]):
         for j in range(centroids.shape[1]):
@@ -321,7 +321,7 @@ def findsignif(data2):
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name).csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (oktmo+name).csv")
 
 data = data.sample(frac=1)  # перетасовка
 
@@ -360,13 +360,13 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-#saveallclusters(clusts)
-
 getmedian(data)
 
 negativeanalyzer(clusts)
 
 clustsfeatures(clusts, centroids)
+
+saveallclusters(clusts)
 
 #saveallclusters(clusts)
 
