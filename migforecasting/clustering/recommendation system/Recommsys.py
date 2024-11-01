@@ -12,20 +12,21 @@ input = pd.read_excel("input.xlsx")
 
 changes = []
 tmp = []
-for col in input.iloc[:, 5:]:
-    tmp.append(float(medians.iloc[0][col] / input[col]))
+for k in range(len(input)):
+    for i in range(len(medians)):
+        if input.iloc[k]['profile'] == medians.iloc[i]['profile']:
+            for col in input.iloc[:, 6:]:
+                tmp.append(float(medians.iloc[0][col] / input.iloc[0][col]))
+            break
 
 changes.append(tmp)
-
-tmp = []
-for col in input.iloc[:, 5:]:
-    tmp.append(float(medians.iloc[1][col] / input[col]))
-
-changes.append(tmp)
-features = list(input.iloc[:, 5:].columns)
+features = list(input.iloc[:, 6:].columns)
 changes = np.array(changes)
 changes = pd.DataFrame(changes, columns=features)
 
-plt.barh(changes.columns, changes.iloc[0])
+plt.title("Сбалансированный вектор развития "+ input.iloc[0, 2] +" относительно лучшей группы мун. образований")
+plt.xlabel('Во сколько раз необходимо улучшить')
+plt.ylabel('Социально-экономические индикаторы')
+plt.barh(changes.columns, changes.iloc[0], label=input.iloc[0, 5])
 plt.show()
 
