@@ -4,20 +4,24 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# факторы для нормирования
+features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+            'livestock', 'harvest', 'agrprod', 'beforeschool']
+
+
+# нормирование факторов на душу населения
 def normpersoul(tonorm):
     for k in range(len(tonorm)):
-        for col in tonorm.iloc[:, 7:]:
-            if col != 'avgsalary' and col != 'livarea' and col != 'roadslen' and col != 'hospitals':
-                for m in range(len(tonorm)):
-                    #tonorm = tonorm.astype({col: float})
-                    x = float(tonorm.iloc[m][col] / tonorm.iloc[m]['popsize'])
-                    tonorm.iloc[0, 7] = x
+        for col in features:
+            index = tonorm.columns.get_loc(col)
+            tonorm.iloc[k, index] = float(tonorm.iloc[k][col] / tonorm.iloc[k]['popsize'])
 
 medians = pd.read_csv("medians.csv")
 
 input = pd.read_excel("input.xlsx")
 
 normpersoul(input)
+normpersoul(medians)
 
 changes = []
 tmp = []
