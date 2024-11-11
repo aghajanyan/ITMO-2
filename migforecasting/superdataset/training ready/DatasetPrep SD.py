@@ -26,7 +26,7 @@ def normbymax(trainset):
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm.csv", index=False)
+    tmpp.to_csv("fornorm (internat saldo).csv", index=False)
 
     return trainset
 
@@ -193,12 +193,12 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = rawdata[rawdata.columns.drop('saldo')]
+rawdata = rawdata[rawdata.columns.drop('saldo')]
 
-#migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
-#migtype = migtype[migtype.columns.drop('name')]
+migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
+migtype = migtype[migtype.columns.drop('name')]
 
-#rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
+rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
 
 #outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
 #inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
@@ -277,12 +277,13 @@ rawdata = rawdata[cols]
 #plt.plot(x, y, 'o', mfc='none', color='black')
 #plt.show()
 
-"""
+
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
-"""
+
+
 """
 # выборка только за определенный год
 for index, row in rawdata.iterrows():
@@ -327,12 +328,12 @@ rawdata = normbyinf(rawdata, thisrubfeatures)
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
-for i in range(len(rawdata)):
-    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        #if rawdata.iloc[i + 1, 2] == rawdata.iloc[i, 2] + 1:  # прогноз только на год вперед
-            #rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo
+for i in range(len(rawdata) - 1):
+    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        if rawdata.iloc[i, 2] + 1 == rawdata.iloc[i + 1, 2]:  # прогноз только на год вперед
+            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo
             #rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow
-    examples.append(rawdata.iloc[i])
+            examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
 
@@ -407,6 +408,6 @@ features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsal
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 alltime-clust (oktmo+name).csv", index=False)
+examples.to_csv("superdataset-24 123.csv", index=False)
 
 print('Done')
