@@ -31,8 +31,8 @@ def normbymax(trainset):
     return trainset
 
 
+# разделить рублевые признаки на стоимость доллара
 def normbydollar(trainset, rubfeatures):
-    # разделить рублевые признаки на стоимость доллара
     dollar = pd.read_csv("dollaravg.csv")
     trainset = trainset.merge(dollar, on='year', how='left')
     d = trainset[['dollar']]
@@ -49,8 +49,8 @@ def normbydollar(trainset, rubfeatures):
     return trainset
 
 
+# умножить рублевые признаки на соответствующую долю инфляции
 def normbyinf(trainset, rubfeatures):
-    # умножить рублевые признаки на соответствующую долю инфляции
     inflation = pd.read_csv("inflation14.csv")
     trainset = trainset.merge(inflation, on='year', how='left')
     inf = trainset[['inf']]
@@ -68,8 +68,8 @@ def normbyinf(trainset, rubfeatures):
     return trainset
 
 
+# умножить рублевые признаки на цену за нефть как долю процента
 def normbyoil(trainset, rubfeatures):
-    # умножить рублевые признаки на цену за нефть как долю процента
     oil2 = pd.read_csv("oilpricesavg.csv")
     trainset = trainset.merge(oil2, on='year', how='left')
     o = trainset[['oil']]
@@ -87,8 +87,8 @@ def normbyoil(trainset, rubfeatures):
     return trainset
 
 
+# разделить рублевые признаки на стоимость доллара
 def normbyprod(trainset, rubfeatures):
-    # разделить рублевые признаки на стоимость доллара
     prod = pd.read_csv("avgbeef.csv")
     trainset = trainset.merge(prod, on='year', how='left')
     d = trainset[['beefprice']]
@@ -105,6 +105,7 @@ def normbyprod(trainset, rubfeatures):
     return trainset
 
 
+# IQR от Кирилла
 def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
     data = copy.deepcopy(data)
 
@@ -116,8 +117,8 @@ def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+# анализ признаков датасета
 def featuresanalysis(examples):
-    # анализ признаков датасета
     features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
                 'library', 'cultureorg', 'musartschool']
 
@@ -145,17 +146,19 @@ def delifzero(data):
             data = data.drop(index)
 
 
-def onlycities(data):
-    # удаление муниципальных районов (только города)
+# удаление из датасета определенных мун. образований
+def onlycertainmun(data):
     for index, row in data.iterrows():
         tmp = row['name'].split()
-        if len(tmp) > 1:
-            if tmp[0] != 'город' and tmp[0] != 'город-курорт' and tmp[0] != 'город-герой':
+        for i in range(len(tmp)):
+            if tmp[i] == 'муниципальный' or tmp[i] == 'Муниципальный':
                 data = data.drop(index)
+                break
+    return data
 
 
+# удалить из датасета отрицательное/положительное сальдо
 def delnegorpos(data, sign):
-    # удалить из датасета отрицательное/положительное сальдо
     for index, row in data.iterrows():
         if sign == 0:
             if row['saldo'] < 0:
@@ -170,8 +173,8 @@ def delnegorpos(data, sign):
     return data
 
 
+# подсчет количества NaNов у признака
 def nannumber(data):
-    # подсчет количества NaNов у признака
     x = 0
     count = []
     for k in range(5, data.shape[1]):
@@ -193,12 +196,12 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
-migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
-migtype = migtype[migtype.columns.drop('name')]
+#migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
+#migtype = migtype[migtype.columns.drop('name')]
 
-rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
 
 #outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
 #inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
@@ -277,12 +280,14 @@ rawdata = rawdata[cols]
 #plt.plot(x, y, 'o', mfc='none', color='black')
 #plt.show()
 
+rawdata = onlycertainmun(rawdata)
 
+"""
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
-
+"""
 
 """
 # выборка только за определенный год
