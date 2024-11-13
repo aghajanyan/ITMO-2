@@ -168,8 +168,8 @@ def saveallclusters(clusts):
 
 # анализ факторов в кластере (медиана, макс, мин)
 def clustsfeatures(clusts, centroids):
-    norm = pd.read_csv("datasets/fornorm.csv")
-
+    norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
+    """
     for i in range(centroids.shape[0]):
         for j in range(centroids.shape[1]):
             centroids[i, j] = centroids[i, j] * norm.iloc[0, j + 1]
@@ -178,7 +178,7 @@ def clustsfeatures(clusts, centroids):
     features = list(norm.columns)
     centroids = pd.DataFrame(centroids, columns=features[1:])
     centroids.to_excel("centroids.xlsx", index=False)
-
+    """
     final = []
     tmp = []
     for k in range(len(clusts)):
@@ -189,7 +189,7 @@ def clustsfeatures(clusts, centroids):
         final.append(tmp)
         tmp = []
 
-    final.append([''] * 17)
+    final.append([''] * (norm.shape[1] + 1))
     for k in range(len(clusts)):
         tmp.append(k)
         for col in norm:
@@ -198,7 +198,7 @@ def clustsfeatures(clusts, centroids):
         final.append(tmp)
         tmp = []
 
-    final.append([''] * 17)
+    final.append([''] * (norm.shape[1] + 1))
     for k in range(len(clusts)):
         tmp.append(k)
         for col in norm:
@@ -211,7 +211,7 @@ def clustsfeatures(clusts, centroids):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters-3.xlsx", index=False)
+    final.to_excel("median of clusters (only mundist-f).xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -319,9 +319,9 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-k = 6  # кол-во кластеров
+k = 3 # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust (oktmo+name).csv")
+data = pd.read_csv("datasets/superdataset-24f only mundist (IQR).csv")
 
 data = data.sample(frac=1)  # перетасовка
 
@@ -341,7 +341,7 @@ data['clust'] = clust_model.labels_
 
 cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 data = data[cols]
 
@@ -366,7 +366,7 @@ negativeanalyzer(clusts)
 
 clustsfeatures(clusts, centroids)
 
-saveallclusters(clusts)
+#saveallclusters(clusts)
 
 #saveallclusters(clusts)
 
