@@ -19,6 +19,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 
+
 #Наименьшие квадраты для одной переменной
 def MLS(x, y):
     x = np.array(x).astype(float)
@@ -30,6 +31,7 @@ def MLS(x, y):
     a = (n * sumxy - (sumx * sumy)) / (n * sumx2 - sumx * sumx)
     b = (sumy - a * sumx) / n
     return a, b
+
 
 # Разбиение прогноза по вероятным направлениям мигрирования
 def migprop(model, data, maxsaldo):
@@ -46,12 +48,45 @@ def migprop(model, data, maxsaldo):
 
     return prop
 
+
+# Нормирование данных для модели
+def normformodel(inputdata):
+    norm = pd.read_csv("clustering/datasets/fornorm-24.csv")
+    final = []
+    tmp = []
+    for k in range(len(inputdata)):
+        for col in norm:
+            if col != 'saldo':
+                tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
+
+        final.append(tmp)
+        tmp = []
+
+    final = np.array(final)
+    features = list(norm.columns[1:])
+    final = pd.DataFrame(final, columns=features)
+    inputdata = final
+    return inputdata
+
+# Осуществить прогноз для произвольного вход
+def anyinput(model, maxsaldo):
+    inputdata = pd.read_csv("clustering/recommendation system/medians.csv")
+    inputdata = inputdata.iloc[:, 2:17]
+
+    inputdata = normformodel(inputdata)
+
+    prediction = model.predict(inputdata)
+    prediction = prediction * maxsaldo
+    inputdata['predsaldo'] = prediction
+
+
+
 #maxsaldo = 26466
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-#maxsaldo = 854     # dataset 24 (also balanced)
-maxsaldo = 347      # dataset 24 interreg (also balanced)
+maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
 #maxsaldo = 295     # dataset 24 internat
 #maxsaldo = 1080      # dataset 25, 28
@@ -67,7 +102,7 @@ maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 interreg balanced.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
@@ -136,3 +171,5 @@ plt.show()
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
 
+# прогноз для произвольного входа
+anyinput(model, maxsaldo)
