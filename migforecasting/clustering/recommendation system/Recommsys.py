@@ -16,35 +16,43 @@ def normpersoul(tonorm):
             index = tonorm.columns.get_loc(col)
             tonorm.iloc[k, index] = float(tonorm.iloc[k][col] / tonorm.iloc[k]['popsize'])
 
-medians = pd.read_csv("medians.csv")
 
-input = pd.read_excel("input.xlsx")
-
-normpersoul(input)
-normpersoul(medians)
+inputdata = pd.read_excel("input.xlsx")
+normpersoul(inputdata)
 
 changes = []
 tmp = []
-for k in range(len(input)):
+filename = ''
+for k in range(len(inputdata)):
+    # выброр медиан кластеров согласно уровню МО
+    if inputdata.iloc[k]['type'] == '!mundist':
+        filename = 'medians all.csv'
+    else:
+        filename = 'medians only mundist.csv'
+
+    medians = pd.read_csv(filename)
+    normpersoul(medians)
+
+    # вычисление разницы входа от медиан лучшего кластера
     for i in range(len(medians)):
-        if input.iloc[k]['profile'] == medians.iloc[i]['profile']:
-            for col in input.iloc[:, 6:]:
-                tmp.append(float(medians.iloc[i][col] / input.iloc[k][col]))
+        if inputdata.iloc[k]['profile'] == medians.iloc[i]['profile']:
+            for col in inputdata.iloc[:, 7:]:
+                tmp.append(float(medians.iloc[i][col] / inputdata.iloc[k][col]))
 
             changes.append(tmp)
             tmp = []
             break
 
-features = list(input.iloc[:, 6:].columns)
+features = list(inputdata.iloc[:, 7:].columns)
 changes = np.array(changes)
 changes = pd.DataFrame(changes, columns=features)
 
 changes = changes.transpose()
 
 ax = changes.plot.barh()
-ax.set_title("Сбалансированный вектор развития "+ input.iloc[0]['name'] +" относительно лучшей группы мун. образований")
+ax.set_title("Сбалансированный вектор развития "+ inputdata.iloc[0]['name'] +" относительно лучшей группы мун. образований")
 ax.set_xlabel('Во сколько раз необходимо улучшить')
 ax.set_ylabel('Социально-экономические индикаторы')
-plt.legend(input['profile'])
+plt.legend(inputdata['profile'])
 plt.show()
 
