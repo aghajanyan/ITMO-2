@@ -166,9 +166,31 @@ def saveallclusters(clusts):
     writer.close()
 
 
+# евклидова метрика
+def euclidean(x, y):
+    d = 0.0
+    for i in range(len(x)):
+        d += (x[i] - y[i]) ** 2
+    return np.sqrt(d)
+
+
+# нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
+def siblingsfinder(clusts):
+    onecluster = clusts[0]
+    dist = []
+    tmp = 0.0
+    for a in range(len(onecluster)):
+        tmp = euclidean([onecluster.iloc[a]['x'], onecluster.iloc[a]['y']], [onecluster.iloc[0]['x'], onecluster.iloc[0]['y']])
+        dist.append(tmp)
+
+    onecluster['dist'] = dist
+    onecluster = onecluster.sort_values(by='dist')
+    print('done')
+
+
 # анализ факторов в кластере (медиана, макс, мин)
 def clustsfeatures(clusts, centroids):
-    norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
+    norm = pd.read_csv("datasets/fornorm no mundist-f (IQR).csv")
     """
     for i in range(centroids.shape[0]):
         for j in range(centroids.shape[1]):
@@ -211,7 +233,7 @@ def clustsfeatures(clusts, centroids):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters (only mundist-f).xlsx", index=False)
+    final.to_excel("median of clusters (only mundist-f)-6.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -319,9 +341,9 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-k = 3 # кол-во кластеров
+k = 6 # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24f only mundist (IQR).csv")
+data = pd.read_csv("datasets/superdataset-24f no mundist (IQR).csv")
 
 data = data.sample(frac=1)  # перетасовка
 
@@ -359,6 +381,8 @@ for i in range(k):
     clusts.append(data[data['clust'] == i])
 
 # анализ и вывод результатов
+
+siblingsfinder(clusts)
 
 getmedian(data)
 
