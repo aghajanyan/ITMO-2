@@ -175,7 +175,18 @@ def euclidean(x, y):
 
 
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
-def siblingsfinder(clusts):
+def siblingsfinder(data, clusts):
+    #наиболее близкие среди всех кластеров
+    dist = []
+    tmp = 0.0
+    for b in range(len(data)):
+        tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])
+        dist.append(tmp)
+
+    data['dist'] = dist
+    data = data.sort_values(by='dist')
+
+    # наиболее близкие в своем кластере
     onecluster = clusts[0]
     dist = []
     tmp = 0.0
@@ -382,7 +393,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-siblingsfinder(clusts)
+siblingsfinder(data, clusts)
 
 getmedian(data)
 
