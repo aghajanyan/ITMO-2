@@ -180,7 +180,9 @@ def siblingsfinder(data, clusts):
     dist = []
     tmp = 0.0
     for b in range(len(data)):
-        tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])
+        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])
+        tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],
+                        [data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
         dist.append(tmp)
 
     data['dist'] = dist
@@ -381,10 +383,11 @@ data = data[cols]
 # data.to_csv("data-cities.csv", index=False)
 
 # трансформация в 2D методом компонент
-pca = PCA(2)
+pca = PCA(3)
 pca2 = pca.fit_transform(data.iloc[:, 4:])  # 4 - без сальдо
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
+data['z'] = pca2[:, 2]
 
 # разделяем кластеры по независимым массивам (массив массивов)
 clusts = []
