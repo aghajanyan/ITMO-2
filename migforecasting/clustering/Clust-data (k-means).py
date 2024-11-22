@@ -176,6 +176,13 @@ def euclidean(x, y):
 
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
+    # трансформация в 2D методом компонент
+    pca = PCA(3)
+    pca3 = pca.fit_transform(data.iloc[:, 4:21])  # 4 - без сальдо
+    data['x'] = pca3[:, 0]
+    data['y'] = pca3[:, 1]
+    data['z'] = pca3[:, 2]
+
     #наиболее близкие среди всех кластеров
     dist = []
     tmp = 0.0
@@ -383,11 +390,10 @@ data = data[cols]
 # data.to_csv("data-cities.csv", index=False)
 
 # трансформация в 2D методом компонент
-pca = PCA(3)
+pca = PCA(2)
 pca2 = pca.fit_transform(data.iloc[:, 4:])  # 4 - без сальдо
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
-data['z'] = pca2[:, 2]
 
 # разделяем кластеры по независимым массивам (массив массивов)
 clusts = []
