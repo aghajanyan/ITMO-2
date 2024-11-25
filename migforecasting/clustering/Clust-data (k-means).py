@@ -1,10 +1,13 @@
 import csv
+import math
+
 import numpy as np
 import random
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import label_binarize, MinMaxScaler
+from sklearn.metrics import mean_squared_error
 
 from sklearn.cluster import KMeans
 from sklearn.cluster import AgglomerativeClustering
@@ -178,22 +181,31 @@ def euclidean(x, y):
 def siblingsfinder(data, clusts):
     # трансформация в 2D методом компонент
     pca = PCA(3)
-    pca3 = pca.fit_transform(data.iloc[:, 4:21])  # 4 - без сальдо
+    pca3 = pca.fit_transform(data.iloc[:, 5:21])  # 5- без сальдо
     data['x'] = pca3[:, 0]
     data['y'] = pca3[:, 1]
     data['z'] = pca3[:, 2]
 
     #наиболее близкие среди всех кластеров
-    dist = []
-    tmp = 0.0
+    dist1 = []
+    dist2 = []
+    tmp1 = 0.0
+    tmp2 = 0.0
     for b in range(len(data)):
-        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])
-        tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],
-                        [data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
-        dist.append(tmp)
+        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])    #PCA2
+        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],     #PCA3
+                        #[data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
 
-    data['dist'] = dist
-    data = data.sort_values(by='dist')
+        tmp1 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])     #All factors
+        tmp2 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])   #All factors
+        dist1.append(tmp1)
+        dist2.append(tmp2)
+
+
+    data['dist1'] = dist1
+    data['dist2'] = dist2
+    data = data.sort_values(by='dist1')
+    data = data.sort_values(by='dist2')
 
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
@@ -391,7 +403,7 @@ data = data[cols]
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 4:])  # 4 - без сальдо
+pca2 = pca.fit_transform(data.iloc[:, 5:])  # 5 - без сальдо
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
 
