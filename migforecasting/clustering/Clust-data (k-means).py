@@ -186,33 +186,48 @@ def siblingsfinder(data, clusts):
     data['y'] = pca3[:, 1]
     data['z'] = pca3[:, 2]
 
-    #наиболее близкие среди всех кластеров
+    # наиболее близкие среди всех кластеров
     dist1 = []
     dist2 = []
     tmp1 = 0.0
     tmp2 = 0.0
     for b in range(len(data)):
-        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])    #PCA2
-        #tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],     #PCA3
-                        #[data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
+        # tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])    #PCA2
+        # tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],     #PCA3
+        # [data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
 
-        tmp1 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])     #All factors
-        tmp2 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])   #All factors
+        tmp1 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+        tmp2 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
         dist1.append(tmp1)
         dist2.append(tmp2)
-
 
     data['dist1'] = dist1
     data['dist2'] = dist2
     data = data.sort_values(by='dist1')
     data = data.sort_values(by='dist2')
 
+    # наиболее близкие из лучшего кластера
+    norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
+    migprop = 0.0
+    bestcluster = 0
+    # определение лучшего кластера
+    for k in range(len(clusts)):
+        msaldo = clusts[k]['saldo'].median() * norm.iloc[0]['saldo']
+        mpopsize = clusts[k]['popsize'].median() * norm.iloc[0]['popsize']
+        if k == 0:
+            migprop = float(msaldo / mpopsize)
+        else:
+            if migprop < float(msaldo / mpopsize):
+                migprop = float(msaldo / mpopsize)
+                bestcluster = k
+
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
     dist = []
     tmp = 0.0
     for a in range(len(onecluster)):
-        tmp = euclidean([onecluster.iloc[a]['x'], onecluster.iloc[a]['y']], [onecluster.iloc[0]['x'], onecluster.iloc[0]['y']])
+        tmp = euclidean([onecluster.iloc[a]['x'], onecluster.iloc[a]['y']],
+                        [onecluster.iloc[0]['x'], onecluster.iloc[0]['y']])
         dist.append(tmp)
 
     onecluster['dist'] = dist
@@ -222,7 +237,7 @@ def siblingsfinder(data, clusts):
 
 # анализ факторов в кластере (медиана, макс, мин)
 def clustsfeatures(clusts, centroids):
-    norm = pd.read_csv("datasets/fornorm no mundist-f (IQR).csv")
+    norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
     """
     for i in range(centroids.shape[0]):
         for j in range(centroids.shape[1]):
@@ -265,7 +280,7 @@ def clustsfeatures(clusts, centroids):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters (only mundist-f)-6.xlsx", index=False)
+    final.to_excel("median of clusters (only mundist-f)-66.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -373,18 +388,18 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-k = 6 # кол-во кластеров
+k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24f no mundist (IQR).csv")
+data = pd.read_csv("datasets/superdataset-24f only mundist (IQR).csv")
 
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data.iloc[:, 4:])   # 4 - без сальдо
+clust_model.fit(data.iloc[:, 4:])  # 4 - без сальдо
 
-#clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
-#clust_model.fit_predict(data.iloc[:, 4:])
+# clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
+# clust_model.fit_predict(data.iloc[:, 4:])
 
 print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
 
@@ -420,11 +435,11 @@ getmedian(data)
 
 negativeanalyzer(clusts)
 
-clustsfeatures(clusts, centroids)
+#clustsfeatures(clusts, centroids)
 
-#saveallclusters(clusts)
+# saveallclusters(clusts)
 
-#saveallclusters(clusts)
+# saveallclusters(clusts)
 
 # movementanalyzer(data, clusts)
 
