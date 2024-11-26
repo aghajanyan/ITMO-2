@@ -185,7 +185,7 @@ def siblingsfinder(data, clusts):
     data['x'] = pca3[:, 0]
     data['y'] = pca3[:, 1]
     data['z'] = pca3[:, 2]
-
+    
     # наиболее близкие среди всех кластеров
     dist1 = []
     dist2 = []
@@ -220,6 +220,18 @@ def siblingsfinder(data, clusts):
             if migprop < float(msaldo / mpopsize):
                 migprop = float(msaldo / mpopsize)
                 bestcluster = k
+
+    dist3 = []
+    tmp3 = 0.0
+    for b in range(len(data)):
+        if data.iloc[b]['clust'] == bestcluster or b == 0:
+            tmp3 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+            dist3.append(tmp3)
+        else:
+            dist3.append(np.NAN)
+
+    data['dist3'] = dist3
+    data = data.sort_values(by='dist3')
 
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
