@@ -177,9 +177,24 @@ def euclidean(x, y):
     return np.sqrt(d)
 
 
+# нормирование факторов на душу населения
+def normpersoul(tonorm):
+    # факторы для нормирования
+    features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool', 'factoriescap']
+
+    for a in features:
+        tonorm[a] = float(tonorm[a] / tonorm['popsize'])
+
+    return tonorm
+
+
 #демонстрация соц-экономической разницы между двумя МО
 def showdifference(worst, best, worstname, bestname):
     dif = []
+    worst = normpersoul(worst)
+    best = normpersoul(best)
+
     for a in worst.index:
         dif.append(float(best[a] / worst[a]))
 
