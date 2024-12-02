@@ -177,6 +177,24 @@ def euclidean(x, y):
     return np.sqrt(d)
 
 
+#демонстрация соц-экономической разницы между двумя МО
+def showdifference(worst, best, worstname, bestname):
+    dif = []
+    for a in worst.index:
+        dif.append(float(best[a] / worst[a]))
+
+    dif = np.array(dif)
+    features = list(worst.index)
+    dif = pd.Series(dif, index=features)
+
+    #dif = dif.transpose()
+    ax = dif.plot.barh()
+    ax.set_title("Сравнение " + worstname + " относительно "+ bestname +"")
+    ax.set_xlabel('Во сколько раз необходимо улучшить')
+    ax.set_ylabel('Социально-экономические индикаторы')
+    plt.show()
+
+
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
     # трансформация в 2D методом компонент
@@ -232,6 +250,9 @@ def siblingsfinder(data, clusts):
 
     data['dist3'] = dist3
     data = data.sort_values(by='dist3')
+
+    # визуализация разницы
+    showdifference(data.iloc[0][5:21], data.iloc[1][5:21], data.iloc[0]['name'], data.iloc[1]['name'])
 
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
