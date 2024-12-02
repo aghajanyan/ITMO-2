@@ -221,23 +221,13 @@ def siblingsfinder(data, clusts):
     
     # наиболее близкие среди всех кластеров
     dist1 = []
-    dist2 = []
     tmp1 = 0.0
-    tmp2 = 0.0
     for b in range(len(data)):
-        # tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y']], [data.iloc[0]['x'], data.iloc[0]['y']])    #PCA2
-        # tmp = euclidean([data.iloc[b]['x'], data.iloc[b]['y'], data.iloc[b]['z']],     #PCA3
-        # [data.iloc[0]['x'], data.iloc[0]['y'], data.iloc[0]['z']])
-
-        tmp1 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
-        tmp2 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+        tmp1 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
         dist1.append(tmp1)
-        dist2.append(tmp2)
 
     data['dist1'] = dist1
-    data['dist2'] = dist2
     data = data.sort_values(by='dist1')
-    data = data.sort_values(by='dist2')
 
     # наиболее близкие из лучшего кластера
     norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
@@ -254,17 +244,17 @@ def siblingsfinder(data, clusts):
                 migprop = float(msaldo / mpopsize)
                 bestcluster = k
 
-    dist3 = []
-    tmp3 = 0.0
+    dist2 = []
+    tmp2 = 0.0
     for b in range(len(data)):
         if data.iloc[b]['clust'] == bestcluster or b == 0:
-            tmp3 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
-            dist3.append(tmp3)
+            tmp2 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+            dist2.append(tmp2)
         else:
-            dist3.append(np.NAN)
+            dist2.append(np.NAN)
 
-    data['dist3'] = dist3
-    data = data.sort_values(by='dist3')
+    data['dist2'] = dist2
+    data = data.sort_values(by='dist2')
 
     # визуализация разницы
     showdifference(data.iloc[0][5:21], data.iloc[1][5:21], data.iloc[0]['name'], data.iloc[1]['name'])
