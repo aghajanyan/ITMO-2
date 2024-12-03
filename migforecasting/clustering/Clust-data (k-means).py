@@ -188,12 +188,21 @@ def normpersoul(tonorm):
 
     return tonorm
 
+# нормирование факторов на душу населения для всего датасета
+def normpersoulalldata(data):
+    # факторы для нормирования
+    features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool', 'factoriescap']
+
+    for a in features:
+        data[a] = data[a] / data['popsize']
+
 
 #демонстрация соц-экономической разницы между двумя МО
 def showdifference(worst, best, worstname, bestname):
     dif = []
-    worst = normpersoul(worst)
-    best = normpersoul(best)
+    #worst = normpersoul(worst)
+    #best = normpersoul(best)
 
     for a in worst.index:
         dif.append(float(best[a] / worst[a]))
@@ -210,6 +219,24 @@ def showdifference(worst, best, worstname, bestname):
     plt.show()
 
 
+#демонстрация соц-экономических показателей наиболее близкого МО из лучшего кластера
+def headtohead(worst, best, worstname, bestname):
+    dif = []
+
+    features = list(worst.index)
+
+    width = 0.3
+    x = np.arange(len(features))
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(x - width / 2, worst, width, label=worstname)
+    rects2 = ax.bar(x + width / 2, best, width, label=bestname)
+    ax.set_title('Сравнение социально-экономических индикаторов')
+    ax.set_xticks(x)
+    ax.set_xticklabels(features)
+    ax.legend()
+    plt.show()
+
+
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
     # трансформация в 2D методом компонент
@@ -218,12 +245,21 @@ def siblingsfinder(data, clusts):
     data['x'] = pca3[:, 0]
     data['y'] = pca3[:, 1]
     data['z'] = pca3[:, 2]
-    
+
+    #нормализация набора данных на душу населения
+    normpersoulalldata(data)
+
+    index = 0
+    for i in range(len(data)):
+        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
+            index = i
+            break
+
     # наиболее близкие среди всех кластеров
     dist1 = []
     tmp1 = 0.0
     for b in range(len(data)):
-        tmp1 = mean_squared_error(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+        tmp1 = mean_squared_error(data.iloc[b][6:21], data.iloc[index][6:21])  # All factors
         dist1.append(tmp1)
 
     data['dist1'] = dist1
@@ -248,7 +284,7 @@ def siblingsfinder(data, clusts):
     tmp2 = 0.0
     for b in range(len(data)):
         if data.iloc[b]['clust'] == bestcluster or b == 0:
-            tmp2 = euclidean(data.iloc[b][5:21], data.iloc[0][5:21])  # All factors
+            tmp2 = mean_squared_error(data.iloc[b][6:21], data.iloc[0][6:21])  # All factors
             dist2.append(tmp2)
         else:
             dist2.append(np.NAN)
@@ -257,7 +293,8 @@ def siblingsfinder(data, clusts):
     data = data.sort_values(by='dist2')
 
     # визуализация разницы
-    showdifference(data.iloc[0][5:21], data.iloc[1][5:21], data.iloc[0]['name'], data.iloc[1]['name'])
+    #showdifference(data.iloc[0][6:21], data.iloc[1][6:21], data.iloc[0]['name'], data.iloc[1]['name'])
+    headtohead(data.iloc[0][6:21], data.iloc[1][6:21], data.iloc[0]['name'], data.iloc[1]['name'])
 
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
