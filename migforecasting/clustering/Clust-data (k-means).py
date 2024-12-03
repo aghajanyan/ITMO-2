@@ -221,8 +221,6 @@ def showdifference(worst, best, worstname, bestname):
 
 #демонстрация соц-экономических показателей наиболее близкого МО из лучшего кластера
 def headtohead(worst, best, worstname, bestname):
-    dif = []
-
     features = list(worst.index)
 
     width = 0.3
@@ -237,6 +235,18 @@ def headtohead(worst, best, worstname, bestname):
     plt.show()
 
 
+# ретроспективный анализ (развитие наиболее похожего региона)
+def retroanalysis(data):
+    index = 0
+    for i in range(len(data)):
+        if 2022 - data.iloc[i]['year'] == 5:
+            index = i
+            break
+
+    retrodata = data[data['oktmo'] == data.iloc[index]['oktmo']]
+    print('ok')
+
+
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
     # трансформация в 2D методом компонент
@@ -249,6 +259,7 @@ def siblingsfinder(data, clusts):
     #нормализация набора данных на душу населения
     normpersoulalldata(data)
 
+    # в демонстративных целях
     index = 0
     for i in range(len(data)):
         if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
@@ -295,6 +306,7 @@ def siblingsfinder(data, clusts):
     # визуализация разницы
     #showdifference(data.iloc[0][6:21], data.iloc[1][6:21], data.iloc[0]['name'], data.iloc[1]['name'])
     headtohead(data.iloc[0][6:21], data.iloc[1][6:21], data.iloc[0]['name'], data.iloc[1]['name'])
+    retroanalysis(data)
 
     # наиболее близкие в своем кластере
     onecluster = clusts[0]
