@@ -188,6 +188,7 @@ def normpersoul(tonorm):
 
     return tonorm
 
+
 # нормирование факторов на душу населения для всего датасета
 def normpersoulalldata(data):
     # факторы для нормирования
@@ -244,6 +245,12 @@ def retroanalysis(data):
             break
 
     retrodata = data[data['oktmo'] == data.iloc[index]['oktmo']]
+    retrodata = retrodata[retrodata['year'] > 2016]
+    plt.plot(retrodata['year'], retrodata.iloc[:, 6:21])
+    plt.title("График развития соц-экономической среды в "+ retrodata.iloc[0]['name'] +"")
+    plt.legend(retrodata.iloc[:, 6:21].columns)
+    plt.show()
+
     print('ok')
 
 
