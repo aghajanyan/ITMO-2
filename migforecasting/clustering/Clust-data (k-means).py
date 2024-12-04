@@ -246,6 +246,7 @@ def retroanalysis(data):
 
     retrodata = data[data['oktmo'] == data.iloc[index]['oktmo']]
     retrodata = retrodata[retrodata['year'] > 2016]
+    retrodata = retrodata.sort_values(by='year')
     plt.plot(retrodata['year'], retrodata.iloc[:, 6:21])
     plt.title("График развития соц-экономической среды в "+ retrodata.iloc[0]['name'] +"")
     plt.legend(retrodata.iloc[:, 6:21].columns)
@@ -282,6 +283,8 @@ def siblingsfinder(data, clusts):
 
     data['dist1'] = dist1
     data = data.sort_values(by='dist1')
+
+    #retroanalysis(data)
 
     # наиболее близкие из лучшего кластера
     norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
