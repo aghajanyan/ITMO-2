@@ -49,6 +49,23 @@ def migprop(model, data, maxsaldo):
     return prop
 
 
+#Нормирование рублевых цен
+def normbyinf(inputdata):
+    # признаки для ценового нормирования
+    allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
+                      'budincome', 'funds', 'naturesecure', 'factoriescap']
+
+    thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+    infdata = pd.read_csv("clustering/recommendation system/inflation14.csv")
+    for k in range(len(inputdata)):
+        inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]
+        for col in thisrubfeatures:
+            index = inputdata.columns.get_loc(col)
+            inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+
+    return inputdata
+
+
 # Нормирование данных для модели
 def normformodel(inputdata):
     norm = pd.read_csv("clustering/datasets/fornorm-24.csv")
@@ -68,13 +85,20 @@ def normformodel(inputdata):
     inputdata = final
     return inputdata
 
-# Осуществить прогноз для произвольного вход
-def anyinput(model, maxsaldo):
-    inputdata = pd.read_csv("clustering/recommendation system/medians.csv")
-    inputdata = inputdata.iloc[:, 2:17]
 
+# Осуществить прогноз для произвольного входа
+def anyinput(model, maxsaldo):
+    inputdata = pd.read_json("clustering/recommendation system/anyinput_test.json")
+
+    # нормализация цен
+    inputdata = normbyinf(inputdata)
+
+    inputdata = inputdata.iloc[:, 1:]   # отрезать показатель year
+
+    # нормализация признаков под модель
     inputdata = normformodel(inputdata)
 
+    # прогноз
     prediction = model.predict(inputdata)
     prediction = prediction * maxsaldo
     inputdata['predsaldo'] = prediction
