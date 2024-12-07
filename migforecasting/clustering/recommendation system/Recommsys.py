@@ -9,6 +9,23 @@ features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsve
             'livestock', 'harvest', 'agrprod', 'beforeschool']
 
 
+#Нормирование рублевых цен
+def normbyinf(tonorm):
+    # признаки для ценового нормирования
+    allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
+                      'budincome', 'funds', 'naturesecure', 'factoriescap']
+
+    thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+    infdata = pd.read_csv("inflation14.csv")
+    for k in range(len(tonorm)):
+        inflation = infdata[infdata['year'] == tonorm.iloc[k]['year']]
+        for col in thisrubfeatures:
+            index = tonorm.columns.get_loc(col)
+            tonorm.iloc[k, index] = tonorm.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+
+    return tonorm
+
+
 # нормирование факторов на душу населения
 def normpersoul(tonorm):
     for k in range(len(tonorm)):
