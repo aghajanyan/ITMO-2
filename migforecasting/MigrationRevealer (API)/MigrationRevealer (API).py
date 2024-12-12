@@ -49,14 +49,13 @@ def normformodel(inputdata):
 
 @app.get("/migration-revealer")
 async def reveal(request: Request):
-    features = ['year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
-                'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
-                'beforeschool']
-
     # обработка входных параметров
     inputdata = dict(request.query_params)
     inputdata = pd.DataFrame(inputdata, index=[0])
     #inputdata = inputdata.transpose()
+    features = ['year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+                'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
+                'beforeschool']
     inputdata = inputdata[features]     # правильный порядок для модели
     inputdata = inputdata.astype(float)
 
@@ -71,7 +70,7 @@ async def reveal(request: Request):
     # выполнение прогноза
     prediction = model.predict(inputdata)
     prediction = prediction * maxsaldo
-    inputdata['predsaldo'] = prediction
+    inputdata['predsaldo'] = int(prediction)
 
     return inputdata.iloc[0]['predsaldo']
 
