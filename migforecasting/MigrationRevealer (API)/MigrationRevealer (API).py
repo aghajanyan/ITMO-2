@@ -1,4 +1,6 @@
 import pandas as pd
+import joblib
+import numpy as np
 
 from fastapi import FastAPI
 from fastapi import Body
@@ -8,7 +10,7 @@ import uvicorn
 app = FastAPI()
 
 
-#Нормирование рублевых цен
+#Нормирование цен согласно инфляции
 def normbyinf(inputdata):
     # признаки для ценового нормирования
     allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest', 'budincome',
@@ -25,7 +27,7 @@ def normbyinf(inputdata):
     return inputdata
 
 
-# Нормирование данных для модели
+# Нормирование данных для модели (от 0 до 1)
 def normformodel(inputdata):
     norm = pd.read_csv("fornorm-24.csv")
     final = []
@@ -42,21 +44,36 @@ def normformodel(inputdata):
     features = list(norm.columns[1:])
     final = pd.DataFrame(final, columns=features)
     inputdata = final
-    return inputdata
+    return inputdata, norm.iloc[0]['saldo']
 
 
 @app.get("/migration-revealer")
 async def reveal(request: Request):
     features = ['year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
                 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
-                'beforeschool', 'factoriescap']
+                'beforeschool']
 
-    x = dict(request.query_params)
-    x = pd.DataFrame(x, index=[0])
-    x = x.transpose()
-    x = x[features]     # правильный порядок для модели
+    # обработка входных параметров
+    inputdata = dict(request.query_params)
+    inputdata = pd.DataFrame(inputdata, index=[0])
+    #inputdata = inputdata.transpose()
+    inputdata = inputdata[features]     # правильный порядок для модели
+    inputdata = inputdata.astype(float)
 
-    return mig
+    # загрузка модели
+    model = joblib.load('migpred (24, tree).joblib')
+
+    #нормализация входных данных
+    inputdata = normbyinf(inputdata)
+    inputdata = inputdata.iloc[:, 1:]  # отрезать показатель year
+    inputdata, maxsaldo = normformodel(inputdata)
+
+    # выполнение прогноза
+    prediction = model.predict(inputdata)
+    prediction = prediction * maxsaldo
+    inputdata['predsaldo'] = prediction
+
+    return inputdata.iloc[0]['predsaldo']
 
 
 @app.get("/notsure")
@@ -64,20 +81,6 @@ async def calc(year: int, popsize: int, avgemployers: float, avgsalary: float, s
                foodseats: int, retailturnover: float, livarea: int, sportsvenue: int, servicesnum: int, roadslen: float,
                livestock: int, harvest: float, agrprod: float, hospitals: int, beforeschool: int, factoriescap: float):
     return avgsalary
-
-
-@app.get("/getjson")
-async def get_body(request: Request):
-    x = dict(request.query_params)
-    x = pd.DataFrame(x, index=[0])
-    x = x.transpose()
-    data = pd.read_json("anyinput_test.json")
-    return x
-
-
-@app.get("/getget")
-async def hello(data=Body()):
-    return data
 
 
 if __name__ == "__main__":
