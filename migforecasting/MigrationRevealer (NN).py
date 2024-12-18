@@ -24,7 +24,9 @@ from tensorflow.keras.layers import Dropout
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/citiesdataset-NY-1.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
+
+rawdata = rawdata.sample(frac=1)  # перетасовка
 
 # разбиение датасета на входные признаки и выходной результат (сальдо)
 datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
@@ -35,14 +37,14 @@ trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, tes
 
 #модель
 model = Sequential()
-model.add(Dense(64, input_dim=18, activation='relu'))
+model.add(Dense(64, input_dim=15, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
-history = model.fit(trainin, trainout, epochs=300, batch_size=5)
+history = model.fit(trainin, trainout, epochs=10, batch_size=5)
 
 pred = model.predict(trainin)
 pred1 = model.predict(testin)
