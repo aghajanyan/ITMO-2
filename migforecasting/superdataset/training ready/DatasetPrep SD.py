@@ -22,11 +22,11 @@ def normbymax(trainset):
 
     features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
                 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod',
-                'hospitals', 'beforeschool']
+                'hospitals', 'beforeschool', 'factoriescap']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm (internat saldo).csv", index=False)
+    tmpp.to_csv("fornorm no mundist-f (IQR).csv", index=False)
 
     return trainset
 
@@ -148,12 +148,18 @@ def delifzero(data):
 
 # удаление из датасета определенных мун. образований
 def onlycertainmun(data):
+    mun = False
     for index, row in data.iterrows():
         tmp = row['name'].split()
         for i in range(len(tmp)):
             if tmp[i] == 'муниципальный' or tmp[i] == 'Муниципальный':
-                data = data.drop(index)
-                break
+                mun = True
+        if mun:
+            data = data.drop(index)
+            mun = False
+        else:
+            mun = False
+
     return data
 
 
@@ -190,7 +196,7 @@ def nannumber(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'factoriescap']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -256,7 +262,7 @@ rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('shoparea')]
 #rawdata = rawdata[rawdata.columns.drop('servicesnum')]
 rawdata = rawdata[rawdata.columns.drop('funds')]
-rawdata = rawdata[rawdata.columns.drop('factoriescap')]
+#rawdata = rawdata[rawdata.columns.drop('factoriescap')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
@@ -266,7 +272,7 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 rawdata = rawdata[cols]
 
@@ -333,12 +339,12 @@ rawdata = normbyinf(rawdata, thisrubfeatures)
 examples = []
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
-for i in range(len(rawdata) - 1):
-    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        if rawdata.iloc[i, 2] + 1 == rawdata.iloc[i + 1, 2]:  # прогноз только на год вперед
-            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo
+for i in range(len(rawdata)):
+    #if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
+        #if rawdata.iloc[i, 2] + 1 == rawdata.iloc[i + 1, 2]:  # прогноз только на год вперед
+            #rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo
             #rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow
-            examples.append(rawdata.iloc[i])
+    examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
 
@@ -348,7 +354,7 @@ examples = np.array(examples)
 
 features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -408,11 +414,11 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 123.csv", index=False)
+examples.to_csv("superdataset-24f no mundist (IQR).csv", index=False)
 
 print('Done')

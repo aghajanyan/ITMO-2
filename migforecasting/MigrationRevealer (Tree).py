@@ -18,6 +18,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import seaborn as sns
+import joblib
 
 
 #Наименьшие квадраты для одной переменной
@@ -52,13 +53,13 @@ def migprop(model, data, maxsaldo):
 #Нормирование рублевых цен
 def normbyinf(inputdata):
     # признаки для ценового нормирования
-    allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
-                      'budincome', 'funds', 'naturesecure', 'factoriescap']
+    allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest', 'budincome',
+                      'funds', 'naturesecure', 'factoriescap']
 
     thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
     infdata = pd.read_csv("clustering/recommendation system/inflation14.csv")
     for k in range(len(inputdata)):
-        inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]
+        inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]   # получить инфляцию за необходимый год
         for col in thisrubfeatures:
             index = inputdata.columns.get_loc(col)
             inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
@@ -196,4 +197,7 @@ print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
 
 # прогноз для произвольного входа
-anyinput(model, maxsaldo)
+#anyinput(model, maxsaldo)
+
+# сохранение модели
+joblib.dump(model, "migpred (24, tree).joblib")
