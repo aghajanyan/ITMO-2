@@ -42,7 +42,7 @@ tmp = []
 filename = ''
 for k in range(len(inputdata)):
     # выброр медиан кластеров согласно уровню МО
-    if inputdata.iloc[k]['type'] == '!mundist':
+    if inputdata.iloc[k]['type'] == 'all':
         filename = 'medians all.csv'
     else:
         filename = 'medians only mundist.csv'
