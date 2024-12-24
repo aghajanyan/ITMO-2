@@ -191,6 +191,9 @@ forplot = pd.DataFrame(data=important, index=rawdata.columns)
 forplot = forplot.sort_values(by=[0])
 
 plt.barh(forplot.index, forplot[0])
+plt.xlabel("Уровень значимости")
+plt.ylabel("Признак")
+plt.title("Значимость признаков по критерию Джинни")
 plt.show()
 
 print("MAPE (train): ", errortrain)
@@ -200,4 +203,4 @@ print("MAPE (test): ", errortest)
 #anyinput(model, maxsaldo)
 
 # сохранение модели
-joblib.dump(model, "migpred (24, tree).joblib")
+#joblib.dump(model, "migpred (24, tree).joblib")

@@ -88,7 +88,7 @@ def normbyoil(trainset, rubfeatures):
     return trainset
 
 
-# разделить рублевые признаки на стоимость доллара
+# разделить рублевые признаки на стоимость продукта
 def normbyprod(trainset, rubfeatures):
     prod = pd.read_csv("avgbeef.csv")
     trainset = trainset.merge(prod, on='year', how='left')
