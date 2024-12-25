@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 0.0
+Recommsys (API).py ver. 0.1
 """
 
 import pandas as pd
@@ -34,8 +34,12 @@ def normbyinf(inputdata):
 
 # нормирование факторов на душу населения
 def normpersoul(tonorm):
+    # факторы для нормирования
+    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
+
     for k in range(len(tonorm)):
-        for col in features:
+        for col in normfeat:
             index = tonorm.columns.get_loc(col)
             tonorm.iloc[k, index] = float(tonorm.iloc[k][col] / tonorm.iloc[k]['popsize'])
 
@@ -50,11 +54,17 @@ async def reveal(request: Request):
     inputdata = dict(request.query_params)
     inputdata = pd.DataFrame(inputdata, index=[0])
 
+    features = ['type', 'profile', 'year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+                'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock',
+                'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
+    inputdata = inputdata[features]  # правильный порядок для модели
+    inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
     inputdata = normbyinf(inputdata)
 
     filename = ''
     # выброр медиан кластеров согласно уровню МО
-    if inputdata.iloc[0]['type'] == '!mundist':
+    if inputdata.iloc[0]['type'] == 'all':
         filename = 'medians all.csv'
     else:
         filename = 'medians only mundist.csv'
@@ -66,17 +76,17 @@ async def reveal(request: Request):
 
     changes = []
     tmp = []
-    # вычисление разницы входа от медиан лучшего кластера
+    # вычисление разницы входа от медиан лучшего кластера (согласно профилю)
     for i in range(len(medians)):
         if inputdata.iloc[0]['profile'] == medians.iloc[i]['profile']:
-            for col in inputdata.iloc[:, 7:]:
+            for col in inputdata.iloc[:, 3:]:
                 tmp.append(float(medians.iloc[i][col] / inputdata.iloc[0][col]))
 
             changes.append(tmp)
             tmp = []
             break
 
-    features = list(inputdata.iloc[:, 7:].columns)
+    features = list(inputdata.iloc[:, 3:].columns)
     changes = np.array(changes)
     changes = pd.DataFrame(changes, columns=features)
 
