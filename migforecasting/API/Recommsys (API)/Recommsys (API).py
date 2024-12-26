@@ -1,11 +1,12 @@
 
 """
-Recommsys (API).py ver. 0.1
+Recommsys (API).py ver. 0.2
 """
 
 import pandas as pd
 import joblib
 import numpy as np
+from sklearn.metrics import mean_squared_error
 
 from fastapi import FastAPI
 from fastapi import Body
@@ -32,6 +33,26 @@ def normbyinf(inputdata):
     return inputdata
 
 
+# Нормирование данных для модели (от 0 до 1)
+def normformodel(inputdata):
+    norm = pd.read_csv("fornorm-24.csv")
+    final = []
+    tmp = []
+    for k in range(len(inputdata)):
+        for col in norm:
+            if col != 'saldo':
+                tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
+
+        final.append(tmp)
+        tmp = []
+
+    final = np.array(final)
+    features = list(norm.columns[1:])
+    final = pd.DataFrame(final, columns=features)
+    inputdata = final
+    return inputdata
+
+
 # нормирование факторов на душу населения
 def normpersoul(tonorm):
     # факторы для нормирования
@@ -46,9 +67,49 @@ def normpersoul(tonorm):
     return tonorm
 
 
+# поиск наиболее близки поселений на основе социально-экономических индикаторов
+@app.get("/recommsys/siblingsfinder")
+async def siblingsfinder(request: Request):
+    # обработка входных данных
+    inputdata = dict(request.query_params)
+    inputdata = pd.DataFrame(inputdata, index=[0])
+
+    features = ['type', 'profile', 'year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+                'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock',
+                'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
+    inputdata = inputdata[features]  # правильный порядок для модели
+    inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
+    inputdata = normbyinf(inputdata)
+    inputdata = normpersoul(inputdata)
+
+    #загрузка датасета
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name)-normbysoul.csv")
+
+    # наиболее близкие среди всех кластеров
+    dist1 = []
+    tmp1 = 0.0
+    for b in range(len(data)):
+        tmp1 = mean_squared_error(data.iloc[b][6:21], inputdata.iloc[0][4:])  # кроме popsize
+        dist1.append(tmp1)
+
+    data['dist1'] = dist1
+    data = data.sort_values(by='dist1')
+
+    top10 = []
+    for i in range(10):
+        top10.append(data.iloc[i])
+
+    top10 = np.array(top10)
+    col = list(data.columns)
+    top10 = pd.DataFrame(top10, columns=col)
+
+    return top10.iloc[:, :4]
+
+
 # вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
 # по каждому социально-экономическому индикатору
-@app.get("/recommsys")
+@app.get("/recommsys/plan")
 async def reveal(request: Request):
     # обработка входных данных
     inputdata = dict(request.query_params)
