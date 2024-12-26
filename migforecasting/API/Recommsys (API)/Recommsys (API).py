@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 0.3
+Recommsys (API).py ver. 0.4
 """
 
 import pandas as pd
@@ -67,9 +67,8 @@ def normpersoul(tonorm):
     return tonorm
 
 
-# поиск наиболее близки поселений на основе социально-экономических индикаторов
-@app.get("/recommsys/siblingsfinder")
-async def siblingsfinder(request: Request):
+# обработчик входных данных
+def inputproc(request):
     # обработка входных данных
     inputdata = dict(request.query_params)
     inputdata = pd.DataFrame(inputdata, index=[0])
@@ -80,6 +79,16 @@ async def siblingsfinder(request: Request):
 
     inputdata = inputdata[features]  # правильный порядок для модели
     inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
+
+    return inputdata
+
+
+# поиск наиболее близки поселений на основе социально-экономических индикаторов
+@app.get("/recommsys/siblingsfinder")
+async def siblingsfinder(request: Request):
+
+    # нормализация входных данных
+    inputdata = inputproc(request)
     inputdata = normbyinf(inputdata)
     inputdata = normformodel(inputdata)
     inputdata = normpersoul(inputdata)
@@ -113,16 +122,7 @@ async def siblingsfinder(request: Request):
 @app.get("/recommsys/plan")
 async def reveal(request: Request):
     # обработка входных данных
-    inputdata = dict(request.query_params)
-    inputdata = pd.DataFrame(inputdata, index=[0])
-
-    features = ['type', 'profile', 'year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-                'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock',
-                'harvest', 'agrprod', 'hospitals', 'beforeschool']
-
-    inputdata = inputdata[features]  # правильный порядок для модели
-    inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
-    inputdata = normbyinf(inputdata)
+    inputdata = inputproc(request)
 
     filename = ''
     # выброр медиан кластеров согласно уровню МО
