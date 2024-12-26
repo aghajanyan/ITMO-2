@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 0.2
+Recommsys (API).py ver. 0.3
 """
 
 import pandas as pd
@@ -81,6 +81,7 @@ async def siblingsfinder(request: Request):
     inputdata = inputdata[features]  # правильный порядок для модели
     inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
     inputdata = normbyinf(inputdata)
+    inputdata = normformodel(inputdata)
     inputdata = normpersoul(inputdata)
 
     #загрузка датасета
@@ -90,7 +91,7 @@ async def siblingsfinder(request: Request):
     dist1 = []
     tmp1 = 0.0
     for b in range(len(data)):
-        tmp1 = mean_squared_error(data.iloc[b][6:21], inputdata.iloc[0][4:])  # кроме popsize
+        tmp1 = mean_squared_error(data.iloc[b][5:21], inputdata.iloc[0][1:])  # кроме popsize
         dist1.append(tmp1)
 
     data['dist1'] = dist1
@@ -104,7 +105,7 @@ async def siblingsfinder(request: Request):
     col = list(data.columns)
     top10 = pd.DataFrame(top10, columns=col)
 
-    return top10.iloc[:, :4]
+    return top10.iloc[:, :3].to_dict()
 
 
 # вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
