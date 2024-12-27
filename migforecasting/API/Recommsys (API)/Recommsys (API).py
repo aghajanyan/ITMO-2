@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 0.4
+Recommsys (API).py ver. 0.5
 """
 
 import pandas as pd
@@ -35,7 +35,7 @@ def normbyinf(inputdata):
 
 # Нормирование данных для модели (от 0 до 1)
 def normformodel(inputdata):
-    norm = pd.read_csv("fornorm-24.csv")
+    norm = pd.read_csv("fornorm 24 all (IQR).csv")
     final = []
     tmp = []
     for k in range(len(inputdata)):
@@ -81,6 +81,22 @@ def inputproc(request):
     inputdata.iloc[:, 2:] = inputdata.iloc[:, 2:].astype(float)
 
     return inputdata
+
+
+# определить кластер для входных данных
+@app.get("/recommsys/whatcluster")
+async def whatcluster(request: Request):
+    # нормализация входных данных
+    inputdata = inputproc(request)
+    inputdata = normbyinf(inputdata)
+    inputdata = normformodel(inputdata)
+
+    # загрузка модели
+    kmeans_model = joblib.load('kmeans_model (24-all-iqr).joblib')
+
+    pred_cluster = kmeans_model.predict(inputdata)
+
+    return "Поселение входит в кластер номер: " + str(pred_cluster[0]) +""
 
 
 # поиск наиболее близки поселений на основе социально-экономических индикаторов
@@ -153,6 +169,7 @@ async def reveal(request: Request):
     changes = pd.DataFrame(changes, columns=features)
 
     return changes.to_json()
+
 
 if __name__ == "__main__":
     uvicorn.run("Recommsys (API):app", host="0.0.0.0", port=8000, reload=True)

@@ -5,6 +5,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import pandas as pd
+import joblib
+
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import label_binarize, MinMaxScaler
 from sklearn.metrics import mean_squared_error
@@ -487,7 +489,7 @@ def findsignif(data2):
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24f only mundist (IQR).csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (oktmo+name).csv")
 
 data = data.sample(frac=1)  # перетасовка
 
@@ -502,12 +504,15 @@ print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'
 
 centroids = clust_model.cluster_centers_
 
+# сохранение модели
+joblib.dump(clust_model, 'kmeans_model (24-all-iqr).joblib')
+
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
 
 cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 data = data[cols]
 
@@ -526,7 +531,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-siblingsfinder(data, clusts)
+#siblingsfinder(data, clusts)
 
 getmedian(data)
 
