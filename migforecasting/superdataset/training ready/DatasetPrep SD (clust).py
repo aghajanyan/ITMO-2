@@ -23,7 +23,7 @@ def normbymax(trainset):
 
     features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
                 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod',
-                'hospitals', 'beforeschool', 'factoriescap']
+                'hospitals', 'beforeschool']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
