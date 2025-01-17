@@ -133,6 +133,37 @@ async def siblingsfinder(request: Request):
     return top10.iloc[:, :3].to_dict()
 
 
+# разница от наиболее близкого из лучшего кластера
+@app.get("/recommsys/h2h")
+async def headtohead(request: Request):
+    # обработка входных данных
+    inputdata = inputproc(request)
+    inputdata = normbyinf(inputdata)
+    inputdata = normformodel(inputdata)
+    inputdata = normpersoul(inputdata)
+
+    #загрузка датасета
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name)-normbysoul.csv")
+
+    # наиболее близкий из лучшего кластера
+    migprop = 0.0
+    bestcluster = 0
+    tmpdata = []
+    # определение лучшего кластера
+    for k in range(int(data['clust'].max()) + 1):
+        tmpdata = data[data['clust'] == i]
+        msaldo = tmpdata['saldo'].median()
+        mpopsize = tmpdata['popsize'].median()
+        if k == 0:
+            migprop = float(msaldo / mpopsize)
+        else:
+            if migprop < float(msaldo / mpopsize):
+                migprop = float(msaldo / mpopsize)
+                bestcluster = k
+
+    return bestcluster
+
+
 # вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
 # по каждому социально-экономическому индикатору
 @app.get("/recommsys/plan")
