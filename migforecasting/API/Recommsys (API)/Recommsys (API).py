@@ -143,7 +143,7 @@ async def headtohead(request: Request):
     inputdata = normpersoul(inputdata)
 
     #загрузка датасета
-    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name)-normbysoul.csv")
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust)-normbysoul.csv")
 
     # наиболее близкий из лучшего кластера
     migprop = 0.0
@@ -151,7 +151,7 @@ async def headtohead(request: Request):
     tmpdata = []
     # определение лучшего кластера
     for k in range(int(data['clust'].max()) + 1):
-        tmpdata = data[data['clust'] == i]
+        tmpdata = data[data['clust'] == k]
         msaldo = tmpdata['saldo'].median()
         mpopsize = tmpdata['popsize'].median()
         if k == 0:
