@@ -516,7 +516,9 @@ cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'a
 
 data = data[cols]
 
-# data.to_csv("data-cities.csv", index=False)
+#data = data.sort_values(by=['oktmo', 'year'])
+
+#data.to_csv("superdataset-24 alltime-clust (oktmo+name+clust).csv", index=False)
 
 # трансформация в 2D методом компонент
 pca = PCA(2)

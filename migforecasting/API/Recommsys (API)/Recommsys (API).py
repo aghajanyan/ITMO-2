@@ -161,7 +161,18 @@ async def headtohead(request: Request):
                 migprop = float(msaldo / mpopsize)
                 bestcluster = k
 
-    return bestcluster
+    # вычисление наиболее близкого МО среди лучшего кластера
+    dist = []
+    tmpdata = data[data['clust'] == bestcluster]
+    for i in range(len(tmpdata)):
+        tmp = mean_squared_error(tmpdata.iloc[i][6:21], inputdata.iloc[0][1:])  # кроме popsize
+        dist.append(tmp)
+
+    # сортировка датафрейма согласно отклонению (dist)
+    tmpdata['dist'] = dist
+    tmpdata = tmpdata.sort_values(by='dist')
+
+    return tmpdata.iloc[0].to_dict()
 
 
 # вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
