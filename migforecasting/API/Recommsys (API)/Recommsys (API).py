@@ -96,7 +96,7 @@ async def whatcluster(request: Request):
 
     pred_cluster = kmeans_model.predict(inputdata)
 
-    return "Поселение входит в кластер номер: " + str(pred_cluster[0]) +""
+    return "Муниципальное образование входит в кластер номер: " + str(pred_cluster[0]) +""
 
 
 # поиск наиболее близки поселений на основе социально-экономических индикаторов
@@ -119,9 +119,11 @@ async def siblingsfinder(request: Request):
         tmp1 = mean_squared_error(data.iloc[b][5:21], inputdata.iloc[0][1:])  # кроме popsize
         dist1.append(tmp1)
 
+    # сортировка датафрейма согласно отклонению (dist1)
     data['dist1'] = dist1
     data = data.sort_values(by='dist1')
 
+    # выделение топ-10 наиболее близких (похожих)
     top10 = []
     for i in range(10):
         top10.append(data.iloc[i])
