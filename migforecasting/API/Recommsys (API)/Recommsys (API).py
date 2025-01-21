@@ -92,7 +92,7 @@ async def whatcluster(request: Request):
     inputdata = normformodel(inputdata)
 
     # загрузка модели
-    kmeans_model = joblib.load('kmeans_model (24-all-iqr).joblib')
+    kmeans_model = joblib.load('kmeans_model (24-all-iqr) 01.joblib')
 
     pred_cluster = kmeans_model.predict(inputdata)
 
@@ -174,7 +174,16 @@ async def headtohead(request: Request):
     tmpdata['dist'] = dist
     tmpdata = tmpdata.sort_values(by='dist')
 
-    return tmpdata.iloc[0].to_dict()
+    #вычисление разницы между наиболее близким и заданным
+    dif = []
+    for col in inputdata:
+        dif.append(float(tmpdata.iloc[0][col] / inputdata.iloc[0][col]))
+
+    dif = np.array(dif)
+    features = list(inputdata.columns)
+    dif = pd.DataFrame(dif, index=features)
+
+    return tmpdata.iloc[0].to_dict(), dif.to_dict()
 
 
 # вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
