@@ -96,6 +96,22 @@ async def whatcluster(request: Request):
 
     pred_cluster = kmeans_model.predict(inputdata)
 
+    # сохранение центроидов с нумерацией кластеров (в случае необходимости)
+    """
+    centroids = kmeans_model.cluster_centers_
+    features = list(inputdata.columns)
+    centroids = np.array(centroids)
+    centroids = pd.DataFrame(centroids, columns=features)
+
+    clust = []
+    for i in range(len(centroids)):
+        clust.append(i)
+
+    centroids['clust'] = clust
+
+    centroids.to_csv('centroids 01.csv', index=False)
+    """
+
     return "Муниципальное образование входит в кластер номер: " + str(pred_cluster[0]) +""
 
 
