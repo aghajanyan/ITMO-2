@@ -134,7 +134,7 @@ async def siblingsfinder(request: Request):
     inputdata = normpersoul(inputdata)
 
     #загрузка датасета
-    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name)-normbysoul.csv")
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01-normbysoul.csv")
 
     # наиболее близкие среди всех кластеров
     dist1 = []
