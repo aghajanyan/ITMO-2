@@ -96,8 +96,15 @@ async def whatcluster(request: Request):
 
     pred_cluster = kmeans_model.predict(inputdata)
 
-    # сохранение центроидов с нумерацией кластеров (в случае необходимости)
     """
+    # сохранение центроидов с нумерацией кластеров (в случае необходимости)
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01.csv")
+    tmpdata = []
+    saldo = []
+    for k in range(int(data['clust'].max()) + 1):
+        tmpdata = data[data['clust'] == k]
+        saldo.append(tmpdata['saldo'].median())
+
     centroids = kmeans_model.cluster_centers_
     features = list(inputdata.columns)
     centroids = np.array(centroids)
@@ -108,6 +115,7 @@ async def whatcluster(request: Request):
         clust.append(i)
 
     centroids['clust'] = clust
+    centroids['saldo'] = saldo
 
     centroids.to_csv('centroids 01.csv', index=False)
     """
