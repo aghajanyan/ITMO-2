@@ -110,6 +110,34 @@ def getmedians():
     medians.to_excel('medians 01.csv', index=False)
 
 
+# сохранение файла с центроидами кластеров
+def getcentroids():
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01.csv")
+    norm = pd.read_csv("fornorm 24 all (IQR).csv")
+    tmpdata = []
+    saldo = []
+    for k in range(int(data['clust'].max()) + 1):
+        tmpdata = data[data['clust'] == k]
+        saldo.append(tmpdata['saldo'].median())
+
+    # загрузка модели
+    kmeans_model = joblib.load('kmeans_model (24-all-iqr) 01.joblib')
+
+    centroids = kmeans_model.cluster_centers_
+    features = list(norm.columns)
+    centroids = np.array(centroids)
+    centroids = pd.DataFrame(centroids, columns=features)
+
+    clust = []
+    for i in range(len(centroids)):
+        clust.append(i)
+
+    centroids['clust'] = clust
+    centroids['saldo'] = saldo
+
+    centroids.to_csv('centroids 01.csv', index=False)
+
+
 # определить кластер для входных данных
 @app.get("/recommsys/whatcluster")
 async def whatcluster(request: Request):
