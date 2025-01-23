@@ -83,6 +83,33 @@ def inputproc(request):
     return inputdata
 
 
+# сохранение файла с медианами кластеров
+def getmedians():
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01.csv")
+    norm = pd.read_csv("fornorm 24 all (IQR).csv")
+    tmpdata = []
+    medians = []
+    tmp = []
+    for k in range(int(data['clust'].max()) + 1):
+        tmpdata = data[data['clust'] == k]
+        for col in norm:
+            tmp.append(tmpdata[col].median() * norm.iloc[0][col])
+
+        medians.append(tmp)
+        tmp = []
+
+    features = list(norm.columns)
+    medians = np.array(medians)
+    medians = pd.DataFrame(medians, columns=features)
+
+    clust = []
+    for i in range(len(medians)):
+        clust.append(i)
+
+    medians['clust'] = clust
+    medians.to_excel('medians 01.csv', index=False)
+
+
 # определить кластер для входных данных
 @app.get("/recommsys/whatcluster")
 async def whatcluster(request: Request):
@@ -91,34 +118,12 @@ async def whatcluster(request: Request):
     inputdata = normbyinf(inputdata)
     inputdata = normformodel(inputdata)
 
+    getmedians()
+
     # загрузка модели
     kmeans_model = joblib.load('kmeans_model (24-all-iqr) 01.joblib')
 
     pred_cluster = kmeans_model.predict(inputdata)
-
-    """
-    # сохранение центроидов с нумерацией кластеров (в случае необходимости)
-    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01.csv")
-    tmpdata = []
-    saldo = []
-    for k in range(int(data['clust'].max()) + 1):
-        tmpdata = data[data['clust'] == k]
-        saldo.append(tmpdata['saldo'].median())
-
-    centroids = kmeans_model.cluster_centers_
-    features = list(inputdata.columns)
-    centroids = np.array(centroids)
-    centroids = pd.DataFrame(centroids, columns=features)
-
-    clust = []
-    for i in range(len(centroids)):
-        clust.append(i)
-
-    centroids['clust'] = clust
-    centroids['saldo'] = saldo
-
-    centroids.to_csv('centroids 01.csv', index=False)
-    """
 
     return "Муниципальное образование входит в кластер номер: " + str(pred_cluster[0]) +""
 
@@ -140,7 +145,7 @@ async def siblingsfinder(request: Request):
     dist1 = []
     tmp1 = 0.0
     for b in range(len(data)):
-        tmp1 = mean_squared_error(data.iloc[b][5:21], inputdata.iloc[0][1:])  # кроме popsize
+        tmp1 = mean_squared_error(data.iloc[b][6:21], inputdata.iloc[0][1:])  # кроме popsize
         dist1.append(tmp1)
 
     # сортировка датафрейма согласно отклонению (dist1)
@@ -169,7 +174,7 @@ async def headtohead(request: Request):
     inputdata = normpersoul(inputdata)
 
     #загрузка датасета
-    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust)-normbysoul.csv")
+    data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01-normbysoul.csv")
 
     # наиболее близкий из лучшего кластера
     migprop = 0.0
