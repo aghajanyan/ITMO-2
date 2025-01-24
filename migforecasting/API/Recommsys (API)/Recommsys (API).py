@@ -146,8 +146,6 @@ async def whatcluster(request: Request):
     inputdata = normbyinf(inputdata)
     inputdata = normformodel(inputdata)
 
-    getmedians()
-
     # загрузка модели
     kmeans_model = joblib.load('kmeans_model (24-all-iqr) 01.joblib')
 
@@ -253,11 +251,14 @@ async def reveal(request: Request):
     filename = ''
     # выброр медиан кластеров согласно уровню МО
     if inputdata.iloc[0]['type'] == 'all':
-        filename = 'medians all.csv'
+        filename = 'medians 01.csv'
     else:
         filename = 'medians only mundist.csv'
 
     medians = pd.read_csv(filename)
+
+    # сортировка от лучшего кластера к худшему (согласно критерию)
+    medians = medians.sort_values(by=['migprop'], ascending=False)
 
     medians = normpersoul(medians)
     inputdata = normpersoul(inputdata)
