@@ -107,7 +107,7 @@ def getmedians():
         clust.append(i)
 
     medians['clust'] = clust
-    medians.to_excel('medians 01.csv', index=False)
+    medians.to_excel('medians 01.xlsx', index=False)
 
 
 # сохранение файла с центроидами кластеров
