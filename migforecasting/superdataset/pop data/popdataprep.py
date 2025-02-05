@@ -45,30 +45,41 @@ newdata = data[['oktmo', 'municipality', 'year', 'vozr', 'indicator_value']]
 tmp = []
 final = []
 i = 0
+age = 0
 while i < len(newdata):
     if i != len(newdata) - 1:
         if newdata.iloc[i]['oktmo'] != newdata.iloc[i+1]['oktmo']:
             tmp.append(newdata.iloc[i]['indicator_value'])
             final.append(np.array(tmp))
             tmp.clear()
+            age = -1
         else:
             if newdata.iloc[i]['vozr'] != newdata.iloc[i+1]['vozr']:
                 if len(tmp) != 0:
                     tmp.append(newdata.iloc[i]['indicator_value'])
+                    if age != newdata.iloc[i]['vozr']:
+                        print('error')
                 else:
                     tmp.append(newdata.iloc[i]['oktmo'])
                     tmp.append(newdata.iloc[i]['municipality'])
                     tmp.append(newdata.iloc[i]['year'])
                     tmp.append(gender)
                     tmp.append(newdata.iloc[i]['indicator_value'])
+                    if age != newdata.iloc[i]['vozr']:
+                        print('error')
             else:
                 if newdata.iloc[i]['indicator_value'] < newdata.iloc[i+1]['indicator_value']:
                     tmp.append(newdata.iloc[i]['indicator_value'])
                     i+=1
+                    if age != newdata.iloc[i]['vozr']:
+                        print('error')
                 else:
                     tmp.append(newdata.iloc[i+1]['indicator_value'])
                     i+=1
+                    if age != newdata.iloc[i]['vozr']:
+                        print('error')
         i += 1
+        age += 1
     else:
         tmp.append(newdata.iloc[i]['indicator_value'])
         final.append(np.array(tmp))
