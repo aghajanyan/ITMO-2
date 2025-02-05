@@ -18,17 +18,21 @@ gender = 'Male'
 # загрузка и первичная обработка входного файла файла
 with open('pop23.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
-    for i in range(1300):
-        row = next(reader)
-        if row[4] == 'Всего' or i == 0:
-            data.append(np.array(row))
-    #for row in reader:
-        #if row[4] == 'Всего':
-            #data.append(np.array(row))
+    row0 = next(reader)
+    data.append(np.array(row0))
+    if gender == 'Male':
+        for row in reader:
+            if row[4] == 'Мужчины':
+                data.append(np.array(row))
+    else:
+        for row in reader:
+            if row[4] == 'Женщины':
+                data.append(np.array(row))
 
 data = np.array(data)
 
 data = pd.DataFrame(data, columns=data[0])
+data = data.drop(0)
 
 data = data.sort_values(by=['oktmo', 'vozr'])
 
