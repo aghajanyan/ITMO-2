@@ -5,13 +5,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 data = []
-"""
-with open('LO outflow.csv', 'r', newline='', encoding='utf-8') as csvfile:
-    reader = csv.reader(csvfile, delimiter=';')
-    for i in range(300):
-        row = next(reader)
-        data.append(np.array(row))
-"""
 
 gender = 'Male'
 
@@ -21,10 +14,8 @@ with open('pop23.csv', 'r', newline='', encoding='utf-8') as csvfile:
     row0 = next(reader)
     data.append(np.array(row0))
     if gender == 'Male':
-        for i in range(1300):
-            row = next(reader)
-        #for row in reader:
-            if row[4] == 'Всего':
+        for row in reader:
+            if row[4] == 'Мужчины':
                 data.append(np.array(row))
     else:
         for row in reader:
@@ -49,27 +40,35 @@ data = data.sort_values(by=['oktmo', 'vozr'])
 
 # оставляем только нужное
 newdata = data[['oktmo', 'municipality', 'year', 'vozr', 'indicator_value']]
+newdata = newdata.rename(columns={'municipality': 'name', 'indicator_value': 'value'})
 newdata['gender'] = 'Male'
 
 # иногда один и тот же возраст повторяется, при этом данные по количеству отличаются!! (удаляем дубликаты)
 newdata = newdata.drop_duplicates(subset=['oktmo', 'vozr'], keep='last')
 
 # транспонирование с целью "номер столбца = возраст"
-final = newdata.pivot(index=['oktmo'], columns='vozr', values='indicator_value')
+final = newdata.pivot(index=['oktmo'], columns='vozr', values='value')
 
 # октмо - отдельный столбец, индекс от 0 до n
 final['oktmo'] = final.index
 final = final.reset_index(drop=True)
 
 # подготовка для мёрджа названий, года и гендера
-newdata = newdata[newdata.columns.drop(['vozr', 'indicator_value'])]
+newdata = newdata[newdata.columns.drop(['vozr', 'value'])]
 newdata = newdata.drop_duplicates()
 
 final = final.merge(newdata, on='oktmo', how='left')
 
-final = np.array(final)
-cols = list(['oktmo', 'name', 'year', 'gender']) + list(range(0, 70))
-final = pd.DataFrame(final, columns=cols)
+for i in range(70, 80):
+    final = final.drop(columns=[i])
+
+final = final.dropna()
+
+for i in range(0, 70):
+    final = final.astype({i: int})
+
+cols = list(['oktmo', 'name', 'gender', 'year']) + list(range(0, 70))
+final = final[cols]
 
 final.to_csv("agestruct "+gender+" 2023.csv", index=False)
 
