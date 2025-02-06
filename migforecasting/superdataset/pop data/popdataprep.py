@@ -6,14 +6,14 @@ import pandas as pd
 
 data = []
 
-gender = 'Male'
+gender = 'female'
 
 # загрузка и первичная обработка входного файла файла
 with open('pop23.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
     row0 = next(reader)
     data.append(np.array(row0))
-    if gender == 'Male':
+    if gender == 'male':
         for row in reader:
             if row[4] == 'Мужчины':
                 data.append(np.array(row))
@@ -41,7 +41,7 @@ data = data.sort_values(by=['oktmo', 'vozr'])
 # оставляем только нужное
 newdata = data[['oktmo', 'municipality', 'year', 'vozr', 'indicator_value']]
 newdata = newdata.rename(columns={'municipality': 'name', 'indicator_value': 'value'})
-newdata['gender'] = 'Male'
+newdata['gender'] = gender
 
 # иногда один и тот же возраст повторяется, при этом данные по количеству отличаются!! (удаляем дубликаты)
 newdata = newdata.drop_duplicates(subset=['oktmo', 'vozr'], keep='last')
@@ -59,11 +59,11 @@ newdata = newdata.drop_duplicates()
 
 final = final.merge(newdata, on='oktmo', how='left')
 
+# есть несколько МО с более детализованной структурой (удалить)
 for i in range(70, 80):
     final = final.drop(columns=[i])
 
 final = final.dropna()
-
 for i in range(0, 70):
     final = final.astype({i: int})
 
