@@ -6,10 +6,10 @@ import pandas as pd
 
 data = []
 
-gender = 'female'
+gender = 'male'
 
 # загрузка и первичная обработка входного файла файла
-with open('pop23.csv', 'r', newline='', encoding='utf-8') as csvfile:
+with open('pop21.csv', 'r', newline='', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile, delimiter=';')
     row0 = next(reader)
     data.append(np.array(row0))
@@ -63,14 +63,14 @@ final = final.merge(newdata, on='oktmo', how='left')
 for i in range(70, 80):
     final = final.drop(columns=[i])
 
-final = final.dropna()
+final = final.dropna(thresh=69)     # удалить примеры, где больше 5 NaN в строке
 for i in range(0, 70):
-    final = final.astype({i: int})
+    final = final.fillna(0).astype({i: int})
 
 cols = list(['oktmo', 'name', 'gender', 'year']) + list(range(0, 70))
 final = final[cols]
 
-final.to_csv("agestruct "+gender+" 2023.csv", index=False)
+final.to_csv("agestruct "+gender+" 2021.csv", index=False)
 
 
 """
