@@ -6,7 +6,7 @@ import pandas as pd
 
 data = []
 
-gender = 'male'
+gender = 'female'
 
 # загрузка и первичная обработка входного файла файла
 with open('pop21.csv', 'r', newline='', encoding='utf-8') as csvfile:
@@ -34,8 +34,9 @@ data = data[data['vozr'].str.isdigit()]
 
 # преобразование типов и сортировка
 data = data.astype({"vozr": int})
+data = data.replace(r'', np.nan, regex=True)
 data = data.astype({"indicator_value": float})
-data = data.astype({"indicator_value": int})
+data = data.fillna(0).astype({"indicator_value": int})
 data = data.sort_values(by=['oktmo', 'vozr'])
 
 # оставляем только нужное
