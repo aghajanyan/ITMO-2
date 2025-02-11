@@ -17,7 +17,7 @@ for y in range(2011, 2024):
     tmp = []
     n = 0   # кол-во хюмансов в когорте
     # преобразование данных за год в когорту
-    for i in range(10):
+    for i in range(len(data)):
         for a in cols:
             a = a.split('-')
             n = 0
