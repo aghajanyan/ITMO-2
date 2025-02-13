@@ -270,12 +270,6 @@ def siblingsfinder(data, clusts):
     #нормализация набора данных на душу населения
     normpersoulalldata(data)
 
-    # в демонстративных целях
-    index = 0
-    for i in range(len(data)):
-        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
-            index = i
-            break
 
     agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
     #agestruct = agestruct[agestruct.columns.drop('name')]
@@ -285,16 +279,38 @@ def siblingsfinder(data, clusts):
     sync = ecosocage[['oktmo', 'year']].drop_duplicates()
     data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
 
+    # в демонстративных целях
+    index = 0
+    for i in range(len(data)):
+        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
+            index = i
+            break
 
     # наиболее близкие среди всех кластеров
     dist1 = []
     tmp1 = 0.0
     for b in range(len(data)):
-        tmp1 = mean_squared_error(data.iloc[b][6:21], data.iloc[index][6:21])  # All factors
+        tmp1 = mean_squared_error(data.iloc[b][6:20], data.iloc[index][6:20])  # All factors
         dist1.append(tmp1)
 
     data['dist1'] = dist1
     data = data.sort_values(by='dist1')
+
+    # наиболее близкие среди всех кластеров
+    popdist = []
+    female = 0.0
+    male = 0.0
+    popindex = index * 2
+    b = 0
+    while b < len(ecosocage):
+        female = mean_squared_error(ecosocage.iloc[b][4:18], ecosocage.iloc[popindex][4:18])
+        male = mean_squared_error(ecosocage.iloc[b + 1][4:18], ecosocage.iloc[popindex + 1][4:18])
+        popdist.append(female + male)
+        b+=2
+
+    data['similarity 2.0'] = popdist
+    data = data.sort_values(by='similarity 2.0')
+
 
     #retroanalysis(data)
 
