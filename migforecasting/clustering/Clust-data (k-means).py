@@ -195,7 +195,7 @@ def normpersoul(tonorm):
 def normpersoulalldata(data):
     # факторы для нормирования
     features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
-                'livestock', 'harvest', 'agrprod', 'beforeschool', 'factoriescap']
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
 
     for a in features:
         data[a] = data[a] / data['popsize']
@@ -259,13 +259,14 @@ def retroanalysis(data):
 
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
-    # трансформация в 2D методом компонент
+    """
+    # трансформация в 3D методом компонент
     pca = PCA(3)
     pca3 = pca.fit_transform(data.iloc[:, 5:21])  # 5- без сальдо
     data['x'] = pca3[:, 0]
     data['y'] = pca3[:, 1]
     data['z'] = pca3[:, 2]
-
+    """
     #нормализация набора данных на душу населения
     normpersoulalldata(data)
 
@@ -275,6 +276,15 @@ def siblingsfinder(data, clusts):
         if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
             index = i
             break
+
+    agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
+    #agestruct = agestruct[agestruct.columns.drop('name')]
+
+    # одинаковые примеры в разных датафреймах (в одном датафрейме дублируются социо-экон. факторы)
+    ecosocage = pd.merge(data[['oktmo', 'year']], agestruct, how='inner', on=['oktmo', 'year'])
+    sync = ecosocage[['oktmo', 'year']].drop_duplicates()
+    data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
+
 
     # наиболее близкие среди всех кластеров
     dist1 = []
@@ -505,7 +515,7 @@ print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'
 centroids = clust_model.cluster_centers_
 
 # сохранение модели
-joblib.dump(clust_model, 'kmeans_model (24-all-iqr).joblib')
+#joblib.dump(clust_model, 'kmeans_model (24-all-iqr).joblib')
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
@@ -518,7 +528,7 @@ data = data[cols]
 
 data = data.sort_values(by=['oktmo', 'year'])
 
-data.to_csv("superdataset-24 alltime-clust (oktmo+name+clust).csv", index=False)
+#data.to_csv("superdataset-24 alltime-clust (oktmo+name+clust).csv", index=False)
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
@@ -533,7 +543,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-#siblingsfinder(data, clusts)
+siblingsfinder(data, clusts)
 
 getmedian(data)
 
