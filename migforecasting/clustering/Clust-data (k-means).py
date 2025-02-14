@@ -259,14 +259,7 @@ def retroanalysis(data):
 
 # нахождение наиболее похожих МО в кластере согласно социально-экономическим факторам
 def siblingsfinder(data, clusts):
-    """
-    # трансформация в 3D методом компонент
-    pca = PCA(3)
-    pca3 = pca.fit_transform(data.iloc[:, 5:21])  # 5- без сальдо
-    data['x'] = pca3[:, 0]
-    data['y'] = pca3[:, 1]
-    data['z'] = pca3[:, 2]
-    """
+
     #нормализация набора данных на душу населения
     normpersoulalldata(data)
 
@@ -278,13 +271,18 @@ def siblingsfinder(data, clusts):
     sync = agestruct[['oktmo', 'year']].drop_duplicates()
     data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
 
+
+    # тавр 52653000
+    # спас 29634000
+    # домб 53617000
     # в демонстративных целях
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
+        if data.iloc[i]['year'] == 2017 and data.iloc[i]['oktmo'] == 53617000:
             index = i
             break
 
+    #index = random.randint(0, len(data))
     # наиболее близкие среди всех кластеров согласно социально-экономическим индикаторам
     sim1 = []
     tmp1 = 0.0
@@ -316,6 +314,14 @@ def siblingsfinder(data, clusts):
     sim3 = data['similarity 1'] + data['similarity 2']
     data['similarity 3'] = sim3
 
+    cols = ['oktmo', 'year', 'name', 'clust', 'similarity 1', 'similarity 2', 'similarity 3', 'saldo', 'popsize',
+            'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea', 'sportsvenue',
+            'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'x', 'y']
+
+    data = data[cols]
+
+    data = data.sort_values(by='similarity 1')
+    data = data.sort_values(by='similarity 2')
     data = data.sort_values(by='similarity 3')
 
 
