@@ -270,7 +270,6 @@ def siblingsfinder(data, clusts):
     #нормализация набора данных на душу населения
     normpersoulalldata(data)
 
-
     agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
     #agestruct = agestruct[agestruct.columns.drop('name')]
 
@@ -287,14 +286,18 @@ def siblingsfinder(data, clusts):
             break
 
     # наиболее близкие среди всех кластеров
-    dist1 = []
+    sim1 = []
     tmp1 = 0.0
     for b in range(len(data)):
         tmp1 = mean_squared_error(data.iloc[b][6:20], data.iloc[index][6:20])  # All factors
-        dist1.append(tmp1)
+        sim1.append(tmp1)
 
-    data['dist1'] = dist1
+    # сортировка согласно критерию подобия
+    data['similarity 1.0'] = sim1
     data = data.sort_values(by='dist1')
+
+    # нормализация оценки подобия от 0 до 1
+    data['similarity 1.0'] = data['similarity 1.0'] / data.iloc[len(data) - 1]['similarity 1.0']
 
     # наиболее близкие среди всех кластеров
     popdist = []
