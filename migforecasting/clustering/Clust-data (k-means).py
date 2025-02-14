@@ -274,8 +274,8 @@ def siblingsfinder(data, clusts):
     #agestruct = agestruct[agestruct.columns.drop('name')]
 
     # одинаковые примеры в разных датафреймах (в одном датафрейме дублируются социо-экон. факторы)
-    ecosocage = pd.merge(data[['oktmo', 'year']], agestruct, how='inner', on=['oktmo', 'year'])
-    sync = ecosocage[['oktmo', 'year']].drop_duplicates()
+    agestruct = pd.merge(data[['oktmo', 'year']], agestruct, how='inner', on=['oktmo', 'year'])
+    sync = agestruct[['oktmo', 'year']].drop_duplicates()
     data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
 
     # в демонстративных целях
@@ -285,34 +285,38 @@ def siblingsfinder(data, clusts):
             index = i
             break
 
-    # наиболее близкие среди всех кластеров
+    # наиболее близкие среди всех кластеров согласно социально-экономическим индикаторам
     sim1 = []
     tmp1 = 0.0
     for b in range(len(data)):
         tmp1 = mean_squared_error(data.iloc[b][6:20], data.iloc[index][6:20])  # All factors
         sim1.append(tmp1)
 
-    # сортировка согласно критерию подобия
-    data['similarity 1.0'] = sim1
-    data = data.sort_values(by='dist1')
-
-    # нормализация оценки подобия от 0 до 1
-    data['similarity 1.0'] = data['similarity 1.0'] / data.iloc[len(data) - 1]['similarity 1.0']
-
-    # наиболее близкие среди всех кластеров
-    popdist = []
+    # наиболее близкие среди всех кластеров согласно половозрастной структуре
+    sim2 = []
     female = 0.0
     male = 0.0
     popindex = index * 2
     b = 0
-    while b < len(ecosocage):
-        female = mean_squared_error(ecosocage.iloc[b][4:18], ecosocage.iloc[popindex][4:18])
-        male = mean_squared_error(ecosocage.iloc[b + 1][4:18], ecosocage.iloc[popindex + 1][4:18])
-        popdist.append(female + male)
+    while b < len(agestruct):
+        female = mean_squared_error(agestruct.iloc[b][4:18], agestruct.iloc[popindex][4:18])
+        male = mean_squared_error(agestruct.iloc[b + 1][4:18], agestruct.iloc[popindex + 1][4:18])
+        sim2.append(female + male)
         b+=2
 
-    data['similarity 2.0'] = popdist
-    data = data.sort_values(by='similarity 2.0')
+    # добавление критериев в таблицу
+    data['similarity 1'] = sim1
+    data['similarity 2'] = sim2
+
+    # нормализация оценки подобия от 0 до 1
+    data['similarity 1'] = data['similarity 1'] / data['similarity 1'].max()
+    data['similarity 2'] = data['similarity 2'] / data['similarity 2'].max()
+
+    # комбинирование двух критериев
+    sim3 = data['similarity 1'] + data['similarity 2']
+    data['similarity 3'] = sim3
+
+    data = data.sort_values(by='similarity 3')
 
 
     #retroanalysis(data)
