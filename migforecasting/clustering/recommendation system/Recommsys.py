@@ -40,36 +40,41 @@ normpersoul(inputdata)
 changes = []
 tmp = []
 filename = ''
-for k in range(len(inputdata)):
-    # выброр медиан кластеров согласно уровню МО
-    if inputdata.iloc[k]['type'] == 'all':
-        filename = 'medians all.csv'
-    else:
-        filename = 'medians only mundist.csv'
+# выброр медиан кластеров согласно уровню МО
+if inputdata.iloc[0]['type'] == 'all':
+    filename = 'medians all.csv'
+else:
+    filename = 'medians only mundist.csv'
 
-    medians = pd.read_csv(filename)
-    normpersoul(medians)
+medians = pd.read_csv(filename)
+normpersoul(medians)
 
-    # вычисление разницы входа от медиан лучшего кластера
-    for i in range(len(medians)):
-        if inputdata.iloc[k]['profile'] == medians.iloc[i]['profile']:
-            for col in inputdata.iloc[:, 7:]:
-                tmp.append(float(medians.iloc[i][col] / inputdata.iloc[k][col]))
+# вычисление разницы входа от медиан лучшего кластера
+for i in range(len(medians)):
+    if inputdata.iloc[0]['profile'] == medians.iloc[i]['profile']:
+        for col in inputdata.iloc[:, 8:]:
+            #tmp.append(float(((medians.iloc[i][col] / inputdata.iloc[0][col])-1)*100))
+            tmp.append(float(medians.iloc[i][col] / inputdata.iloc[0][col]))
 
-            changes.append(tmp)
-            tmp = []
-            break
+        changes.append(tmp)
+        tmp = []
+        break
 
-features = list(inputdata.iloc[:, 7:].columns)
+features = list(inputdata.iloc[:, 8:].columns)
 changes = np.array(changes)
 changes = pd.DataFrame(changes, columns=features)
+
+for a in changes.columns:
+    if changes.iloc[0][a] < 1:
+        changes = changes[changes.columns.drop(a)]
 
 changes = changes.transpose()
 
 ax = changes.plot.barh()
-ax.set_title("Сбалансированный вектор развития "+ inputdata.iloc[0]['name'] +" относительно лучшей группы мун. образований")
+ax.set_title("Сбалансированный вектор развития "+ inputdata.iloc[0]['name'] + " относительно лучшей группы мун. образований")
 ax.set_xlabel('Во сколько раз необходимо улучшить')
 ax.set_ylabel('Социально-экономические индикаторы')
+plt.xlim(1, changes[0].max())
 plt.legend(inputdata['profile'])
 plt.show()
 
