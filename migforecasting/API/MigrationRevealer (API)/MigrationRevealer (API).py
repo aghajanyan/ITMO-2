@@ -11,20 +11,32 @@ app = FastAPI()
 
 
 #Нормирование цен согласно инфляции
-def normbyinf(inputdata):
+def normbyinf(inputdata, year):
     # признаки для ценового нормирования
     allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest', 'budincome',
                       'funds', 'naturesecure', 'factoriescap']
 
     thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
     infdata = pd.read_csv("inflation14.csv")
+
+    avginf = 0.0
+    for i in range(len(infdata) - 1):
+        avginf += np.abs(infdata.iloc[i]['inf'] - infdata.iloc[i + 1]['inf'])
+
+    avginf = avginf / len(infdata)
+
+    start = 2023
+    if year != 2023:
+        while start < year:
+            infdata.loc[len(infdata)] = [start + 1] + [infdata.iloc[len(infdata) - 1] + avginf]
+
     for k in range(len(inputdata)):
-        inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]   # получить инфляцию за необходимый год
+        inflation = infdata[infdata['year'] == year]   # получить инфляцию за необходимый год
         for col in thisrubfeatures:
             index = inputdata.columns.get_loc(col)
             inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
 
-    return inputdata
+    return inputdata.iloc[0]
 
 
 # Нормирование данных для модели (от 0 до 1)
@@ -44,7 +56,7 @@ def normformodel(inputdata):
     features = list(norm.columns[1:])
     final = pd.DataFrame(final, columns=features)
     inputdata = final
-    return inputdata, norm.iloc[0]['saldo']
+    return inputdata.iloc[0], norm.iloc[0]['saldo']
 
 
 @app.get("/migration-revealer")
@@ -62,17 +74,30 @@ async def reveal(request: Request):
     # загрузка модели
     model = joblib.load('migpred (24, tree).joblib')
 
-    #нормализация входных данных
-    inputdata = normbyinf(inputdata)
+    # получение периода прогноза (если 2023, то делается прогноз на один год, то есть от 2022 года)
+    startyear = 2022
+    endyear = inputdata.iloc[0]['year']
     inputdata = inputdata.iloc[:, 1:]  # отрезать показатель year
-    inputdata, maxsaldo = normformodel(inputdata)
+
+    dataforpred = []
+    # нормализация согласно инфляции
+    while startyear < endyear:
+        dataforpred.append(normbyinf(inputdata, startyear + 1))
+        startyear += 1
+
+    dataforpred = np.array(dataforpred)
+    dataforpred = pd.DataFrame(dataforpred, columns=inputdata.columns)
 
     # выполнение прогноза
-    prediction = model.predict(inputdata)
-    prediction = prediction * maxsaldo
-    inputdata['predsaldo'] = int(prediction)
+    predsaldo = 0
+    for i in range(len(dataforpred)):
+        dataforpred.iloc[i], maxsaldo = normformodel(dataforpred.iloc[[i]])
 
-    return inputdata.iloc[0]['predsaldo']
+        prediction = model.predict(dataforpred)
+        prediction = prediction * maxsaldo
+        predsaldo += int(prediction)
+
+    return predsaldo
 
 
 @app.get("/notsure")
