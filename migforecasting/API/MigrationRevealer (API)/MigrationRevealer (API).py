@@ -22,7 +22,8 @@ def normbyinf(inputdata, infdata, year):
         inflation = infdata[infdata['year'] == year]   # получить инфляцию за необходимый год
         for col in thisrubfeatures:
             index = inputdata.columns.get_loc(col)
-            inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+            infnorm = 1 - (inflation.iloc[0]['inf'] / 100)
+            inputdata.iloc[k, index] = inputdata.iloc[k][col] * infnorm
 
     return inputdata.iloc[0]
 
@@ -79,9 +80,11 @@ async def reveal(request: Request):
     # нормализация согласно инфляции
     startyear = 2023
     while startyear <= endyear:
-        dataforpred.append(np.array(normbyinf(inputdata, infdata, startyear)))
+        tmp = pd.DataFrame.copy(inputdata)
+        dataforpred.append(np.array(normbyinf(tmp, infdata, startyear)))
         startyear += 1
 
+    # список в датафрейм
     dataforpred = pd.DataFrame(dataforpred, columns=inputdata.columns)
 
     #нормализация под модель прогноза
@@ -96,13 +99,6 @@ async def reveal(request: Request):
     predsaldo = int(np.sum(prediction))
 
     return predsaldo
-
-
-@app.get("/notsure")
-async def calc(year: int, popsize: int, avgemployers: float, avgsalary: float, shoparea: float,
-               foodseats: int, retailturnover: float, livarea: int, sportsvenue: int, servicesnum: int, roadslen: float,
-               livestock: int, harvest: float, agrprod: float, hospitals: int, beforeschool: int, factoriescap: float):
-    return avgsalary
 
 
 if __name__ == "__main__":
