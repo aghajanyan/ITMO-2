@@ -28,7 +28,8 @@ def normbyinf(inputdata):
         inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]   # получить инфляцию за необходимый год
         for col in thisrubfeatures:
             index = inputdata.columns.get_loc(col)
-            inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+            infnorm = 1 - (inflation.iloc[0]['inf'] / 100)
+            inputdata.iloc[k, index] = inputdata.iloc[k][col] * infnorm
 
     return inputdata
 

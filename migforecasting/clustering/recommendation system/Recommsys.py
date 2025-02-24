@@ -21,7 +21,8 @@ def normbyinf(tonorm):
         inflation = infdata[infdata['year'] == tonorm.iloc[k]['year']]
         for col in thisrubfeatures:
             index = tonorm.columns.get_loc(col)
-            tonorm.iloc[k, index] = tonorm.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+            infnorm = 1 - (inflation.iloc[0]['inf'] / 100)
+            tonorm.iloc[k, index] = tonorm.iloc[k][col] * infnorm
 
     return tonorm
 
