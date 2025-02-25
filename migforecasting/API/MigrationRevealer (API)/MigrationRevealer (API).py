@@ -1,4 +1,4 @@
-# version 0.7 (25.02.2025)
+# version 0.8 (25.02.2025)
 
 import pandas as pd
 import joblib
@@ -55,7 +55,6 @@ async def reveal(request: Request):
     # обработка входных параметров
     inputdata = dict(request.query_params)
     inputdata = pd.DataFrame(inputdata, index=[0])
-    #inputdata = inputdata.transpose()
     features = ['year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
                 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
                 'beforeschool']
@@ -65,26 +64,14 @@ async def reveal(request: Request):
     # загрузка модели
     model = joblib.load('migpred (24, tree).joblib')
 
-    # получение периода прогноза (если 2023, то делается прогноз на один год, то есть от 2022 года)
-    startyear = 2023
-    endyear = inputdata.iloc[0]['year']
+    startyear = 2024    # начальная точка прогноза, т.е. первый прогноз делается на 25-ый год
+    endyear = int(inputdata.iloc[0]['year'])
     inputdata = inputdata.iloc[:, 1:]  # отрезать показатель year
 
-    # получение данных об инфляции и расчёт среднего годового приращения
-    infdata = pd.read_csv("inflation14.csv")
-    avginf = infdata.iloc[len(infdata) - 1]['inf'] / len(infdata)
-
-    while startyear < endyear:
-        infdata.loc[len(infdata)] = [startyear + 1] + [infdata.iloc[len(infdata) - 1]['inf'] + avginf]
-        startyear +=1
-
-    dataforpred = []
     # нормализация согласно инфляции
-    startyear = 2023
-    while startyear <= endyear:
-        tmp = pd.DataFrame.copy(inputdata)
-        dataforpred.append(np.array(normbyinf(tmp, infdata, startyear)))
-        startyear += 1
+    infdata = pd.read_csv("inflation14.csv")
+    dataforpred = []
+    dataforpred.append(np.array(normbyinf(inputdata, infdata, startyear)))
 
     # список в датафрейм
     dataforpred = pd.DataFrame(dataforpred, columns=inputdata.columns)
@@ -100,18 +87,7 @@ async def reveal(request: Request):
     prediction = prediction * maxsaldo
     predsaldo = int(np.sum(prediction))
 
-    # подготовка выходного результата
-    output = ''
-    startyear = 2023
-    for i in range(len(prediction)):
-        output += str(startyear) + ': ' + str(int(prediction[i])) + ' '
-        startyear += 1
-
-    output += 'total: ' + str(predsaldo)
-
-    # return predsaldo - вернуть только общее число
-
-    return output
+    return 'Миграционное сальдо к ' + str(endyear) + ': ' + str(predsaldo * (endyear - startyear))
 
 
 if __name__ == "__main__":
