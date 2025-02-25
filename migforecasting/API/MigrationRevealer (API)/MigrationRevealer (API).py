@@ -70,7 +70,7 @@ async def reveal(request: Request):
     endyear = inputdata.iloc[0]['year']
     inputdata = inputdata.iloc[:, 1:]  # отрезать показатель year
 
-    # получение данных об инфляции и расчёт годового приращения на основе среднего
+    # получение данных об инфляции и расчёт среднего годового приращения
     infdata = pd.read_csv("inflation14.csv")
     avginf = infdata.iloc[len(infdata) - 1]['inf'] / len(infdata)
 
@@ -108,6 +108,8 @@ async def reveal(request: Request):
         startyear += 1
 
     output += 'total: ' + str(predsaldo)
+
+    # return predsaldo - вернуть только общее число
 
     return output
 
