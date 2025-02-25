@@ -1,4 +1,4 @@
-# version 0.6 (24.02.2025)
+# version 0.7 (25.02.2025)
 
 import pandas as pd
 import joblib
@@ -100,7 +100,16 @@ async def reveal(request: Request):
     prediction = prediction * maxsaldo
     predsaldo = int(np.sum(prediction))
 
-    return predsaldo
+    # подготовка выходного результата
+    output = ''
+    startyear = 2023
+    for i in range(len(prediction)):
+        output += str(startyear) + ': ' + str(int(prediction[i])) + ' '
+        startyear += 1
+
+    output += 'total: ' + str(predsaldo)
+
+    return output
 
 
 if __name__ == "__main__":
