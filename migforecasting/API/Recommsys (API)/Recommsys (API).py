@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 0.5
+Recommsys (API).py ver. 1.1
 """
 
 import pandas as pd
@@ -152,7 +152,14 @@ async def whatcluster(request: Request):
 
     pred_cluster = kmeans_model.predict(inputdata)
 
-    return "Муниципальное образование входит в кластер номер: " + str(pred_cluster[0]) +""
+    # получение данных о профиле кластера
+    medians = pd.read_csv('medians 01.csv')
+    clust = -1
+    for i in range(len(medians)):
+        if medians.iloc[i]['clust'] == pred_cluster[0]:
+            clust = i
+
+    return "Муниципальное образование входит в кластер: №" + str(pred_cluster[0]) +" - " + medians.iloc[clust]['profile']
 
 
 # поиск наиболее близки поселений на основе социально-экономических индикаторов
@@ -262,6 +269,7 @@ async def reveal(request: Request):
     medians = medians.sort_values(by=['migprop'], ascending=False)
 
     medians = normpersoul(medians)
+    inputdata = normbyinf(inputdata)
     inputdata = normpersoul(inputdata)
 
     changes = []
@@ -269,14 +277,14 @@ async def reveal(request: Request):
     # вычисление разницы входа от медиан лучшего кластера (согласно профилю)
     for i in range(len(medians)):
         if inputdata.iloc[0]['profile'] == medians.iloc[i]['profile']:
-            for col in inputdata.iloc[:, 3:]:
+            for col in inputdata.iloc[:, 4:]:
                 tmp.append(float(medians.iloc[i][col] / inputdata.iloc[0][col]))
 
             changes.append(tmp)
             tmp = []
             break
 
-    features = list(inputdata.iloc[:, 3:].columns)
+    features = list(inputdata.iloc[:, 4:].columns)
     changes = np.array(changes)
     changes = pd.DataFrame(changes, columns=features)
 
