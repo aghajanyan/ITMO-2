@@ -27,7 +27,7 @@ def normbymax(trainset):
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24 all (IQR).csv", index=False)
+    tmpp.to_csv("fornorm 24 alltime-clust (IQR)-normbysoul.csv", index=False)
 
     return trainset
 
@@ -194,6 +194,16 @@ def nannumber(data):
         x = 0
 
 
+# нормирование факторов на душу населения для всего датасета
+def normpersoulalldata(data):
+    # факторы для нормирования
+    features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
+
+    for a in features:
+        data[a] = data[a] / data['popsize']
+
+
 # признаки для ценового нормирования
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
@@ -314,7 +324,11 @@ examples = pd.DataFrame(examples, columns=features)
 
 examples = remove_outliers(examples)
 
+# нормирование на душу населения
+normpersoulalldata(examples)
+
 examples = np.array(examples)
+
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
@@ -344,6 +358,6 @@ features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsal
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 all (IQR).csv", index=False)
+examples.to_csv("superdataset-24 alltime-clust (IQR)-normbysoul.csv", index=False)
 
 print('Done')
