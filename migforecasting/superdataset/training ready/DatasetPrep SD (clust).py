@@ -198,7 +198,7 @@ def nannumber(data):
 def normpersoulalldata(data):
     # факторы для нормирования
     features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
-                'livestock', 'harvest', 'agrprod', 'beforeschool']
+                'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
     for a in features:
         data[a] = data[a] / data['popsize']
@@ -322,10 +322,10 @@ features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsal
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples = remove_outliers(examples)
-
 # нормирование на душу населения
 normpersoulalldata(examples)
+
+examples = remove_outliers(examples)
 
 examples = np.array(examples)
 
