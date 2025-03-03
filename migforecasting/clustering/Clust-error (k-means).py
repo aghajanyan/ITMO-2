@@ -7,12 +7,12 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
-data = pd.read_csv("datasets/superdataset-24 only mundist (IQR).csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul.csv")
 
 error = []
 tmper = []
 N = range(2, 11)    # количество кластеров
-x = 10   # количество повторных циклов
+x = 1   # количество повторных циклов
 for i in range(x):     # цикл для вычисления средней ошибки для конкретного кол-ва кластеров
     tmper = []
     data = data.sample(frac=1)  # перетасовка
@@ -20,13 +20,16 @@ for i in range(x):     # цикл для вычисления средней о�
         # модель кластеризации и вычисление ошибки
         clust_model = KMeans(n_clusters=n, random_state=None, n_init='auto')
         clust_model.fit(data.iloc[:, 4:])
-        tmper.append(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
+        #tmper.append(silhouette_score(data.iloc[:, 5:], clust_model.labels_, metric='euclidean'))
+        tmper.append(clust_model.inertia_)
 
     for j, m in enumerate(tmper):
         if i == 0:
             error.append(m)
         else:
             error[j]+=m
+
+    print("Итерация №: ", i)
 
 for i in range(len(error)):
     error[i] = error[i] / x
