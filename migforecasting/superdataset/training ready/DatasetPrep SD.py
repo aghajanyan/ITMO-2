@@ -10,7 +10,7 @@ import copy
 # нормализация знечений признаков от 0 до 1 (с сохранением файла с нормализаторами (макс.))
 def normbymax(trainset):
     tmpp = []
-    for k in range(3, len(trainset[0])):
+    for k in range(0, len(trainset[0])):
         maxi = trainset[0][k]
         for i in range(len(trainset)):
             if (maxi < trainset[i][k]):
@@ -23,11 +23,11 @@ def normbymax(trainset):
 
     features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
                 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod',
-                'hospitals', 'beforeschool', 'factoriescap']
+                'hospitals', 'beforeschool']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm no mundist-f (IQR).csv", index=False)
+    tmpp.to_csv("fornorm 24 normbysoul.csv", index=False)
 
     return trainset
 
@@ -111,7 +111,7 @@ def remove_outliers(data: pd.DataFrame) -> pd.DataFrame:
     data = copy.deepcopy(data)
 
     for col in data.columns:
-        if col != 'oktmo' and col != 'name' and col != 'year':
+        if col != 'popsize':
             data = data[(data[col] < np.quantile(data[col], 0.75) + 4 * sts.iqr(data[col])) &
                         (data[col] > np.quantile(data[col], 0.25) - 4 * sts.iqr(data[col]))]
 
@@ -192,6 +192,16 @@ def nannumber(data):
         count.append(data.columns[k])
         count.append(x)
         x = 0
+
+
+# нормирование факторов на душу населения для всего датасета
+def normpersoulalldata(data):
+    # факторы для нормирования
+    features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
+    for a in features:
+        data[a] = data[a] / data['popsize']
 
 
 # признаки для ценового нормирования
@@ -290,12 +300,12 @@ rawdata = rawdata[cols]
 
 #rawdata = onlycertainmun(rawdata)
 
-
+"""
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
-
+"""
 
 """
 # выборка только за определенный год
@@ -350,15 +360,17 @@ for i in range(len(rawdata) - 1):
 
 examples = np.array(examples)
 
-#examples = np.delete(examples, 2, 1)  # удаляем год
-#examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
-#examples = np.delete(examples, 0, 1)  # удаляем октмо
+examples = np.delete(examples, 2, 1)  # удаляем год
+examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
+examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-            'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+            'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 examples = pd.DataFrame(examples, columns=features)
+
+# нормирование на душу населения
+normpersoulalldata(examples)
 
 examples = remove_outliers(examples)
 
@@ -392,6 +404,7 @@ examples = np.array(balanced)
 """
 
 examples = np.array(examples)
+
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
@@ -414,13 +427,12 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-            'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+            'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24f no mundist (IQR).csv", index=False)
+examples.to_csv("superdataset-24 normbysoul.csv", index=False)
 
 print('Done')
