@@ -50,7 +50,7 @@ superdataset-24-2 (negative flow).csv - 5834 examples, отличается от
 
 superdataset-24-2 (positive flow).csv - 1611 examples, отличается от датасета 24 тем, что убраны примеры с отрицательным сальдо (maxsaldo 854)
 
-superdataset-24 normbysoul.csv - 8515 examples, отличается от датасета 24 тем, что все признаки нормированы на душу населения (maxsaldo 1009)
+superdataset-24 normbysoul.csv - 7803 examples, отличается от датасета 24 тем, что все признаки нормированы на душу населения (maxsaldo 854)
 
 superdataset-24 inflow.csv - 7556 examples, отличается от датасета 24 тем, что вместо сальдо (saldo) используется приток (inflow) (maxinflow 3933)
 
