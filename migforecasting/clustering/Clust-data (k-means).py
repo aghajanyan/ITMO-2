@@ -275,10 +275,12 @@ def siblingsfinder(data, clusts):
     # тавр 52653000
     # спас 29634000
     # домб 53617000
+    # тихв 41645000 (14-18)
+    # мичу 68715000 (14-19)
     # в демонстративных целях
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 2017 and data.iloc[i]['oktmo'] == 53617000:
+        if data.iloc[i]['year'] == 2016 and data.iloc[i]['oktmo'] == 68715000:
             index = i
             break
 
@@ -321,6 +323,11 @@ def siblingsfinder(data, clusts):
     data = data[cols]
 
     data = data.sort_values(by='similarity 1')
+    """
+    for i in range(len(data)):
+        if data.iloc[i]['oktmo'] == 97619000:
+            print('yes')
+    """
     data = data.sort_values(by='similarity 2')
     data = data.sort_values(by='similarity 3')
 
@@ -375,7 +382,7 @@ def siblingsfinder(data, clusts):
 
 # анализ факторов в кластере (медиана, макс, мин)
 def clustsfeatures(clusts, centroids):
-    norm = pd.read_csv("datasets/fornorm only mundist-f (IQR).csv")
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
     """
     for i in range(centroids.shape[0]):
         for j in range(centroids.shape[1]):
@@ -418,7 +425,7 @@ def clustsfeatures(clusts, centroids):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("median of clusters (only mundist-f)-66.xlsx", index=False)
+    final.to_excel("median of clusters (normbysoul) only mundist-f.xlsx", index=False)
 
 
 # анализ кластеров по временному периоду
@@ -526,20 +533,23 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-k = 6  # кол-во кластеров
+k = 35 # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust (oktmo+name).csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+
+#normpersoulalldata(data)
 
 data = data.sample(frac=1)  # перетасовка
 
 # модель кластеризации
 clust_model = KMeans(n_clusters=k, random_state=None, n_init='auto')
-clust_model.fit(data.iloc[:, 4:])  # 4 - без сальдо
+clust_model.fit(data.iloc[:, 5:])  # 4 - без сальдо, 5 - без popsize (при нормировании на душу)
 
 # clust_model = AgglomerativeClustering(n_clusters=k, linkage='ward')
 # clust_model.fit_predict(data.iloc[:, 4:])
 
-print(silhouette_score(data.iloc[:, 4:], clust_model.labels_, metric='euclidean'))
+#print(silhouette_score(data.iloc[:, 5:], clust_model.labels_, metric='euclidean'))
+print(clust_model.inertia_)
 
 centroids = clust_model.cluster_centers_
 
@@ -561,7 +571,7 @@ data = data.sort_values(by=['oktmo', 'year'])
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 5:])  # 5 - без сальдо
+pca2 = pca.fit_transform(data.iloc[:, 5:])  # 4 - без сальдо, 5 - без popsize
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
 
@@ -572,7 +582,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-siblingsfinder(data, clusts)
+#siblingsfinder(data, clusts)
 
 getmedian(data)
 

@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 rawdata = pd.read_csv("datasets/superdataset-24 normbysoul.csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
 #rawdata = rawdata[rawdata.columns.drop('museums')]
 

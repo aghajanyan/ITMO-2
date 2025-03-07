@@ -111,6 +111,7 @@ def anyinput(model, maxsaldo):
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
 maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
 #maxsaldo = 295     # dataset 24 internat
@@ -139,7 +140,7 @@ datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
 datasetout = np.array(rawdata[['saldo']])
 
 # разбиение на обучающую и тестовую выборку
-trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
+trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)

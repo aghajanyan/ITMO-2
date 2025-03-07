@@ -23,11 +23,11 @@ def normbymax(trainset):
 
     features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
                 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod',
-                'hospitals', 'beforeschool']
+                'hospitals', 'beforeschool', 'factoriescap']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24 alltime-clust (IQR)-normbysoul.csv", index=False)
+    tmpp.to_csv("fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv", index=False)
 
     return trainset
 
@@ -157,9 +157,9 @@ def onlycertainmun(data):
             if tmp[i] == 'муниципальный' or tmp[i] == 'Муниципальный':
                 mun = True
         if mun:
-            data = data.drop(index)
             mun = False
         else:
+            data = data.drop(index)
             mun = False
 
     return data
@@ -198,7 +198,7 @@ def nannumber(data):
 def normpersoulalldata(data):
     # факторы для нормирования
     features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
-                'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+                'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
     for a in features:
         data[a] = data[a] / data['popsize']
@@ -208,7 +208,7 @@ def normpersoulalldata(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'factoriescap']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
@@ -274,7 +274,7 @@ rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('shoparea')]
 #rawdata = rawdata[rawdata.columns.drop('servicesnum')]
 rawdata = rawdata[rawdata.columns.drop('funds')]
-rawdata = rawdata[rawdata.columns.drop('factoriescap')]
+#rawdata = rawdata[rawdata.columns.drop('factoriescap')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
@@ -284,11 +284,11 @@ rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
 cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 rawdata = rawdata[cols]
 
-#rawdata = onlycertainmun(rawdata)
+rawdata = onlycertainmun(rawdata)
 
 """
 # удаление больших городов (население более 100 тысяч)
@@ -318,7 +318,7 @@ examples = np.array(examples)
 
 features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -353,11 +353,11 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
             'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 alltime-clust (IQR)-normbysoul.csv", index=False)
+examples.to_csv("superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv", index=False)
 
 print('Done')

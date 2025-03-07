@@ -300,12 +300,12 @@ rawdata = rawdata[cols]
 
 #rawdata = onlycertainmun(rawdata)
 
-"""
+
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
-"""
+
 
 """
 # выборка только за определенный год
