@@ -533,7 +533,30 @@ def findsignif(data2):
     shap.summary_plot(shap_values, data2)
 
 
-k = 35 # кол-во кластеров
+# метод Антона Николаевича (средние показатели индикаторов для отрицательных и положительных примеров в кластере)
+def ANmethod(clusts):
+    final = []
+    tmpnegative = []
+    tmppositive = []
+    for k in range(len(clusts)):
+        negative = clusts[k][clusts[k]['saldo'] < 0]
+        positive = clusts[k][clusts[k]['saldo'] > 0]
+        for col in negative:
+            if col != 'oktmo' and col != 'name' and col != 'year':
+                tmpnegative.append(negative[col].mean())
+                tmppositive.append(positive[col].mean())
+        final.append(np.array(tmppositive))
+        final.append(np.array(tmpnegative))
+        tmppositive = []
+        tmpnegative = []
+        final.append([''] * len(final[0]))
+
+
+
+    print('ok, lets go')
+
+
+k = 6  # кол-во кластеров
 
 data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
 
@@ -581,6 +604,8 @@ for i in range(k):
     clusts.append(data[data['clust'] == i])
 
 # анализ и вывод результатов
+
+ANmethod(clusts)
 
 #siblingsfinder(data, clusts)
 
