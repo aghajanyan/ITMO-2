@@ -535,25 +535,35 @@ def findsignif(data2):
 
 # метод Антона Николаевича (средние показатели индикаторов для отрицательных и положительных примеров в кластере)
 def ANmethod(clusts):
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
     final = []
     tmpnegative = []
     tmppositive = []
+    # вычисление средних значений и нормализация
     for k in range(len(clusts)):
         negative = clusts[k][clusts[k]['saldo'] < 0]
         positive = clusts[k][clusts[k]['saldo'] > 0]
+
+        negative = negative.drop(columns=['x', 'y'])
+        positive = positive.drop(columns=['x', 'y'])
+
+        tmpnegative.append(k)
+        tmppositive.append(k)
         for col in negative:
-            if col != 'oktmo' and col != 'name' and col != 'year':
-                tmpnegative.append(negative[col].mean())
-                tmppositive.append(positive[col].mean())
+            if col != 'oktmo' and col != 'name' and col != 'year' and col != 'clust':
+                tmppositive.append(positive[col].mean() * norm.iloc[0][col])
+                tmpnegative.append(negative[col].mean() * norm.iloc[0][col])
         final.append(np.array(tmppositive))
         final.append(np.array(tmpnegative))
         tmppositive = []
         tmpnegative = []
         final.append([''] * len(final[0]))
 
-
-
-    print('ok, lets go')
+    final = np.array(final)
+    features = list(norm.columns)
+    features.insert(0, 'clust')
+    final = pd.DataFrame(final, columns=features)
+    final.to_excel("AN-method output (only mundist).xlsx", index=False)
 
 
 k = 6  # кол-во кластеров
@@ -584,7 +594,7 @@ data['clust'] = clust_model.labels_
 
 cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 data = data[cols]
 
@@ -594,7 +604,7 @@ data = data.sort_values(by=['oktmo', 'year'])
 
 # трансформация в 2D методом компонент
 pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 5:])  # 4 - без сальдо, 5 - без popsize
+pca2 = pca.fit_transform(data.iloc[:, 6:])  # 5 - без сальдо, 6 - без popsize
 data['x'] = pca2[:, 0]
 data['y'] = pca2[:, 1]
 
