@@ -56,32 +56,33 @@ def normbyinf(inputdata):
     allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest', 'budincome',
                       'funds', 'naturesecure', 'factoriescap']
 
-    thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+    thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'factoriescap']
     infdata = pd.read_csv("clustering/recommendation system/inflation14.csv")
     for k in range(len(inputdata)):
         inflation = infdata[infdata['year'] == inputdata.iloc[k]['year']]   # получить инфляцию за необходимый год
         for col in thisrubfeatures:
             index = inputdata.columns.get_loc(col)
-            inputdata.iloc[k, index] = inputdata.iloc[k][col] * (inflation.iloc[0]['inf'] / 100)
+            infnorm = 1 - (inflation.iloc[0]['inf'] / 100)
+            inputdata.iloc[k, index] = inputdata.iloc[k][col] * infnorm
 
     return inputdata
 
 
 # Нормирование данных для модели
 def normformodel(inputdata):
-    norm = pd.read_csv("clustering/datasets/fornorm-24.csv")
+    norm = pd.read_csv("superdataset/training ready/fornorm 24 normbysoul-f.csv")
     final = []
     tmp = []
     for k in range(len(inputdata)):
         for col in norm:
-            if col != 'saldo':
+            if col != 'saldo' and col != 'popsize':
                 tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
 
     final = np.array(final)
-    features = list(norm.columns[1:])
+    features = list(norm.columns[2:])
     final = pd.DataFrame(final, columns=features)
     inputdata = final
     return inputdata
@@ -89,7 +90,7 @@ def normformodel(inputdata):
 
 # Осуществить прогноз для произвольного входа
 def anyinput(model, maxsaldo):
-    inputdata = pd.read_json("clustering/recommendation system/anyinput_test.json")
+    inputdata = pd.read_excel("clustering/recommendation system/anyinput_test.json")
 
     # нормализация цен
     inputdata = normbyinf(inputdata)
@@ -105,12 +106,26 @@ def anyinput(model, maxsaldo):
     inputdata['predsaldo'] = prediction
 
 
+# Осуществить прогноз для произвольного входа (прогноз средних значений кластера)
+def anyinputAN(model, maxsaldo):
+    inputdata = pd.read_excel("clustering/AN-input.xlsx")
+
+    # нормализация признаков под модель
+    inputdata = normformodel(inputdata)
+
+    # прогноз
+    prediction = model.predict(inputdata)
+    prediction = prediction * maxsaldo
+    inputdata['predsaldo'] = prediction
+    return inputdata
+
 
 #maxsaldo = 26466
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 854     # dataset 24 (also balanced)
+maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
@@ -128,9 +143,9 @@ maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 normbysoul-f.csv")
 
-#rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
@@ -154,7 +169,7 @@ errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
 a, b = MLS(testout, predtest)
 
-migprop(model, testin, maxsaldo)
+#migprop(model, testin, maxsaldo)
 
 # ВЫВОД РЕЗУЛЬТАТОВ
 # графики отклонения реального значения от прогнозируемого
@@ -178,10 +193,12 @@ plt.ylabel("Миграционное сальдо")
 plt.title("Прогноз на тестовой выборке")
 plt.show()
 
+"""
 #Корреляционная матрица Пирсона
 cor = rawdata.corr()
 sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
+"""
 
 # Значимость по критерию Джинни (сортировка, получение название признаков из датафрейма)
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -197,11 +214,12 @@ plt.ylabel("Признак")
 plt.title("Значимость признаков по критерию Джинни")
 plt.show()
 
+# прогноз для произвольного входа
+outputdata = anyinputAN(model, maxsaldo)
+outputdata.to_excel("outputdata.xlsx")
+
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
-
-# прогноз для произвольного входа
-#anyinput(model, maxsaldo)
 
 # сохранение модели
 #joblib.dump(model, "migpred (24, tree).joblib")
