@@ -70,21 +70,30 @@ def normbyinf(inputdata):
 
 # Нормирование данных для модели
 def normformodel(inputdata):
-    norm = pd.read_csv("superdataset/training ready/fornorm 24 normbysoul-f.csv")
+    norm = pd.read_csv("clustering/datasets/fornorm-24.csv")
     final = []
     tmp = []
     for k in range(len(inputdata)):
         for col in norm:
-            if col != 'saldo' and col != 'popsize':
+            if col != 'saldo': #and col != 'popsize':
                 tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
 
     final = np.array(final)
-    features = list(norm.columns[2:])
+    features = list(norm.columns[1:])
     final = pd.DataFrame(final, columns=features)
     inputdata = final
+    return inputdata
+
+
+# перевод душевых показателей в абсолютные значения
+def fromsoultoabs(inputdata):
+    for col in inputdata.columns:
+        if col!= 'popsize' and col!= 'avgsalary' and col!= 'livarea':
+            inputdata[col] = inputdata[col] * inputdata['popsize']
+
     return inputdata
 
 
@@ -108,7 +117,10 @@ def anyinput(model, maxsaldo):
 
 # Осуществить прогноз для произвольного входа (прогноз средних значений кластера)
 def anyinputAN(model, maxsaldo):
-    inputdata = pd.read_excel("clustering/AN-input.xlsx")
+    inputdata = pd.read_excel("clustering/AN-input-onlymun-popsize.xlsx")
+
+    # перевод душевых показателей в абсолютные значения
+    inputdata = fromsoultoabs(inputdata)
 
     # нормализация признаков под модель
     inputdata = normformodel(inputdata)
@@ -124,8 +136,8 @@ def anyinputAN(model, maxsaldo):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-#maxsaldo = 854     # dataset 24 (also balanced)
-maxsaldo = 995     # dataset 24 normbysoul-f
+maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
@@ -143,9 +155,9 @@ maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 4087     # dataset 24 outflow
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 normbysoul-f.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
