@@ -1,4 +1,4 @@
-# version 0.8 (25.02.2025)
+# version 0.9 (14.03.2025)
 
 import pandas as pd
 import joblib
@@ -31,8 +31,8 @@ def normbyinf(inputdata, infdata, year):
 
 
 # Нормирование данных для модели (от 0 до 1)
-def normformodel(inputdata):
-    norm = pd.read_csv("fornorm-24.csv")
+def normformodel(inputdata, migtype):
+    norm = pd.read_csv("fornorm 24 "+ migtype +".csv")
     final = []
     tmp = []
     for k in range(len(inputdata)):
@@ -61,8 +61,11 @@ async def reveal(request: Request):
     inputdata = inputdata[features]     # правильный порядок для модели
     inputdata = inputdata.astype(float)
 
-    # загрузка модели
-    model = joblib.load('migpred (24, tree).joblib')
+    # загрузка моделей
+    modeltotal = joblib.load('migpred (24 total, tree).joblib')
+    modelreg = joblib.load('migpred (24 reg, tree).joblib')
+    modelinterreg = joblib.load('migpred (24 interreg, tree).joblib')
+    modelinternat = joblib.load('migpred (24 internat, tree).joblib')
 
     startyear = 2024    # начальная точка прогноза, т.е. первый прогноз делается на 25-ый год
     endyear = int(inputdata.iloc[0]['year'])
@@ -76,18 +79,25 @@ async def reveal(request: Request):
     # список в датафрейм
     dataforpred = pd.DataFrame(dataforpred, columns=inputdata.columns)
 
-    #нормализация под модель прогноза
-    maxsaldo = 0
-    for i in range(len(dataforpred)):
-        dataforpred.iloc[i], maxsaldo = normformodel(dataforpred.iloc[[i]])
+    #нормализация под каждую модель прогноза
+    maxsaldo = list(range(4))
+    migtype = ['total', 'reg', 'interreg', 'internat']
+    for i in range(len(migtype)):
+        dataforpred.loc[i], maxsaldo[i] = normformodel(inputdata.iloc[[0]], migtype[i])
 
-    # выполнение прогноза
-    predsaldo = 0
-    prediction = model.predict(dataforpred)
-    prediction = prediction * maxsaldo
-    predsaldo = int(np.sum(prediction))
+    # выполнение прогноза для каждого типа миграции
+    models = [modeltotal, modelreg, modelinterreg, modelinternat]
+    predictions = []
+    for i in range(len(models)):
+        predictions.append(int(models[i].predict(dataforpred.iloc[[i]]) * maxsaldo[i]))
 
-    return 'Миграционное сальдо к ' + str(endyear) + ': ' + str(predsaldo * (endyear - startyear))
+    y = endyear - startyear
+    final = 'Миграционное сальдо к ' + str(endyear) + ': общее: ' + str(predictions[0] * y)
+    final += '; внутрирегиональное: ' + str(predictions[1] * y)
+    final += '; межрегиональное: ' + str(predictions[2] * y)
+    final += '; международное: ' + str(predictions[3] * y)
+
+    return final
 
 
 if __name__ == "__main__":
