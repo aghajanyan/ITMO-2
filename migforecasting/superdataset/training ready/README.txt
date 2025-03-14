@@ -80,6 +80,14 @@ superdataset-27.csv - 5795 examples, отличается от датасета 
 
 superdataset-28.csv - 4368 examples, отличается от датасета 24 тем, что добавлен признак goodcompincome
 
+superdataset-29.csv - 7083 examples, отличается от датасета 24 тем, что нет фильтра на 100 тыс. и добавлен factoriescap (maxsaldo 951)
+
+superdataset-29 reg.csv - 7100 examples, отличается от датасета 29 тем, что использована внутрирегиональная миграция (maxsaldo 594)
+
+superdataset-29 interreg.csv - 7070 examples, отличается от датасета 29 тем, что использована межрегиональная миграция (maxsaldo 427)
+
+superdataset-29 internat.csv - 6052 examples, отличается от датасета 29 тем, что использована международная миграция (maxsaldo 402)
+
 superdataset-31.csv - 894 examples, отличается от датасета 13 тем, что в датасет включены только города с населнием свыше 100 тыс.
 
 superdataset-40.csv - 1925 examples, только образования меньше 100 тыс. и на основе ценностно-ориентированных признаков: 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres'
