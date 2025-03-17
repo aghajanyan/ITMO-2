@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24 normbysoul.csv")
+rawdata = pd.read_csv("datasets/superdataset-24.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
@@ -66,10 +66,10 @@ for k in range(n):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_error(trainout, predtrain) * maxsaldo
+    errortrain = mean_squared_error(trainout * maxsaldo, predtrain * maxsaldo)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_error(testout, predtest) * maxsaldo
+    errortest = mean_squared_error(testout * maxsaldo, predtest * maxsaldo)
 
     # запись ошибки
     resulttrain.append(errortrain)
