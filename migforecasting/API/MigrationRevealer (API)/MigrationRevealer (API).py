@@ -1,4 +1,4 @@
-# version 0.9 (14.03.2025)
+# version 1.0 (18.03.2025)
 
 import pandas as pd
 import joblib
@@ -62,7 +62,7 @@ async def reveal(request: Request):
     inputdata = inputdata.astype(float)
 
     # загрузка моделей
-    modeltotal = joblib.load('migpred (24 total, tree).joblib')
+    #modeltotal = joblib.load('migpred (24 total, tree).joblib')
     modelreg = joblib.load('migpred (24 reg, tree).joblib')
     modelinterreg = joblib.load('migpred (24 interreg, tree).joblib')
     modelinternat = joblib.load('migpred (24 internat, tree).joblib')
@@ -80,22 +80,23 @@ async def reveal(request: Request):
     dataforpred = pd.DataFrame(dataforpred, columns=inputdata.columns)
 
     #нормализация под каждую модель прогноза
-    maxsaldo = list(range(4))
-    migtype = ['total', 'reg', 'interreg', 'internat']
+    maxsaldo = list(range(3))
+    migtype = ['reg', 'interreg', 'internat']
     for i in range(len(migtype)):
         dataforpred.loc[i], maxsaldo[i] = normformodel(inputdata.iloc[[0]], migtype[i])
 
     # выполнение прогноза для каждого типа миграции
-    models = [modeltotal, modelreg, modelinterreg, modelinternat]
+    models = [modelreg, modelinterreg, modelinternat]
     predictions = []
     for i in range(len(models)):
         predictions.append(int(models[i].predict(dataforpred.iloc[[i]]) * maxsaldo[i]))
 
+    total = np.sum(predictions)
     y = endyear - startyear
-    final = 'Миграционное сальдо к ' + str(endyear) + ': общее: ' + str(predictions[0] * y)
-    final += '; внутрирегиональное: ' + str(predictions[1] * y)
-    final += '; межрегиональное: ' + str(predictions[2] * y)
-    final += '; международное: ' + str(predictions[3] * y)
+    final = 'Миграционное сальдо к ' + str(endyear) + ': общее: ' + str(total * y)
+    final += '; внутрирегиональное: ' + str(predictions[0] * y)
+    final += '; межрегиональное: ' + str(predictions[1] * y)
+    final += '; международное: ' + str(predictions[2] * y)
 
     return final
 
