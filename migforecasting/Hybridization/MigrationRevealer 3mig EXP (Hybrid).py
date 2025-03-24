@@ -22,7 +22,7 @@ rawdata = pd.read_csv("superdataset-24 3mig.csv")
 resulttest = []
 resulttrain = []
 
-n = 3
+n = 50
 for k in range(n):
 
     # перетасовка
@@ -36,9 +36,9 @@ for k in range(n):
     datasetout3 = np.array(rawdata[['internat']])
 
     # разбиение на обучающую и тестовую выборку
-    trainin, testin, trainout1, testout1 = train_test_split(datasetin, datasetout1, test_size=0.1, random_state=146)
-    trainin, testin, trainout2, testout2 = train_test_split(datasetin, datasetout2, test_size=0.1, random_state=146)
-    trainin, testin, trainout3, testout3 = train_test_split(datasetin, datasetout3, test_size=0.1, random_state=146)
+    trainin, testin, trainout1, testout1 = train_test_split(datasetin, datasetout1, test_size=0.2, random_state=146)
+    trainin, testin, trainout2, testout2 = train_test_split(datasetin, datasetout2, test_size=0.2, random_state=146)
+    trainin, testin, trainout3, testout3 = train_test_split(datasetin, datasetout3, test_size=0.2, random_state=146)
 
     # модель 1
     model1 = RandomForestRegressor(n_estimators=100, random_state=0)
@@ -56,8 +56,9 @@ for k in range(n):
     predinternat = model3.predict(trainin)
 
     # ошибка гибридной модели
-    errortrain = mean_absolute_error(((trainout1 * maxsaldoreg) + (trainout2 * maxsaldointerreg) + (trainout3 * maxsaldointernat)),
+    errortrain = mean_squared_error(((trainout1 * maxsaldoreg) + (trainout2 * maxsaldointerreg) + (trainout3 * maxsaldointernat)),
                                      ((predreg * maxsaldoreg) + (predinterreg * maxsaldointerreg) + (predinternat * maxsaldointernat)))
+
 
     resulttrain.append(errortrain)
 
@@ -65,8 +66,10 @@ for k in range(n):
     predinterreg = model2.predict(testin)
     predinternat = model3.predict(testin)
 
-    errortest = mean_absolute_error(((testout1 * maxsaldoreg) + (testout2 * maxsaldointerreg) + (testout3 * maxsaldointernat)),
+    errortest = mean_squared_error(((testout1 * maxsaldoreg) + (testout2 * maxsaldointerreg) + (testout3 * maxsaldointernat)),
                                      ((predreg * maxsaldoreg) + (predinterreg * maxsaldointerreg) + (predinternat * maxsaldointernat)))
+
+    #errortest = mean_squared_error((testout1 + testout2 + testout3), (predreg + predinterreg + predinternat))
 
     resulttest.append(errortest)
     print('Итерация: ' + str(k))
