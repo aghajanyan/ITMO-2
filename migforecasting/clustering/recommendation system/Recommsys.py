@@ -4,9 +4,11 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from sklearn.metrics import mean_squared_error
+
 # факторы для нормирования
-features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
-            'livestock', 'harvest', 'agrprod', 'beforeschool']
+features = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum', 'roadslen',
+            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 
 #Нормирование рублевых цен
@@ -35,6 +37,23 @@ def normpersoul(tonorm):
             tonorm.iloc[k, index] = float(tonorm.iloc[k][col] / tonorm.iloc[k]['popsize'])
 
 
+# тестирование новой рекомендательной системы (profile-free)
+def recommsys2():
+    medians = pd.read_csv('medians all.csv')
+    normpersoul(medians)
+
+    mse = []
+    for i in range(0, len(medians)):
+        mse.append(mean_squared_error(medians.iloc[5][3:17], medians.iloc[i][3:17]))
+
+    mse = pd.DataFrame(mse)
+    mse.to_excel('mse.xlsx', index=False)
+
+    medians['mse'] = mse
+    print('done')
+
+
+recommsys2()
 inputdata = pd.read_excel("input.xlsx")
 normpersoul(inputdata)
 
