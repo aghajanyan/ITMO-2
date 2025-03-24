@@ -18,10 +18,15 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dropout
+
+import os
+import jax
+os.environ["KERAS_BACKEND"] = "jax"
+import keras
+print(keras.__version__)
+
+from keras.layers import Dense
+from keras.models import Sequential
 
 
 # Получение данных
@@ -48,7 +53,7 @@ for k in range(20):
     model.add(Dense(64, activation='relu'))
     model.add(Dense(1))
 
-    model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError())
+    model.compile(optimizer='adam', loss=keras.losses.MeanAbsoluteError())
     model.fit(trainin, trainout, epochs=300, batch_size=5)
     
     predtrain = model.predict(trainin)
