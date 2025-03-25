@@ -1,6 +1,6 @@
 
 """
-Recommsys (API).py ver. 1.1
+Recommsys (API).py ver. 2.0
 """
 
 import pandas as pd
@@ -35,35 +35,37 @@ def normbyinf(inputdata):
 
 
 # Нормирование данных для модели (от 0 до 1)
-def normformodel(inputdata):
-    norm = pd.read_csv("fornorm 24 all (IQR).csv")
+def normformodel(inputdata, filename, normbysoul):
+    norm = pd.read_csv(filename)
     final = []
     tmp = []
     for k in range(len(inputdata)):
         for col in norm:
-            if col != 'saldo':
-                tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
+            if normbysoul == True:
+                if col != 'saldo' and col != 'popsize':
+                    tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
+            else:
+                if col != 'saldo':
+                    tmp.append(inputdata.iloc[k][col] / norm.iloc[0][col])
 
         final.append(tmp)
         tmp = []
 
     final = np.array(final)
-    features = list(norm.columns[1:])
+    if normbysoul == True:
+        features = list(norm.columns[2:])
+    else:
+        features = list(norm.columns[1:])
     final = pd.DataFrame(final, columns=features)
     inputdata = final
     return inputdata
 
 
-# нормирование факторов на душу населения
-def normpersoul(tonorm):
-    # факторы для нормирования
-    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
-                'livestock', 'harvest', 'agrprod', 'beforeschool']
+# нормирование факторов на душу населения (для старой версии планирования)
+def normpersoul(tonorm, normfeat):
 
-    for k in range(len(tonorm)):
-        for col in normfeat:
-            index = tonorm.columns.get_loc(col)
-            tonorm.iloc[k, index] = float(tonorm.iloc[k][col] / tonorm.iloc[k]['popsize'])
+    for a in normfeat:
+        tonorm[a] = tonorm[a] / tonorm['popsize']
 
     return tonorm
 
@@ -145,7 +147,7 @@ async def whatcluster(request: Request):
     # нормализация входных данных
     inputdata = inputproc(request)
     inputdata = normbyinf(inputdata)
-    inputdata = normformodel(inputdata)
+    inputdata = normformodel(inputdata, 'fornorm 24 all (IQR).csv', False)
 
     # загрузка модели
     kmeans_model = joblib.load('kmeans_model (24-all-iqr) 01.joblib')
@@ -169,8 +171,11 @@ async def siblingsfinder(request: Request):
     # нормализация входных данных
     inputdata = inputproc(request)
     inputdata = normbyinf(inputdata)
-    inputdata = normformodel(inputdata)
-    inputdata = normpersoul(inputdata)
+    inputdata = normformodel(inputdata, 'fornorm 24 all (IQR).csv', False)
+    # факторы для нормирования
+    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
+    inputdata = normpersoul(inputdata, normfeat)
 
     #загрузка датасета
     data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01-normbysoul.csv")
@@ -204,8 +209,11 @@ async def headtohead(request: Request):
     # обработка входных данных
     inputdata = inputproc(request)
     inputdata = normbyinf(inputdata)
-    inputdata = normformodel(inputdata)
-    inputdata = normpersoul(inputdata)
+    inputdata = normformodel(inputdata, 'fornorm 24 all (IQR).csv', False)
+    # факторы для нормирования
+    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
+    inputdata = normpersoul(inputdata, normfeat)
 
     #загрузка датасета
     data = pd.read_csv("superdataset-24 alltime-clust (oktmo+name+clust) 01-normbysoul.csv")
@@ -249,8 +257,8 @@ async def headtohead(request: Request):
     return tmpdata.iloc[0].to_dict(), dif.to_dict()
 
 
-# вычисляется во сколько раз входные данные отличаются от центра лучших кластеров
-# по каждому социально-экономическому индикатору
+# вычисляется во сколько раз входные данные отличаются от центра лучших кластеров согласно профилю
+# по каждому социально-экономическому индикатору (развите на основе перехода в другой кластер!!!)
 @app.get("/recommsys/plan")
 async def reveal(request: Request):
     # обработка входных данных
@@ -268,9 +276,12 @@ async def reveal(request: Request):
     # сортировка от лучшего кластера к худшему (согласно критерию)
     medians = medians.sort_values(by=['migprop'], ascending=False)
 
-    medians = normpersoul(medians)
+    # факторы для нормирования
+    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'livestock', 'harvest', 'agrprod', 'beforeschool']
+    medians = normpersoul(medians, normfeat)
     inputdata = normbyinf(inputdata)
-    inputdata = normpersoul(inputdata)
+    inputdata = normpersoul(inputdata, normfeat)
 
     changes = []
     tmp = []
@@ -285,6 +296,55 @@ async def reveal(request: Request):
             break
 
     features = list(inputdata.iloc[:, 4:].columns)
+    changes = np.array(changes)
+    changes = pd.DataFrame(changes, columns=features)
+
+    return changes.to_json()
+
+
+# вычисляется во сколько раз входные данные отличаются от медиан положительной части своего кластера
+# по каждому социально-экономическому индикатору (развитие внутри кластера!!!)
+@app.get("/recommsys/plan-profileless")
+async def reveal(request: Request):
+    # обработка входных данных
+    inputdata = dict(request.query_params)
+    inputdata = pd.DataFrame(inputdata, index=[0])
+
+    features = ['year', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+                'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen', 'livestock',
+                'harvest', 'agrprod', 'hospitals', 'beforeschool']
+
+    inputdata = inputdata[features]  # правильный порядок для модели
+    inputdata = inputdata.astype(float)
+
+    # нормализация инфляции, перевод в душевые показатели и нормализация под модель
+    inputdata = normbyinf(inputdata)
+    # факторы для нормирования
+    normfeat = ['avgemployers', 'shoparea', 'foodseats', 'retailturnover', 'sportsvenue', 'servicesnum',
+                'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+    inputdata = normpersoul(inputdata, normfeat)
+    inputdatamodel = normformodel(inputdata, 'fornorm 24 all (IQR)-normbysoul.csv', True)
+
+    # загрузка модели и определение кластера
+    kmeans_model = joblib.load('kmeans_model (24-all-iqr-normbysoul).joblib')
+    pred_cluster = kmeans_model.predict(inputdatamodel)
+
+    # загрузка медиан
+    medians = pd.read_excel('medians positive.xlsx')
+
+    changes = []
+    tmp = []
+    # вычисление разницы входа от медиан лучшего кластера (согласно кластеру)
+    for i in range(len(medians)):
+        if pred_cluster[0] == int(medians.iloc[i]['clust']):
+            for col in inputdata.iloc[:, 2:]:
+                tmp.append(float(medians.iloc[i][col] / inputdata.iloc[0][col]))
+
+            changes.append(tmp)
+            tmp = []
+            break
+
+    features = list(inputdata.iloc[:, 2:].columns)
     changes = np.array(changes)
     changes = pd.DataFrame(changes, columns=features)
 

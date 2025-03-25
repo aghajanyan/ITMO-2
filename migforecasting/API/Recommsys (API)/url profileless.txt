@@ -1,0 +1,1 @@
+year=2024&popsize=15039.0&avgemployers=2043&avgsalary=17624.2&shoparea=4333&foodseats=240.0&retailturnover=684065.8&livarea=29.7&sportsvenue=46&servicesnum=50&roadslen=115.1&livestock=33104&harvest=9860&agrprod=1012325.2&hospitals=19&beforeschool=788.0
