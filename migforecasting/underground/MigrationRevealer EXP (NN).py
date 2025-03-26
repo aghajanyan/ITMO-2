@@ -29,10 +29,11 @@ from keras.layers import Dense
 from keras.models import Sequential
 
 maxsaldo = 854     # dataset 24 (also balanced)
-#maxsaldo = 1009 
+#maxsaldo = 1009   # dataset 24 normbysoul
 
 # Получение данных
-rawdata = pd.read_csv("datasets/superdataset-24.csv")
+rawdata = pd.read_csv("datasets/superdataset-24 balanced.csv")
+rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 resulttest = []
 resulttrain = []
@@ -49,7 +50,7 @@ for k in range(20):
     
     #модель
     model = Sequential()
-    model.add(Dense(64, input_dim=15, activation='relu'))
+    model.add(Dense(64, input_dim=14, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))
