@@ -11,8 +11,8 @@ data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-no
 
 error = []
 tmper = []
-N = range(2, 16)    # количество кластеров
-x = 5   # количество повторных циклов
+N = range(2, 21)    # количество кластеров
+x = 1   # количество повторных циклов
 for i in range(x):     # цикл для вычисления средней ошибки для конкретного кол-ва кластеров
     tmper = []
     data = data.sample(frac=1)  # перетасовка

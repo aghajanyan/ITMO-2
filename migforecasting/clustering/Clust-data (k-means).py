@@ -16,7 +16,7 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 import seaborn as sns
-import shap
+#import shap
 
 
 # вывод графика с поселениями на карте согласно их реальным координатам
@@ -535,7 +535,7 @@ def findsignif(data2):
 
 # метод Антона Николаевича (средние показатели индикаторов для отрицательных и положительных примеров в кластере)
 def ANmethod(clusts):
-    norm = pd.read_csv("datasets/fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul.csv")
     final = []
     tmpnegative = []
     tmppositive = []
@@ -563,12 +563,12 @@ def ANmethod(clusts):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("AN-method output (only mundist).xlsx", index=False)
+    final.to_excel("AN-method output (all 31).xlsx", index=False)
 
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul.csv")
 
 #normpersoulalldata(data)
 
@@ -587,14 +587,14 @@ print(clust_model.inertia_)
 centroids = clust_model.cluster_centers_
 
 # сохранение модели
-#joblib.dump(clust_model, 'kmeans_model (24-all-iqr).joblib')
+#joblib.dump(clust_model, 'kmeans_model (24-all-iqr-normbysoul).joblib')
 
 # добавляем к данным столбец с номером кластера
 data['clust'] = clust_model.labels_
 
 cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 
 data = data[cols]
 
@@ -619,7 +619,7 @@ ANmethod(clusts)
 
 #siblingsfinder(data, clusts)
 
-getmedian(data)
+#getmedian(data)
 
 negativeanalyzer(clusts)
 

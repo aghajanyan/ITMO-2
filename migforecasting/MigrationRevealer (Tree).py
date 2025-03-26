@@ -117,7 +117,7 @@ def anyinput(model, maxsaldo):
 
 # Осуществить прогноз для произвольного входа (прогноз средних значений кластера)
 def anyinputAN(model, maxsaldo):
-    inputdata = pd.read_excel("clustering/AN-input-onlymun-popsize.xlsx")
+    inputdata = pd.read_excel("clustering/AN-input-nomun-popsize.xlsx")
 
     # перевод душевых показателей в абсолютные значения
     inputdata = fromsoultoabs(inputdata)
@@ -136,11 +136,12 @@ def anyinputAN(model, maxsaldo):
 #maxsaldo = 39719
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
-maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 951     # dataset 24 balanced-f
 #maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
-#maxsaldo = 512     # dataset 24 reg (also balanced)
+maxsaldo = 512     # dataset 24 reg (also balanced)
 #maxsaldo = 295     # dataset 24 internat
 #maxsaldo = 1080      # dataset 25, 28
 #maxsaldo = 1277     # dataset 26
@@ -154,8 +155,9 @@ maxsaldo = 854     # dataset 24 (also balanced)
 #maxsaldo = 3933     # dataset 24 inflow
 #maxsaldo = 4087     # dataset 24 outflow
 
+
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24 reg.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
@@ -227,11 +229,11 @@ plt.title("Значимость признаков по критерию Джи�
 plt.show()
 
 # прогноз для произвольного входа
-outputdata = anyinputAN(model, maxsaldo)
-outputdata.to_excel("outputdata.xlsx")
+#outputdata = anyinputAN(model, maxsaldo)
+#outputdata.to_excel("outputdata.xlsx")
 
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
 
 # сохранение модели
-#joblib.dump(model, "migpred (24, tree).joblib")
+#joblib.dump(model, "migpred (24 internat, tree).joblib")

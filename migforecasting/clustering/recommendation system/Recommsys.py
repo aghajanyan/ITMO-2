@@ -53,7 +53,7 @@ def recommsys2():
     print('done')
 
 
-recommsys2()
+#recommsys2()
 inputdata = pd.read_excel("input.xlsx")
 normpersoul(inputdata)
 
