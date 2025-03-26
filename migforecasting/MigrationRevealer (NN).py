@@ -26,13 +26,13 @@ print(keras.__version__)
 from keras.layers import Dense
 from keras.models import Sequential
 
-#maxsaldo = 854     # dataset 24 (also balanced)
-maxsaldo = 1009 
+maxsaldo = 854     # dataset 24 (also balanced)
+#maxsaldo = 1009 
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24 normbysoul.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24.csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -45,14 +45,14 @@ trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, tes
 
 #модель
 model = Sequential()
-model.add(Dense(64, input_dim=14, activation='relu'))
+model.add(Dense(64, input_dim=15, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(1))
 
-model.compile(optimizer='adam', loss=keras.losses.MeanAbsoluteError())
-history = model.fit(trainin, trainout, epochs=200, batch_size=8)
+model.compile(optimizer='adam', loss=keras.losses.MeanSquaredError())
+history = model.fit(trainin, trainout, epochs=50, batch_size=8)
 
 pred = model.predict(trainin)
 pred1 = model.predict(testin)
