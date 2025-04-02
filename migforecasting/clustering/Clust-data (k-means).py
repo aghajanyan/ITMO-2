@@ -6,6 +6,7 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 import joblib
+from distributed.utils import palette
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import label_binarize, MinMaxScaler
@@ -16,6 +17,7 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
 import seaborn as sns
+import colormaps as cmaps
 #import shap
 
 
@@ -498,14 +500,16 @@ def getnegative(clusts):
 # доля поселений с отрицательным сальдо в класетер
 def negativeanalyzer(clusts):
     negprop = []
+    fig, ax = plt.subplots()
     for i in range(len(clusts)):
         negprop.append(len(clusts[i][clusts[i]['saldo'] < 0]) / len(clusts[i]))
-        plt.bar(i, negprop[i], width=0.3, label="Cluster " + str(i) + "")
 
-    plt.title("Доля поселений с отрицательным сальдо в кластере")
-    plt.legend()
-    plt.xlabel('Номер кластера')
-    plt.ylabel('Процент')
+    y = range(0, len(clusts))
+    ax.bar(y, negprop, width=0.3, color=sns.color_palette('viridis', len(clusts)))
+
+    plt.title("Percentage of settlements with negative net migration in the cluster")
+    plt.xlabel('Cluster')
+    plt.ylabel('Value')
     plt.show()
     """
     # выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
@@ -530,11 +534,11 @@ def negativeanalyzer(clusts):
 
 # медианное значение сальдо в кластере
 def getmedian(data2):
-    sns.boxplot(x='clust', y='saldo', data=data2)
+    sns.boxplot(x='clust', y='saldo', data=data2, palette='viridis')
 
-    plt.title("Медианное значение сальдо в кластере")
-    plt.xlabel('Номер кластера')
-    plt.ylabel('Сальдо')
+    plt.title("Median values of net migration")
+    plt.xlabel('Cluster')
+    plt.ylabel('Net migration')
     plt.show()
 
 
@@ -638,9 +642,9 @@ for i in range(k):
 
 #ANmethod(clusts)
 
-siblingsfinder(data, clusts)
+#siblingsfinder(data, clusts)
 
-#getmedian(data)
+getmedian(data)
 
 negativeanalyzer(clusts)
 
