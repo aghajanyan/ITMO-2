@@ -261,7 +261,7 @@ def retroanalysis(data):
 def siblingsfinder(data, clusts):
 
     #нормализация набора данных на душу населения
-    normpersoulalldata(data)
+    #normpersoulalldata(data)
 
     agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
     #agestruct = agestruct[agestruct.columns.drop('name')]
@@ -271,6 +271,7 @@ def siblingsfinder(data, clusts):
     sync = agestruct[['oktmo', 'year']].drop_duplicates()
     data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
 
+    data = data.drop(columns=['x', 'y'])
 
     # тавр 52653000
     # спас 29634000
@@ -280,7 +281,7 @@ def siblingsfinder(data, clusts):
     # в демонстративных целях
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 2016 and data.iloc[i]['oktmo'] == 68715000:
+        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
             index = i
             break
 
@@ -289,7 +290,7 @@ def siblingsfinder(data, clusts):
     sim1 = []
     tmp1 = 0.0
     for b in range(len(data)):
-        tmp1 = mean_squared_error(data.iloc[b][6:20], data.iloc[index][6:20])  # All factors
+        tmp1 = mean_squared_error(data.iloc[b][6:], data.iloc[index][6:])  # All factors
         sim1.append(tmp1)
 
     # наиболее близкие среди всех кластеров согласно половозрастной структуре
@@ -313,23 +314,43 @@ def siblingsfinder(data, clusts):
     data['similarity 2'] = data['similarity 2'] / data['similarity 2'].max()
 
     # комбинирование двух критериев
-    sim3 = data['similarity 1'] + data['similarity 2']
+    sim0 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.5)
+    data['similarity 0'] = sim0
+
+    sim3 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.75)
     data['similarity 3'] = sim3
 
-    cols = ['oktmo', 'year', 'name', 'clust', 'similarity 1', 'similarity 2', 'similarity 3', 'saldo', 'popsize',
+    sim4 = (data['similarity 1'] * 0.25) + (data['similarity 2'] * 0.75)
+    data['similarity 4'] = sim4
+
+    sim5 = (data['similarity 1'] * 0.75) + (data['similarity 2'] * 0.5)
+    data['similarity 5'] = sim5
+
+    sim6 = (data['similarity 1'] * 0.25) + (data['similarity 2'] * 0.5)
+    data['similarity 6'] = sim6
+
+    sim7 = (data['similarity 1'] * 0.45) + (data['similarity 2'] * 0.25)
+    data['similarity 7'] = sim7
+
+    sim8 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.1)
+    data['similarity 8'] = sim8
+
+    cols = ['oktmo', 'year', 'name', 'clust', 'similarity 1', 'similarity 2', 'similarity 0', 'similarity 3', 'similarity 4', 'similarity 5', 'similarity 6', 'similarity 7', 'similarity 8',
+            'saldo', 'popsize',
             'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea', 'sportsvenue',
-            'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'x', 'y']
+            'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
     data = data[cols]
 
     data = data.sort_values(by='similarity 1')
-    """
-    for i in range(len(data)):
-        if data.iloc[i]['oktmo'] == 97619000:
-            print('yes')
-    """
     data = data.sort_values(by='similarity 2')
+    data = data.sort_values(by='similarity 0')
     data = data.sort_values(by='similarity 3')
+    data = data.sort_values(by='similarity 4')
+    data = data.sort_values(by='similarity 5')
+    data = data.sort_values(by='similarity 6')
+    data = data.sort_values(by='similarity 7')
+    data = data.sort_values(by='similarity 8')
 
 
     #retroanalysis(data)
@@ -535,7 +556,7 @@ def findsignif(data2):
 
 # метод Антона Николаевича (средние показатели индикаторов для отрицательных и положительных примеров в кластере)
 def ANmethod(clusts):
-    norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul.csv")
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
     final = []
     tmpnegative = []
     tmppositive = []
@@ -563,12 +584,12 @@ def ANmethod(clusts):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("AN-method output (all 31).xlsx", index=False)
+    final.to_excel("AN-method output (hospital).xlsx", index=False)
 
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
 
 #normpersoulalldata(data)
 
@@ -594,7 +615,7 @@ data['clust'] = clust_model.labels_
 
 cols = ['oktmo', 'year', 'name', 'clust', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 data = data[cols]
 
@@ -615,9 +636,9 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-ANmethod(clusts)
+#ANmethod(clusts)
 
-#siblingsfinder(data, clusts)
+siblingsfinder(data, clusts)
 
 #getmedian(data)
 
