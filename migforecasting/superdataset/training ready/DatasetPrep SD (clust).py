@@ -27,7 +27,7 @@ def normbymax(trainset):
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv", index=False)
+    tmpp.to_csv("fornorm 24 alltime-clust (IQR)-normbysoul-f.csv", index=False)
 
     return trainset
 
@@ -288,7 +288,7 @@ cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary'
 
 rawdata = rawdata[cols]
 
-rawdata = onlycertainmun(rawdata)
+#rawdata = onlycertainmun(rawdata)
 
 """
 # удаление больших городов (население более 100 тысяч)
@@ -358,6 +358,6 @@ features = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsal
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv", index=False)
+examples.to_csv("superdataset-24 alltime-clust (IQR)-normbysoul-f.csv", index=False)
 
 print('Done')

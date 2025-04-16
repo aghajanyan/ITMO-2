@@ -160,7 +160,7 @@ def movementanalyzer(data, clusts):
 
 # сохранить данные по всем кластерам в эксель файле (без нормализации)
 def saveallclusters(clusts):
-    norm = pd.read_csv("datasets/fornorm.csv")
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul-f.csv")
 
     writer = pd.ExcelWriter("Clusters.xlsx")
     for k in range(len(clusts)):
@@ -507,9 +507,9 @@ def negativeanalyzer(clusts):
     y = range(0, len(clusts))
     ax.bar(y, negprop, width=0.3, color=sns.color_palette('viridis', len(clusts)))
 
-    plt.title("Percentage of settlements with negative net migration in the cluster")
+    plt.title("Proportion of settlements with negative net migration")
     plt.xlabel('Cluster')
-    plt.ylabel('Value')
+    plt.ylabel('Percentage')
     plt.show()
     """
     # выгрузка уникальных поселений из наиболее и наименее отрицательного кластера (согласно сальдо)
@@ -560,7 +560,7 @@ def findsignif(data2):
 
 # метод Антона Николаевича (средние показатели индикаторов для отрицательных и положительных примеров в кластере)
 def ANmethod(clusts):
-    norm = pd.read_csv("datasets/fornorm 24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+    norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul-f.csv")
     final = []
     tmpnegative = []
     tmppositive = []
@@ -569,8 +569,8 @@ def ANmethod(clusts):
         negative = clusts[k][clusts[k]['saldo'] < 0]
         positive = clusts[k][clusts[k]['saldo'] > 0]
 
-        negative = negative.drop(columns=['x', 'y'])
-        positive = positive.drop(columns=['x', 'y'])
+        #negative = negative.drop(columns=['x', 'y'])
+        #positive = positive.drop(columns=['x', 'y'])
 
         tmpnegative.append(k)
         tmppositive.append(k)
@@ -588,12 +588,12 @@ def ANmethod(clusts):
     features = list(norm.columns)
     features.insert(0, 'clust')
     final = pd.DataFrame(final, columns=features)
-    final.to_excel("AN-method output (hospital).xlsx", index=False)
+    final.to_excel("AN-method output (all).xlsx", index=False)
 
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
 
 #normpersoulalldata(data)
 
@@ -625,13 +625,13 @@ data = data[cols]
 
 data = data.sort_values(by=['oktmo', 'year'])
 
-#data.to_csv("superdataset-24 alltime-clust (oktmo+name+clust).csv", index=False)
+#data.to_csv("For Sergey (all).csv", index=False)
 
 # трансформация в 2D методом компонент
-pca = PCA(2)
-pca2 = pca.fit_transform(data.iloc[:, 6:])  # 5 - без сальдо, 6 - без popsize
-data['x'] = pca2[:, 0]
-data['y'] = pca2[:, 1]
+#pca = PCA(2)
+#pca2 = pca.fit_transform(data.iloc[:, 6:])  # 5 - без сальдо, 6 - без popsize
+#data['x'] = pca2[:, 0]
+#data['y'] = pca2[:, 1]
 
 # разделяем кластеры по независимым массивам (массив массивов)
 clusts = []
@@ -640,7 +640,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-#ANmethod(clusts)
+ANmethod(clusts)
 
 #siblingsfinder(data, clusts)
 
@@ -650,7 +650,7 @@ negativeanalyzer(clusts)
 
 #clustsfeatures(clusts, centroids)
 
-# saveallclusters(clusts)
+saveallclusters(clusts)
 
 # saveallclusters(clusts)
 
