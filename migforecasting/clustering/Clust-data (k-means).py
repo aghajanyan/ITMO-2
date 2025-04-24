@@ -593,7 +593,9 @@ def ANmethod(clusts):
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+
+num = data['oktmo'].nunique()
 
 #normpersoulalldata(data)
 
@@ -640,7 +642,7 @@ for i in range(k):
 
 # анализ и вывод результатов
 
-ANmethod(clusts)
+#ANmethod(clusts)
 
 #siblingsfinder(data, clusts)
 
@@ -650,7 +652,7 @@ negativeanalyzer(clusts)
 
 #clustsfeatures(clusts, centroids)
 
-saveallclusters(clusts)
+#saveallclusters(clusts)
 
 # saveallclusters(clusts)
 
