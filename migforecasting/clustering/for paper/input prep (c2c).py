@@ -16,13 +16,14 @@ for i in range(len(data)):
     for j in range((len(subclusters))):
         # определение наиболее близкого кластера для перехода
         tocluster = 0
-        mse = mean_squared_error(data[i][1:], subclusters[0][1:])
+        mse = mean_squared_error(data.iloc[i][1:], subclusters.iloc[0][1:])
         for m in range(1, (len(subclusters))):
-           if mse > mean_squared_error(data[i][1:], subclusters[m][1:]):
-               mse = mean_squared_error(data[i][1:], subclusters[m][1:])
+           if mse > mean_squared_error(data.iloc[i][1:], subclusters.iloc[m][1:]):
+               mse = mean_squared_error(data.iloc[i][1:], subclusters.iloc[m][1:])
                tocluster = m
 
-        for k in range(data.shape[1]):
+        tmp.append(data.iloc[i][0])
+        for k in range(1, data.shape[1]):
             if data.iloc[i][k] < subclusters.iloc[tocluster][k]:
                 if subclusters.iloc[tocluster][k] / data.iloc[i][k] < 2:
                     tmp.append(subclusters.iloc[tocluster][k])  # замена на медиану (если разница от неё меньше 100%)
@@ -33,3 +34,11 @@ for i in range(len(data)):
                 tmp.append(data.iloc[i][k])
         changes.append(tmp)
         tmp = []
+        break
+
+
+features = data.columns
+changes = np.array(changes)
+changes = pd.DataFrame(changes, columns=features)
+
+changes.to_excel("input with changes (c2c).xlsx", index=False)
