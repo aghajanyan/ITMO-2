@@ -21,14 +21,13 @@ def normbymax(trainset):
         for j in range(len(trainset)):
             trainset[j][k] = trainset[j][k] / maxi
 
-    features = ['reg', 'interreg', 'internat', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
-                'retailturnover', 'livarea',
+    features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
                 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
-                'beforeschool']
+                'beforeschool', 'factoriescap']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24 3mig.csv", index=False)
+    tmpp.to_csv("fornorm 24-f.csv", index=False)
 
     return trainset
 
@@ -209,34 +208,34 @@ def normpersoulalldata(data):
 allrubfeatures = ['avgsalary', 'retailturnover', 'foodservturnover', 'agrprod', 'invest',
                   'budincome', 'funds', 'naturesecure', 'factoriescap']
 
-thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod']
+thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'factoriescap']
 
 # получение и сортировка данных
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 #migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
 #migtype = migtype[migtype.columns.drop('name')]
 
 #rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
 
-reg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
-reg = reg[reg.columns.drop('name')]
-reg.columns = ['oktmo', 'year', 'reg']
+#reg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
+#reg = reg[reg.columns.drop('name')]
+#reg.columns = ['oktmo', 'year', 'reg']
 
-interreg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo interreg (allmun).csv")
-interreg = interreg[interreg.columns.drop('name')]
-interreg.columns = ['oktmo', 'year', 'interreg']
+#interreg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo interreg (allmun).csv")
+#interreg = interreg[interreg.columns.drop('name')]
+#interreg.columns = ['oktmo', 'year', 'interreg']
 
-internat = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
-internat = internat[internat.columns.drop('name')]
-internat.columns = ['oktmo', 'year', 'internat']
+#internat = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
+#internat = internat[internat.columns.drop('name')]
+#internat.columns = ['oktmo', 'year', 'internat']
 
-rawdata = rawdata.merge(reg, on=['oktmo', 'year'], how='left')
-rawdata = rawdata.merge(interreg, on=['oktmo', 'year'], how='left')
-rawdata = rawdata.merge(internat, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(reg, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(interreg, on=['oktmo', 'year'], how='left')
+#rawdata = rawdata.merge(internat, on=['oktmo', 'year'], how='left')
 
 #outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
 #inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
@@ -291,7 +290,7 @@ rawdata = rawdata[rawdata.columns.drop('consnewareas')]
 #rawdata = rawdata[rawdata.columns.drop('shoparea')]
 #rawdata = rawdata[rawdata.columns.drop('servicesnum')]
 rawdata = rawdata[rawdata.columns.drop('funds')]
-rawdata = rawdata[rawdata.columns.drop('factoriescap')]
+#rawdata = rawdata[rawdata.columns.drop('factoriescap')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
@@ -299,9 +298,9 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-cols = ['oktmo', 'name', 'year', 'reg', 'interreg', 'internat', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
+cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
+        'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
 rawdata = rawdata[cols]
 
@@ -317,12 +316,12 @@ rawdata = rawdata[cols]
 
 #rawdata = onlycertainmun(rawdata)
 
-
+"""
 # удаление больших городов (население более 100 тысяч)
 for index, row in rawdata.iterrows():
     if row['popsize'] > 100000:
         rawdata = rawdata.drop(index)
-
+"""
 """
 # выборка только за определенный год
 for index, row in rawdata.iterrows():
@@ -371,8 +370,8 @@ for i in range(len(rawdata) - 1):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
         if rawdata.iloc[i, 2] + 1 == rawdata.iloc[i + 1, 2]:  # прогноз только на год вперед
             rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo / reg
-            rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow / interreg
-            rawdata.iloc[i, 5] = rawdata.iloc[i + 1, 5]     # сдвигаем internat
+            #rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow / interreg
+            #rawdata.iloc[i, 5] = rawdata.iloc[i + 1, 5]     # сдвигаем internat
             examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -381,9 +380,9 @@ examples = np.delete(examples, 2, 1)  # удаляем год
 examples = np.delete(examples, 1, 1)  # удаляем название мун. образования
 examples = np.delete(examples, 0, 1)  # удаляем октмо
 
-features = ['reg', 'interreg', 'internat', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
             'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
-            'beforeschool']
+            'beforeschool', 'factoriescap']
 
 examples = pd.DataFrame(examples, columns=features)
 
@@ -445,13 +444,13 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
             'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
 """
 
-features = ['reg', 'interreg', 'internat', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
             'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
-            'beforeschool']
+            'beforeschool', 'factoriescap']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24 3mig.csv", index=False)
+examples.to_csv("superdataset-24-f.csv", index=False)
 
 print('Done')
