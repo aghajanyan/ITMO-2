@@ -70,7 +70,7 @@ def normbyinf(inputdata):
 
 # Нормирование данных для модели
 def normformodel(inputdata):
-    norm = pd.read_csv("clustering/datasets/fornorm-24-f.csv")
+    norm = pd.read_csv("clustering/datasets/fornorm 24-f.csv")
     final = []
     tmp = []
     for k in range(len(inputdata)):
@@ -117,7 +117,7 @@ def anyinput(model, maxsaldo):
 
 # Осуществить прогноз для произвольного входа (прогноз средних значений кластера)
 def anyinputAN(model, maxsaldo):
-    inputdata = pd.read_excel("clustering/for paper/input for paper (c2c).xlsx")
+    inputdata = pd.read_excel("clustering/for paper/input for paper.xlsx")
 
     # перевод душевых показателей в абсолютные значения
     #inputdata = fromsoultoabs(inputdata)
@@ -229,8 +229,8 @@ plt.title("Значимость признаков по критерию Джи�
 plt.show()
 
 # прогноз для произвольного входа
-#outputdata = anyinputAN(model, maxsaldo)
-#outputdata.to_excel("outputdata.xlsx")
+outputdata = anyinputAN(model, maxsaldo)
+outputdata.to_excel("outputdata.xlsx")
 
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
