@@ -27,7 +27,7 @@ def normbymax(trainset):
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24-f.csv", index=False)
+    tmpp.to_csv("fornorm 24-f 2Y.csv", index=False)
 
     return trainset
 
@@ -364,14 +364,15 @@ rawdata = rawdata.dropna()
 rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
+ny = 2 # на сколько лет вперед сальдо в качестве выходного результата
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
-for i in range(len(rawdata) - 1):
-    if rawdata.iloc[i, 0] == rawdata.iloc[i + 1, 0]:
-        if rawdata.iloc[i, 2] + 1 == rawdata.iloc[i + 1, 2]:  # прогноз только на год вперед
-            rawdata.iloc[i, 3] = rawdata.iloc[i + 1, 3]     # сдвигаем inflow / saldo / reg
-            #rawdata.iloc[i, 4] = rawdata.iloc[i + 1, 4]     # сдвигаем outflow / interreg
-            #rawdata.iloc[i, 5] = rawdata.iloc[i + 1, 5]     # сдвигаем internat
+for i in range(len(rawdata) - ny):
+    if rawdata.iloc[i, 0] == rawdata.iloc[i + ny, 0]:
+        if rawdata.iloc[i, 2] + ny == rawdata.iloc[i + ny, 2]:  # прогноз только на год вперед
+            rawdata.iloc[i, 3] = rawdata.iloc[i + ny, 3]     # сдвигаем inflow / saldo / reg
+            #rawdata.iloc[i, 4] = rawdata.iloc[i + ny, 4]     # сдвигаем outflow / interreg
+            #rawdata.iloc[i, 5] = rawdata.iloc[i + ny, 5]     # сдвигаем internat
             examples.append(rawdata.iloc[i])
 
 examples = np.array(examples)
@@ -451,6 +452,6 @@ features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodse
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24-f.csv", index=False)
+examples.to_csv("superdataset-24-f 2Y.csv", index=False)
 
 print('Done')
