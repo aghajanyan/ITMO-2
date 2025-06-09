@@ -27,7 +27,7 @@ resulttrain = []
 #maxsaldo = 1775     # dataset 23 (positive flow)
 #maxsaldo = 888     # dataset 23 (negative flow)
 #maxsaldo = 854     # dataset 24 (also balanced, normbysoul)
-maxsaldo = 951     # dataset 24 balanced-f also 24-f
+maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
 #maxsaldo = 295     # dataset 24 internat
@@ -50,7 +50,7 @@ maxsaldo = 951     # dataset 24 balanced-f also 24-f
 #maxsaldo = 4087     # dataset 24 outflow
 
 signif = []
-n = 10
+n = 50
 for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
@@ -67,10 +67,10 @@ for k in range(n):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout * maxsaldo, predtrain * maxsaldo)
+    errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout * maxsaldo, predtest * maxsaldo)
+    errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
     # запись ошибки
     resulttrain.append(errortrain)
