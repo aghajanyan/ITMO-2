@@ -137,7 +137,7 @@ def anyinputAN(model, maxsaldo):
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
 #maxsaldo = 854     # dataset 24 (also balanced)
-maxsaldo = 951     # dataset 24 balanced-f also 24-f
+maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
 #maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
@@ -157,7 +157,7 @@ maxsaldo = 951     # dataset 24 balanced-f also 24-f
 
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24-f.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24-f 2Y.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]
@@ -169,7 +169,7 @@ datasetin = np.array(rawdata[rawdata.columns.drop('saldo')])
 datasetout = np.array(rawdata[['saldo']])
 
 # разбиение на обучающую и тестовую выборку
-trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
+trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.1, random_state=42)
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)
@@ -229,8 +229,8 @@ plt.title("Значимость признаков по критерию Джи�
 plt.show()
 
 # прогноз для произвольного входа
-outputdata = anyinputAN(model, maxsaldo)
-outputdata.to_excel("outputdata.xlsx")
+#outputdata = anyinputAN(model, maxsaldo)
+#outputdata.to_excel("outputdata.xlsx")
 
 print("MAPE (train): ", errortrain)
 print("MAPE (test): ", errortest)
