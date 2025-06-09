@@ -24,7 +24,7 @@ for cluster in data:
     backtoabs(positive)
     tmp.append(cluster)
     for col in positive.columns[4:]:
-        tmp.append(positive[col].median())
+        tmp.append(positive[col].mean())
     mindata.append(tmp)
     tmp = []
 
@@ -33,6 +33,6 @@ features.insert(0, 'clust')
 mindata = np.array(mindata)
 mindata = pd.DataFrame(mindata, columns=features)
 
-mindata.to_excel("mediandata (abs).xlsx", index=False)
+mindata.to_excel("meandata (abs).xlsx", index=False)
 
 print('ok')

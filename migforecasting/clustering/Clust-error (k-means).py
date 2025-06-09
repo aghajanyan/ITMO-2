@@ -7,12 +7,12 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
 
 error = []
 tmper = []
 N = range(2, 21)    # количество кластеров
-x = 1   # количество повторных циклов
+x = 1  # количество повторных циклов
 for i in range(x):     # цикл для вычисления средней ошибки для конкретного кол-ва кластеров
     tmper = []
     data = data.sample(frac=1)  # перетасовка
@@ -36,5 +36,5 @@ for i in range(len(error)):
 
 plt.plot(N, error)
 plt.xlabel("Number of clusters")
-plt.ylabel("Error")
+plt.ylabel("Sum of Squared Errors")
 plt.show()

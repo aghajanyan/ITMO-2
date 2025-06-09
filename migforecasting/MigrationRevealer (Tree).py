@@ -117,7 +117,7 @@ def anyinput(model, maxsaldo):
 
 # Осуществить прогноз для произвольного входа (прогноз средних значений кластера)
 def anyinputAN(model, maxsaldo):
-    inputdata = pd.read_excel("clustering/for paper/input for paper.xlsx")
+    inputdata = pd.read_excel("clustering/for paper/input for paper (c2c).xlsx")
 
     # перевод душевых показателей в абсолютные значения
     #inputdata = fromsoultoabs(inputdata)
