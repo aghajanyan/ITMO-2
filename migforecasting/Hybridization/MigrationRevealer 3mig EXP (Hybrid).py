@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -56,7 +57,7 @@ for k in range(n):
     predinternat = model3.predict(trainin)
 
     # ошибка гибридной модели
-    errortrain = mean_squared_error(((trainout1 * maxsaldoreg) + (trainout2 * maxsaldointerreg) + (trainout3 * maxsaldointernat)),
+    errortrain = r2_score(((trainout1 * maxsaldoreg) + (trainout2 * maxsaldointerreg) + (trainout3 * maxsaldointernat)),
                                      ((predreg * maxsaldoreg) + (predinterreg * maxsaldointerreg) + (predinternat * maxsaldointernat)))
 
 
@@ -66,7 +67,7 @@ for k in range(n):
     predinterreg = model2.predict(testin)
     predinternat = model3.predict(testin)
 
-    errortest = mean_squared_error(((testout1 * maxsaldoreg) + (testout2 * maxsaldointerreg) + (testout3 * maxsaldointernat)),
+    errortest = r2_score(((testout1 * maxsaldoreg) + (testout2 * maxsaldointerreg) + (testout3 * maxsaldointernat)),
                                      ((predreg * maxsaldoreg) + (predinterreg * maxsaldointerreg) + (predinternat * maxsaldointernat)))
 
     #errortest = mean_squared_error((testout1 + testout2 + testout3), (predreg + predinterreg + predinternat))

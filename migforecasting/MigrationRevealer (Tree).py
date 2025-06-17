@@ -137,7 +137,8 @@ def anyinputAN(model, maxsaldo):
 #maxsaldo = 10001    # dataset 20 (also positive flow)
 #maxsaldo = 426      # dataset 22
 #maxsaldo = 854     # dataset 24 (also balanced)
-maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
+#maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
+maxsaldo = 947      # 24-f 3Y
 #maxsaldo = 995     # dataset 24 normbysoul-f
 #maxsaldo = 1009     # dataset 24 normbysoul
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
@@ -157,7 +158,7 @@ maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
 
 
 # Получение данных
-rawdata = pd.read_csv("superdataset/training ready/superdataset-24-f 2Y.csv")
+rawdata = pd.read_csv("superdataset/training ready/superdataset-24-f 3Y.csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('beforeschool')]

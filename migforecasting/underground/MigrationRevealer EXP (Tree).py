@@ -7,11 +7,16 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24-f 2Y.csv")
+rawdata = pd.read_csv("datasets/superdataset-24.csv")
+
+rawdata = rawdata.sample(frac=1) # перетасовка
+
+#rawdata = rawdata[:4135]
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('parks')]
@@ -26,8 +31,9 @@ resulttrain = []
 #maxsaldo = 848     # dataset 23
 #maxsaldo = 1775     # dataset 23 (positive flow)
 #maxsaldo = 888     # dataset 23 (negative flow)
-#maxsaldo = 854     # dataset 24 (also balanced, normbysoul)
-maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
+maxsaldo = 854     # dataset 24 (also balanced, normbysoul)
+#maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
+#maxsaldo = 947      # 24-f 3Y
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
 #maxsaldo = 512     # dataset 24 reg (also balanced)
 #maxsaldo = 295     # dataset 24 internat
@@ -67,10 +73,10 @@ for k in range(n):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = mean_squared_error(trainout * maxsaldo, predtrain * maxsaldo)
+    errortrain = r2_score(trainout * maxsaldo, predtrain * maxsaldo)
 
     predtest = model.predict(testin)
-    errortest = mean_squared_error(testout * maxsaldo, predtest * maxsaldo)
+    errortest = r2_score(testout * maxsaldo, predtest * maxsaldo)
 
     # запись ошибки
     resulttrain.append(errortrain)
