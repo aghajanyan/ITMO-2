@@ -13,12 +13,12 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
 
-maxsaldoreg = 522
-maxsaldointerreg = 377
-maxsaldointernat = 273
+maxsaldoreg = 651
+maxsaldointerreg = 437
+maxsaldointernat = 302
 
 # Получение данных
-rawdata = pd.read_csv("superdataset-24 3mig.csv")
+rawdata = pd.read_csv("superdataset-24 3mig 2Y.csv")
 
 resulttest = []
 resulttrain = []
