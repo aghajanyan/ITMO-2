@@ -12,9 +12,9 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24.csv")
+rawdata = pd.read_csv("datasets/superdataset-24-f 2Ysum.csv")
 
-rawdata = rawdata.sample(frac=1) # перетасовка
+#rawdata = rawdata.sample(frac=1) # перетасовка
 
 #rawdata = rawdata[:4135]
 
@@ -31,7 +31,8 @@ resulttrain = []
 #maxsaldo = 848     # dataset 23
 #maxsaldo = 1775     # dataset 23 (positive flow)
 #maxsaldo = 888     # dataset 23 (negative flow)
-maxsaldo = 854     # dataset 24 (also balanced, normbysoul)
+#maxsaldo = 854     # dataset 24 (also balanced, normbysoul)
+maxsaldo = 1732     # 24-f 2Ysum
 #maxsaldo = 951     # dataset 24 balanced-f also 24-f also 2Y
 #maxsaldo = 947      # 24-f 3Y
 #maxsaldo = 347      # dataset 24 interreg (also balanced)
