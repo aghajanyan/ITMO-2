@@ -75,10 +75,10 @@ for k in range(n):
 
     # вычисление ошибки
     predtrain = model.predict(trainin)
-    errortrain = r2_score(trainout * maxsaldo, predtrain * maxsaldo)
+    errortrain = mean_absolute_error(trainout * maxsaldo, predtrain * maxsaldo)
 
     predtest = model.predict(testin)
-    errortest = r2_score(testout * maxsaldo, predtest * maxsaldo)
+    errortest = mean_absolute_error(testout * maxsaldo, predtest * maxsaldo)
 
     # запись ошибки
     resulttrain.append(errortrain)
