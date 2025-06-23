@@ -49,11 +49,15 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = mean_absolute_error(testout * maxsaldo, predsum * maxsaldosum)
+    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
+
+    predtest = modelone.predict(testin2)
+    testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     predone = modelone.predict(testin)
+    predone = predone * maxsaldoone
     predextra = predone * 3
-    errorextra = mean_absolute_error(testout * maxsaldo, predextra * maxsaldoone)
+    errorextra = r2_score(testout * maxsaldoone, predextra)
 
 
     # запись ошибки
