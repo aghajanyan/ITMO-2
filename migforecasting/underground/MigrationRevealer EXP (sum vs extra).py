@@ -51,14 +51,29 @@ for k in range(n):
     predsum = modelsum.predict(testin)
     errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
 
+    # вычисление ошибки на своём датасете
     predtest = modelone.predict(testin2)
     testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
 
+    # перенормализация тестовой выборки под другую модель
+    normsum = pd.read_csv("datasets/fornorm 24-f 3Ysum.csv")
+    normone = pd.read_csv("datasets/fornorm 24-f.csv")
+
+    testin = pd.DataFrame(data=testin,columns=normsum.columns[1:])
+
+    for a in testin.columns:
+        testin[a] = testin[a] * normsum.iloc[0][a]
+
+    for a in testin.columns:
+        testin[a] = testin[a] / normone.iloc[0][a]
+
+    testin = np.array(testin)
+
+    # вычисление ошибки проноза с экстраполяцией
     predone = modelone.predict(testin)
     predone = predone * maxsaldoone
     predextra = predone * 3
-    errorextra = r2_score(testout * maxsaldoone, predextra)
-
+    errorextra = r2_score(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
@@ -74,4 +89,4 @@ testresultsum = pd.DataFrame(testresultsum)
 testresultextra = pd.DataFrame(testresultextra)
 
 testresultsum.to_excel('test-sum.xlsx')
-testresultextra.to_excel('train-data.xlsx')
+testresultextra.to_excel('test-extra.xlsx')
