@@ -23,7 +23,7 @@ maxsaldoone = 951     # dataset 24 balanced-f also 24-f also 2Y
 
 
 signif = []
-n = 50
+n = 3
 for k in range(n):
     rawdatasum  = rawdatasum.sample(frac=1) # перетасовка
     rawdataone  = rawdataone.sample(frac=1)  # перетасовка
