@@ -298,18 +298,6 @@ rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-nextsaldo = []
-ny = 1
-for i in range(len(rawdata) - ny):
-    if rawdata.iloc[i, 0] == rawdata.iloc[i + ny, 0]:
-        if rawdata.iloc[i, 2] + ny == rawdata.iloc[i + ny, 2]:  # прогноз только на год вперед
-            nextsaldo.append([rawdata.iloc[i, 0], rawdata.iloc[i, 2], rawdata.iloc[i + ny, 3]])   # сдвигаем inflow / saldo / reg
-
-colsfor = ['oktmo', 'year', 'nextsaldo']
-nextsaldo = np.array(nextsaldo)
-nextsaldo = pd.DataFrame(data=nextsaldo, columns=colsfor)
-
-
 cols = ['oktmo', 'name', 'year', 'saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats',
         'retailturnover', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
         'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
