@@ -13,14 +13,14 @@ from sklearn.model_selection import train_test_split
 
 
 rawdatasum = pd.read_csv("datasets/superdataset-24-f 3Ysum.csv")
-rawdataone = pd.read_csv("datasets/superdataset-24-f 3Y.csv")
+rawdataone = pd.read_csv("datasets/superdataset-24-f 2Y.csv")
 
 testresultsum = []
 testresultextra = []
 
 maxsaldosum = 2483     # 24-f 3Ysum
-#maxsaldoone = 951     # dataset 24 balanced-f also 24-f also 2Y
-maxsaldoone = 947          # 24-f 3Y
+maxsaldoone = 951     # dataset 24 balanced-f also 24-f also 2Y
+#maxsaldoone = 947          # 24-f 3Y
 
 signif = []
 n = 50
@@ -57,7 +57,7 @@ for k in range(n):
 
     # перенормализация тестовой выборки под другую модель
     normsum = pd.read_csv("datasets/fornorm 24-f 3Ysum.csv")
-    normone = pd.read_csv("datasets/fornorm 24-f 3Y.csv")
+    normone = pd.read_csv("datasets/fornorm 24-f 2Y.csv")
 
     testin = pd.DataFrame(data=testin,columns=normsum.columns[1:])
 
