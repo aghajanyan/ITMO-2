@@ -12,15 +12,16 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdatasum = pd.read_csv("datasets/superdataset-24-f 3Ysum.csv")
-rawdataone = pd.read_csv("datasets/superdataset-24-f 2Y.csv")
+rawdatasum = pd.read_csv("datasets/superdataset-24-f 2Ysum.csv")
+rawdataone = pd.read_csv("datasets/superdataset-24-f.csv")
 
 testresultsum = []
 testresultextra = []
 
-maxsaldosum = 2483     # 24-f 3Ysum
-#maxsaldoone = 951     # dataset 24 balanced-f also 24-f also 2Y
-maxsaldoone = 947          # 24-f 3Y
+#maxsaldosum = 2483     # 24-f 3Ysum
+maxsaldosum = 1732     # 24-f 2Ysum
+maxsaldoone = 951     # dataset 24 balanced-f also 24-f also 2Y
+#maxsaldoone = 947          # 24-f 3Y
 
 signif = []
 n = 50
@@ -49,15 +50,15 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = mean_squared_error(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     predtest = modelone.predict(testin2)
-    testerror = mean_squared_error(testout2 * maxsaldoone, predtest * maxsaldoone)
+    testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     # перенормализация тестовой выборки под другую модель
-    normsum = pd.read_csv("datasets/fornorm 24-f 3Ysum.csv")
-    normone = pd.read_csv("datasets/fornorm 24-f 3Y.csv")
+    normsum = pd.read_csv("datasets/fornorm 24-f 2Ysum.csv")
+    normone = pd.read_csv("datasets/fornorm 24-f.csv")
 
     testin = pd.DataFrame(data=testin,columns=normsum.columns[1:])
 
@@ -72,8 +73,8 @@ for k in range(n):
     # вычисление ошибки проноза с экстраполяцией
     predone = modelone.predict(testin)
     predone = predone * maxsaldoone
-    predextra = predone * 3
-    errorextra = mean_squared_error(testout * maxsaldosum, predextra)
+    predextra = predone * 2
+    errorextra = r2_score(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
