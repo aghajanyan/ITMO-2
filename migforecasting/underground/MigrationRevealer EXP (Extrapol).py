@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 
 rawdatasum = pd.read_csv("datasets/superdataset-24-f 2Ysum.csv")
-rawdataone = pd.read_csv("datasets/superdataset-24-f.csv")
+rawdataone = pd.read_csv("datasets/superdataset-24-f 2Y.csv")
 
 testresultsum = []
 testresultextra = []
@@ -50,15 +50,15 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = mean_squared_error(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     predtest = modelone.predict(testin2)
-    testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
+    testerror = mean_squared_error(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     # перенормализация тестовой выборки под другую модель
     normsum = pd.read_csv("datasets/fornorm 24-f 2Ysum.csv")
-    normone = pd.read_csv("datasets/fornorm 24-f.csv")
+    normone = pd.read_csv("datasets/fornorm 24-f 2Y.csv")
 
     testin = pd.DataFrame(data=testin,columns=normsum.columns[1:])
 
@@ -74,7 +74,7 @@ for k in range(n):
     predone = modelone.predict(testin)
     predone = predone * maxsaldoone
     predextra = predone * 2
-    errorextra = r2_score(testout * maxsaldosum, predextra)
+    errorextra = mean_squared_error(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
