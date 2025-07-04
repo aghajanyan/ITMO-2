@@ -214,39 +214,6 @@ thisrubfeatures = ['avgsalary', 'retailturnover', 'agrprod', 'factoriescap']
 rawdata = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/superdataset (full data).csv")
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
 
-#rawdata = rawdata[rawdata.columns.drop('saldo')]
-
-#migtype = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
-#migtype = migtype[migtype.columns.drop('name')]
-
-#rawdata = rawdata.merge(migtype, on=['oktmo', 'year'], how='left')
-
-#reg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo reg (allmun).csv")
-#reg = reg[reg.columns.drop('name')]
-#reg.columns = ['oktmo', 'year', 'reg']
-
-#interreg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo interreg (allmun).csv")
-#interreg = interreg[interreg.columns.drop('name')]
-#interreg.columns = ['oktmo', 'year', 'interreg']
-
-#internat = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/saldo internat (allmun).csv")
-#internat = internat[internat.columns.drop('name')]
-#internat.columns = ['oktmo', 'year', 'internat']
-
-#rawdata = rawdata.merge(reg, on=['oktmo', 'year'], how='left')
-#rawdata = rawdata.merge(interreg, on=['oktmo', 'year'], how='left')
-#rawdata = rawdata.merge(internat, on=['oktmo', 'year'], how='left')
-
-#outflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/outflow (allmun).csv")
-#inflow = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/inflow (allmun).csv")
-
-#outflow = outflow[outflow.columns.drop('name')]
-#inflow = inflow[inflow.columns.drop('name')]
-
-#rawdata = rawdata.merge(outflow, on=['oktmo', 'year'], how='left')
-#rawdata = rawdata.merge(inflow, on=['oktmo', 'year'], how='left')
-#rawdata = rawdata[rawdata.columns.drop('saldo')]
-
 dataset = []
 """
 rawdata = rawdata[rawdata.columns.drop('consnewapt')]
@@ -341,24 +308,6 @@ library = library[library.columns.drop('name')]
 
 rawdata = rawdata.merge(library, on=['oktmo', 'year'], how='left')
 
-cultureorg = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/cultureorg (allmun).csv")
-cultureorg = cultureorg[cultureorg.columns.drop('name')]
-
-rawdata = rawdata.merge(cultureorg, on=['oktmo', 'year'], how='left')
-
-#musartschool = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/musartschool (allmun).csv")
-#musartschool = musartschool[musartschool.columns.drop('name')]
-
-#rawdata = rawdata.merge(musartschool, on=['oktmo', 'year'], how='left')
-
-rawdata = rawdata.dropna()
-
-
-goodcompincome = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/features separately/goodcompincome (allmun).csv")
-goodcompincome = goodcompincome[goodcompincome.columns.drop('name')]
-
-rawdata = rawdata.merge(goodcompincome, on=['oktmo', 'year'], how='left')
-rawdata = rawdata.dropna()
 """
 
 rawdata = normbyinf(rawdata, thisrubfeatures)
@@ -425,25 +374,6 @@ examples = np.array(examples)
 
 # нормализация от 0 до 1
 examples = normbymax(examples)
-
-"""
-features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
-            
-            features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'museums', 'parks', 'theatres',
-            'library', 'cultureorg', 'musartschool']
-            
-            features = ['saldo', 'foodseats', 'sportsvenue', 'servicesnum', 'theatres', 'library', 'cultureorg', 'musartschool']
-            
-            features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'consnewareas', 'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'funds', 'hospitals', 'beforeschool', 'factoriescap']
-            
-            features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover',
-            'livarea', 'sportsvenue', 'servicesnum', 'roadslen',
-            'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool']
-"""
 
 features = ['saldo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
             'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
