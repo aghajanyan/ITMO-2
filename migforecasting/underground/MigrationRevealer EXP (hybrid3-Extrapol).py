@@ -71,17 +71,17 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = mean_absolute_error(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     predtest = modelone.predict(testin2)
-    testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
+    testerror = mean_absolute_error(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     predtest2 = modeltwo.predict(testin3)
-    testerror2 = r2_score(testout3 * maxsaldotwo, predtest2 * maxsaldotwo)
+    testerror2 = mean_absolute_error(testout3 * maxsaldotwo, predtest2 * maxsaldotwo)
 
     predtest3 = modelthree.predict(testin4)
-    testerror3 = r2_score(testout4 * maxsaldothree, predtest3 * maxsaldothree)
+    testerror3 = mean_absolute_error(testout4 * maxsaldothree, predtest3 * maxsaldothree)
 
     # перенормализация тестовой выборки под другую модель
     normsum = pd.read_csv("datasets/fornorm 24-f 3Ysum.csv")
@@ -115,7 +115,7 @@ for k in range(n):
     predtwo = predtwo * maxsaldotwo
     predthree = predthree * maxsaldothree
     predextra = predone + predtwo + predthree
-    errorextra = r2_score(testout * maxsaldosum, predextra)
+    errorextra = mean_absolute_error(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
