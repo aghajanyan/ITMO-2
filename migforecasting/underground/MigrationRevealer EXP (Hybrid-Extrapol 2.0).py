@@ -51,15 +51,15 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = mean_squared_errore(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
-    predtest = modelone.predict(testin)
-    testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
+    #predtest = modelone.predict(testin)
+    #testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     # вычисление ошибки на своём датасете
-    predtest2 = modeltwo.predict(testin)
-    testerror2 = r2_score(testout3 * maxsaldotwo, predtest2 * maxsaldotwo)
+    #predtest2 = modeltwo.predict(testin)
+    #testerror2 = r2_score(testout3 * maxsaldotwo, predtest2 * maxsaldotwo)
 
     # вычисление ошибки проноза с экстраполяцией
     predone = modelone.predict(testin)
@@ -67,7 +67,7 @@ for k in range(n):
     predone = predone * maxsaldoone
     predtwo = predtwo * maxsaldotwo
     predextra = predone + predtwo
-    errorextra = r2_score(testout * maxsaldosum, predextra)
+    errorextra = mean_squared_error(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
