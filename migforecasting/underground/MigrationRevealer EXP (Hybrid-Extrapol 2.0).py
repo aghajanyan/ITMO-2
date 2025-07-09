@@ -51,7 +51,7 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = mean_squared_errore(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = mean_squared_error(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     #predtest = modelone.predict(testin)
