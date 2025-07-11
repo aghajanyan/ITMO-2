@@ -18,7 +18,7 @@ testresultsum = []
 testresultextra = []
 
 maxsaldosum = 2051
-maxsaldoone = 847
+maxsaldoone = 848
 
 signif = []
 n = 50
@@ -28,7 +28,7 @@ for k in range(n):
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop(['saldo', 'saldoone', 'saldotwo', 'saldothree'])])
     datasetout1 = np.array(rawdata[['saldo']])
-    datasetout2 = np.array(rawdata[['saldoone']])
+    datasetout2 = np.array(rawdata[['saldotwo']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout1, test_size=0.2, random_state=42)
@@ -44,7 +44,7 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = mean_absolute_error(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     #predtest = modelone.predict(testin)
@@ -54,7 +54,7 @@ for k in range(n):
     predone = modelone.predict(testin)
     predone = predone * maxsaldoone
     predextra = predone * 3
-    errorextra = r2_score(testout * maxsaldosum, predextra)
+    errorextra = mean_absolute_error(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
