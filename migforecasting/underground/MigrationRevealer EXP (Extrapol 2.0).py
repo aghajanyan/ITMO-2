@@ -18,7 +18,7 @@ testresultsum = []
 testresultextra = []
 
 maxsaldosum = 2051
-maxsaldoone = 848
+maxsaldoone = 847
 
 signif = []
 n = 50
@@ -28,7 +28,7 @@ for k in range(n):
     # разбиение датасета на входные признаки и выходной результат (сальдо)
     datasetin = np.array(rawdata[rawdata.columns.drop(['saldo', 'saldoone', 'saldotwo', 'saldothree'])])
     datasetout1 = np.array(rawdata[['saldo']])
-    datasetout2 = np.array(rawdata[['saldotwo']])
+    datasetout2 = np.array(rawdata[['saldoone']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout1, test_size=0.2, random_state=42)
