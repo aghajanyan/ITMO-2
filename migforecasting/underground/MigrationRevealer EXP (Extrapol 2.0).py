@@ -12,13 +12,13 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24-f hybrid one-2Ysum.csv")
+rawdata = pd.read_csv("datasets/superdataset-24-f hybrid onetwothree-3Ysum.csv")
 
 testresultsum = []
 testresultextra = []
 
-maxsaldosum = 1732
-maxsaldoone = 869
+maxsaldosum = 2051
+maxsaldoone = 848
 
 signif = []
 n = 50
@@ -26,9 +26,9 @@ for k in range(n):
     rawdata  = rawdata.sample(frac=1) # перетасовка
 
     # разбиение датасета на входные признаки и выходной результат (сальдо)
-    datasetin = np.array(rawdata[rawdata.columns.drop(['saldo', 'saldoone'])])
+    datasetin = np.array(rawdata[rawdata.columns.drop(['saldo', 'saldoone', 'saldotwo', 'saldothree'])])
     datasetout1 = np.array(rawdata[['saldo']])
-    datasetout2 = np.array(rawdata[['saldoone']])
+    datasetout2 = np.array(rawdata[['saldotwo']])
 
     # разбиение на обучающую и тестовую выборку
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout1, test_size=0.2, random_state=42)
@@ -44,17 +44,17 @@ for k in range(n):
 
     # вычисление ошибки
     predsum = modelsum.predict(testin)
-    errorsum = mean_absolute_error(testout * maxsaldosum, predsum * maxsaldosum)
+    errorsum = r2_score(testout * maxsaldosum, predsum * maxsaldosum)
 
     # вычисление ошибки на своём датасете
     #predtest = modelone.predict(testin)
-    #testerror = mean_absolute_error(testout2 * maxsaldoone, predtest * maxsaldoone)
+    #testerror = r2_score(testout2 * maxsaldoone, predtest * maxsaldoone)
 
     # вычисление ошибки проноза с экстраполяцией
     predone = modelone.predict(testin)
     predone = predone * maxsaldoone
-    predextra = predone * 2
-    errorextra = mean_absolute_error(testout * maxsaldosum, predextra)
+    predextra = predone * 3
+    errorextra = r2_score(testout * maxsaldosum, predextra)
 
     # запись ошибки
     testresultsum.append(errorsum)
