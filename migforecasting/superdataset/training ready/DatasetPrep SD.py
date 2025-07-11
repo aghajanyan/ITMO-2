@@ -21,13 +21,14 @@ def normbymax(trainset):
         for j in range(len(trainset)):
             trainset[j][k] = trainset[j][k] / maxi
 
-    features = ['saldo', 'saldoone', 'saldotwo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+    features = ['saldo', 'saldoone', 'saldotwo', 'saldothree', 'popsize', 'avgemployers', 'avgsalary', 'shoparea',
+                'foodseats', 'retailturnover', 'livarea',
                 'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
                 'beforeschool', 'factoriescap']
 
     tmpp = np.array(tmpp)
     tmpp = pd.DataFrame([tmpp], columns=features)
-    tmpp.to_csv("fornorm 24-f hybrid onetwo-2Ysum.csv", index=False)
+    tmpp.to_csv("fornorm 24-f hybrid onetwothree-3Ysum.csv", index=False)
 
     return trainset
 
@@ -313,20 +314,22 @@ rawdata = rawdata.merge(library, on=['oktmo', 'year'], how='left')
 rawdata = normbyinf(rawdata, thisrubfeatures)
 
 examples = []
-ny = 2 # на сколько лет вперед сальдо в качестве выходного результата
+ny = 3 # на сколько лет вперед сальдо в качестве выходного результата
 # формирование датасета с социально-экономическими показателями предыдущего года
 # но миграционным сальдо следующего
 saldoone = []
 saldotwo = []
+saldothree = []
 for i in range(len(rawdata) - ny):
     if rawdata.iloc[i, 0] == rawdata.iloc[i + ny, 0]:
         if rawdata.iloc[i, 2] + ny == rawdata.iloc[i + ny, 2]:  # прогноз только на год вперед
-            rawdata.iloc[i, 3] = rawdata.iloc[i + ny - 1, 3] + rawdata.iloc[i + ny, 3]  # сдвигаем inflow / saldo / reg
+            rawdata.iloc[i, 3] = rawdata.iloc[i + ny - 2, 3] + rawdata.iloc[i + ny - 1, 3] + rawdata.iloc[i + ny, 3]  # сдвигаем inflow / saldo / reg
             #rawdata.iloc[i, 4] = rawdata.iloc[i + ny, 4]     # сдвигаем outflow / interreg
             #rawdata.iloc[i, 5] = rawdata.iloc[i + ny, 5]     # сдвигаем internat
             examples.append(rawdata.iloc[i])
-            saldoone.append(rawdata.iloc[i + ny - 1, 3])
-            saldotwo.append(rawdata.iloc[i + ny, 3])
+            saldoone.append(rawdata.iloc[i + ny - 2, 3])
+            saldotwo.append(rawdata.iloc[i + ny - 1, 3])
+            saldothree.append(rawdata.iloc[i + ny, 3])
 
 
 examples = np.array(examples)
@@ -343,8 +346,9 @@ examples = pd.DataFrame(examples, columns=features)
 
 examples['saldoone'] = saldoone
 examples['saldotwo'] = saldotwo
+examples['saldothree'] = saldothree
 
-features = ['saldo', 'saldoone', 'saldotwo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+features = ['saldo', 'saldoone', 'saldotwo', 'saldothree', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
             'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
             'beforeschool', 'factoriescap']
 
@@ -389,13 +393,13 @@ examples = np.array(examples)
 # нормализация от 0 до 1
 examples = normbymax(examples)
 
-features = ['saldo', 'saldoone', 'saldotwo', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
+features = ['saldo', 'saldoone', 'saldotwo', 'saldothree', 'popsize', 'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea',
             'sportsvenue', 'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals',
             'beforeschool', 'factoriescap']
 
 
 examples = pd.DataFrame(examples, columns=features)
 
-examples.to_csv("superdataset-24-f hybrid onetwo-2Ysum.csv", index=False)
+examples.to_csv("superdataset-24-f hybrid onetwothree-3Ysum.csv", index=False)
 
 print('Done')
