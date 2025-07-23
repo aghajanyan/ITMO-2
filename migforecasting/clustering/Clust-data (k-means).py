@@ -273,7 +273,7 @@ def siblingsfinder(data, clusts):
     sync = agestruct[['oktmo', 'year']].drop_duplicates()
     data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
 
-    data = data.drop(columns=['x', 'y'])
+    #data = data.drop(columns=['x', 'y'])
 
     # тавр 52653000
     # спас 29634000
@@ -281,9 +281,13 @@ def siblingsfinder(data, clusts):
     # тихв 41645000 (14-18)
     # мичу 68715000 (14-19)
     # в демонстративных целях
+    # социальные-конфликты
+    # 11635000 - (мусорный конфликт 2018, Шиес, Ленский МР)
+    # 3623000 - (мусорный конфликт 2022, ст. Полтавская, Красноармейский МР)
+    # 63637000 - (межнац. конфликт 2013, г. Пугачёв, Пугачёвский МР)
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 52653000:
+        if data.iloc[i]['year'] == 2014 and data.iloc[i]['oktmo'] == 63637000:
             index = i
             break
 
@@ -316,29 +320,10 @@ def siblingsfinder(data, clusts):
     data['similarity 2'] = data['similarity 2'] / data['similarity 2'].max()
 
     # комбинирование двух критериев
-    sim0 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.5)
-    data['similarity 0'] = sim0
-
-    sim3 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.75)
+    sim3 = (data['similarity 1']) + (data['similarity 2'] * 0.5)
     data['similarity 3'] = sim3
 
-    sim4 = (data['similarity 1'] * 0.25) + (data['similarity 2'] * 0.75)
-    data['similarity 4'] = sim4
-
-    sim5 = (data['similarity 1'] * 0.75) + (data['similarity 2'] * 0.5)
-    data['similarity 5'] = sim5
-
-    sim6 = (data['similarity 1'] * 0.25) + (data['similarity 2'] * 0.5)
-    data['similarity 6'] = sim6
-
-    sim7 = (data['similarity 1'] * 0.45) + (data['similarity 2'] * 0.25)
-    data['similarity 7'] = sim7
-
-    sim8 = (data['similarity 1'] * 0.5) + (data['similarity 2'] * 0.1)
-    data['similarity 8'] = sim8
-
-    cols = ['oktmo', 'year', 'name', 'clust', 'similarity 1', 'similarity 2', 'similarity 0', 'similarity 3', 'similarity 4', 'similarity 5', 'similarity 6', 'similarity 7', 'similarity 8',
-            'saldo', 'popsize',
+    cols = ['oktmo', 'year', 'name', 'clust', 'similarity 1', 'similarity 2', 'similarity 3', 'saldo', 'popsize',
             'avgemployers', 'avgsalary', 'shoparea', 'foodseats', 'retailturnover', 'livarea', 'sportsvenue',
             'servicesnum', 'roadslen', 'livestock', 'harvest', 'agrprod', 'hospitals', 'beforeschool', 'factoriescap']
 
@@ -346,14 +331,7 @@ def siblingsfinder(data, clusts):
 
     data = data.sort_values(by='similarity 1')
     data = data.sort_values(by='similarity 2')
-    data = data.sort_values(by='similarity 0')
     data = data.sort_values(by='similarity 3')
-    data = data.sort_values(by='similarity 4')
-    data = data.sort_values(by='similarity 5')
-    data = data.sort_values(by='similarity 6')
-    data = data.sort_values(by='similarity 7')
-    data = data.sort_values(by='similarity 8')
-
 
     #retroanalysis(data)
 
@@ -593,7 +571,7 @@ def ANmethod(clusts):
 
 k = 6  # кол-во кластеров
 
-data = pd.read_csv("datasets/superdataset-24 alltime-clust only mundist (IQR)-normbysoul-f.csv")
+data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
 
 num = data['oktmo'].nunique()
 
@@ -644,7 +622,7 @@ for i in range(k):
 
 #ANmethod(clusts)
 
-#siblingsfinder(data, clusts)
+siblingsfinder(data, clusts)
 
 getmedian(data)
 
