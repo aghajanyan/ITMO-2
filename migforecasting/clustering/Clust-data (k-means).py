@@ -294,7 +294,7 @@ def siblingsfinder(data, clusts):
 
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 2020 and data.iloc[i]['oktmo'] == 80601000:
+        if data.iloc[i]['year'] == 0 and data.iloc[i]['oktmo'] == 0:
             index = i
             break
 
@@ -580,6 +580,15 @@ def ANmethod(clusts):
 k = 6  # кол-во кластеров
 
 data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
+
+profile = pd.read_excel('avg profile.xlsx')
+
+# нормализация среднего профиля и добавление в сет
+norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul-f.csv")
+for j in range(5, profile.shape[1]):
+    profile.iloc[0, j] = profile.iloc[0, j] / norm.iloc[0, j - 3]
+
+data = pd.concat([data, profile])
 
 num = data['oktmo'].nunique()
 
