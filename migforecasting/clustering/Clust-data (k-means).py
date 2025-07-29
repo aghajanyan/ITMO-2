@@ -266,6 +266,10 @@ def siblingsfinder(data, clusts):
     #normpersoulalldata(data)
 
     agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
+
+    # добавление среднего возрастного профиля в сет
+    avgagestruct = pd.read_excel('avg agestruct.xlsx')
+    agestruct = pd.concat([agestruct, avgagestruct])
     #agestruct = agestruct[agestruct.columns.drop('name')]
 
     # одинаковые примеры в разных датафреймах (в одном датафрейме дублируются социо-экон. факторы)
