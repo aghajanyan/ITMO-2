@@ -298,7 +298,7 @@ def siblingsfinder(data, clusts):
 
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 0 and data.iloc[i]['oktmo'] == 0:
+        if data.iloc[i]['year'] == 1 and data.iloc[i]['oktmo'] == 1:
             index = i
             break
 
@@ -589,8 +589,9 @@ profile = pd.read_excel('avg profile.xlsx')
 
 # нормализация среднего профиля и добавление в сет
 norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul-f.csv")
-for j in range(5, profile.shape[1]):
-    profile.iloc[0, j] = profile.iloc[0, j] / norm.iloc[0, j - 3]
+for i in range(len(profile)):
+    for j in range(5, profile.shape[1]):
+        profile.iloc[i, j] = profile.iloc[i, j] / norm.iloc[0, j - 3]
 
 data = pd.concat([data, profile])
 
