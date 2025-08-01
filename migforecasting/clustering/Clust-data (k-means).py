@@ -298,7 +298,7 @@ def siblingsfinder(data, clusts):
 
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 1 and data.iloc[i]['oktmo'] == 1:
+        if data.iloc[i]['year'] == 2 and data.iloc[i]['oktmo'] == 2:
             index = i
             break
 
