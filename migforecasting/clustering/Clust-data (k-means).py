@@ -586,8 +586,6 @@ k = 6  # кол-во кластеров
 
 data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
 
-data.to_excel("forinvestig.xlsx", index=False)
-
 profile = pd.read_excel('avg profile.xlsx')
 
 # нормализация среднего профиля и добавление в сет
