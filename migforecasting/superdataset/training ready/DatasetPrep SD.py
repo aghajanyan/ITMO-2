@@ -262,6 +262,7 @@ rawdata = rawdata[rawdata.columns.drop('funds')]
 
 
 # rawdata = rawdata.dropna(thresh=25)
+rawdata.to_excel('rawdata.xlsx', index=False)
 rawdata = rawdata.dropna()
 
 rawdata = rawdata.sort_values(by=['oktmo', 'year'])
