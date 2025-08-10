@@ -583,7 +583,7 @@ def ANmethod(clusts):
 
 
 # метод ранжирования мун. образований по степени риска социального конфликта на основе критерия подобия
-def сonflictassessment(data):
+def conflictassessment(data):
     agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
 
 
@@ -600,12 +600,13 @@ def сonflictassessment(data):
     rankings['name'] = data['name']
     rankings['year'] = data['year']
 
+    a = 0
     for k in range(len(socecoextrem)):
         # оценка подобия по социально-экономическим факторам
         sim1 = []
         tmp = 0.0
         for i in range(len(data)):
-            tmp = mean_squared_error(data.iloc[i][6:], socecoextrem.iloc[k][6:])
+            tmp = mean_squared_error(data.iloc[i][6:], socecoextrem.iloc[k][5:])
             sim1.append(tmp)
 
         # оценка подобия по половозрастной структуре
@@ -613,9 +614,13 @@ def сonflictassessment(data):
         female = 0.0
         male = 0.0
         b = 0
+        if k == 0:
+            a = 0
+        else:
+            a +=2
         while b < len(agestruct):
-            female = mean_squared_error(agestruct.iloc[b][4:18], ageextrem.iloc[k][4:18])
-            male = mean_squared_error(agestruct.iloc[b + 1][4:18], ageextrem.iloc[k + 1][4:18])
+            female = mean_squared_error(agestruct.iloc[b][4:18], ageextrem.iloc[a][4:18])
+            male = mean_squared_error(agestruct.iloc[b + 1][4:18], ageextrem.iloc[a + 1][4:18])
             sim2.append(female + male)
             b += 2
 
@@ -707,7 +712,9 @@ for i in range(k):
 
 #ANmethod(clusts)
 
-siblingsfinder(data, clusts)
+conflictassessment(data)
+
+#siblingsfinder(data, clusts)
 
 getmedian(data)
 
