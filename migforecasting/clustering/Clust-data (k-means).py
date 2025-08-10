@@ -582,6 +582,52 @@ def ANmethod(clusts):
     final.to_excel("AN-method output (all).xlsx", index=False)
 
 
+# метод ранжирования мун. образований по степени риска социального конфликта на основе критерия подобия
+def сonflictassessment(data):
+    agestruct = pd.read_csv("C:/Users/Albert/.spyder-py3/ITMO-2/migforecasting/superdataset/pop data/agestruct prop.csv")
+
+
+    # одинаковые примеры в разных датафреймах (в одном датафрейме дублируются социо-экон. факторы)
+    agestruct = pd.merge(data[['oktmo', 'year']], agestruct, how='inner', on=['oktmo', 'year'])
+    sync = agestruct[['oktmo', 'year']].drop_duplicates()
+    data = pd.merge(sync, data, how='inner', on=['oktmo', 'year'])
+
+    socecoextrem = pd.read_excel('soc-eco extremums.xlsx')
+    ageextrem = pd.read_excel('age extremums.xlsx')
+
+    rankings = pd.DataFrame()
+    for k in range(len(socecoextrem)):
+        # оценка подобия по социально-экономическим факторам
+        sim1 = []
+        tmp = 0.0
+        for i in range(len(data)):
+            tmp = mean_squared_error(data.iloc[i][6:], socecoextrem.iloc[k][6:])
+            sim1.append(tmp)
+
+        # оценка подобия по половозрастной структуре
+        sim2 = []
+        female = 0.0
+        male = 0.0
+        b = 0
+        while b < len(agestruct):
+            female = mean_squared_error(agestruct.iloc[b][4:18], ageextrem.iloc[k][4:18])
+            male = mean_squared_error(agestruct.iloc[b + 1][4:18], ageextrem.iloc[k + 1][4:18])
+            sim2.append(female + male)
+            b += 2
+
+        sim3 = np.array(sim1) + (np.array(sim2) * 0.5)
+        data['similarity'] = sim3
+
+        data = data.sort_values(by='similarity')
+
+        risk = []
+
+        data = data[data.columns.drop('similarity')]
+        data = data.sort_values(by=['oktmo', 'year'])
+
+
+
+
 k = 6  # кол-во кластеров
 
 data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
