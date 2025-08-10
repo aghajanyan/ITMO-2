@@ -596,6 +596,10 @@ def сonflictassessment(data):
     ageextrem = pd.read_excel('age extremums.xlsx')
 
     rankings = pd.DataFrame()
+    rankings['oktmo'] = data['oktmo']
+    rankings['name'] = data['name']
+    rankings['year'] = data['year']
+
     for k in range(len(socecoextrem)):
         # оценка подобия по социально-экономическим факторам
         sim1 = []
@@ -615,17 +619,29 @@ def сonflictassessment(data):
             sim2.append(female + male)
             b += 2
 
+        # совокупный критерий подобия и сортировка
         sim3 = np.array(sim1) + (np.array(sim2) * 0.5)
         data['similarity'] = sim3
-
         data = data.sort_values(by='similarity')
 
+        # оценка риска на основе равномерного разбиения датасета на 5 частей
         risk = []
+        size = int(len(data) * 0.2)
+        tier1 = [1] * size
+        tier2 = [0.75] * size
+        tier3 = [0.5] * size
+        tier4 = [0.25] * size
+        tier5 = [0] * (len(data) - (size * 4))
+
+        risk = tier1 + tier2 + tier3 + tier4 + tier5
+
+        # добавление оценок в финальную таблицу rankings
+        data['risk'] = risk
+        data = data.sort_values(by=['oktmo', 'year'])
+        rankings[str(k + 1)] = data['risk']
 
         data = data[data.columns.drop('similarity')]
-        data = data.sort_values(by=['oktmo', 'year'])
-
-
+        data = data[data.columns.drop('risk')]
 
 
 k = 6  # кол-во кластеров
