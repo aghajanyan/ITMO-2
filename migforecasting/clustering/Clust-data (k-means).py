@@ -595,10 +595,21 @@ def conflictassessment(data):
     socecoextrem = pd.read_excel('soc-eco extremums.xlsx')
     ageextrem = pd.read_excel('age extremums.xlsx')
 
+    # перевод в array для более быстрого вычисления
+    agestruct = np.array(agestruct)
+    ageextrem = np.array(ageextrem)
+    dataarr = np.array(data)
+    socecoextrem = np.array(socecoextrem)
+
     rankings = pd.DataFrame()
     rankings['oktmo'] = data['oktmo']
     rankings['name'] = data['name']
     rankings['year'] = data['year']
+
+    # шкала оценки риска от 1 до 0
+    risk = []
+    for i in range(len(data)):
+        risk.append((len(data) - i) / len(data))
 
     a = 0
     for k in range(len(socecoextrem)):
@@ -606,7 +617,7 @@ def conflictassessment(data):
         sim1 = []
         tmp = 0.0
         for i in range(len(data)):
-            tmp = mean_squared_error(data.iloc[i][6:], socecoextrem.iloc[k][5:])
+            tmp = mean_squared_error(dataarr[i, 6:], socecoextrem[k, 5:])
             sim1.append(tmp)
 
         # оценка подобия по половозрастной структуре
@@ -618,9 +629,10 @@ def conflictassessment(data):
             a = 0
         else:
             a +=2
+
         while b < len(agestruct):
-            female = mean_squared_error(agestruct.iloc[b][4:18], ageextrem.iloc[a][4:18])
-            male = mean_squared_error(agestruct.iloc[b + 1][4:18], ageextrem.iloc[a + 1][4:18])
+            female = mean_squared_error(agestruct[b, 4:18], ageextrem[a, 4:18])
+            male = mean_squared_error(agestruct[b + 1, 4:18], ageextrem[a + 1, 4:18])
             sim2.append(female + male)
             b += 2
 
@@ -629,8 +641,8 @@ def conflictassessment(data):
         data['similarity'] = sim3
         data = data.sort_values(by='similarity')
 
+        """
         # оценка риска на основе равномерного разбиения датасета на 5 частей
-        risk = []
         size = int(len(data) * 0.2)
         tier1 = [1] * size
         tier2 = [0.75] * size
@@ -639,6 +651,7 @@ def conflictassessment(data):
         tier5 = [0] * (len(data) - (size * 4))
 
         risk = tier1 + tier2 + tier3 + tier4 + tier5
+        """
 
         # добавление оценок в финальную таблицу rankings
         data['risk'] = risk
@@ -647,7 +660,9 @@ def conflictassessment(data):
 
         data = data[data.columns.drop('similarity')]
         data = data[data.columns.drop('risk')]
+        print(k)
 
+    rankings.to_excel('Conflict assessment.xlsx', index=False)
 
 k = 6  # кол-во кластеров
 
