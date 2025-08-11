@@ -642,15 +642,13 @@ def conflictassessment(data):
         data = data.sort_values(by='similarity')
 
         """
-        # оценка риска на основе равномерного разбиения датасета на 5 частей
-        size = int(len(data) * 0.2)
-        tier1 = [1] * size
-        tier2 = [0.75] * size
-        tier3 = [0.5] * size
-        tier4 = [0.25] * size
-        tier5 = [0] * (len(data) - (size * 4))
-
-        risk = tier1 + tier2 + tier3 + tier4 + tier5
+        # оценка риска на основе топ300
+        risk = []
+        tier1 = [1] * 100
+        tier2 = [0.5] * 100
+        tier3 = [0.2] * 100
+        tier4 = [0] * (len(data) - 300)
+        risk = tier1 + tier2 + tier3 + tier4
         """
 
         # добавление оценок в финальную таблицу rankings
@@ -662,7 +660,13 @@ def conflictassessment(data):
         data = data[data.columns.drop('risk')]
         print(k)
 
+    # вычисление суммарной оценки, сортировка и сохранение результата
+    rankings['oktmo'] = rankings['oktmo'].astype(str)
+    rankings['year'] = rankings['year'].astype(str)
+    rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
+    rankings = rankings.sort_values(by=['sum'], ascending=False)
     rankings.to_excel('Conflict assessment.xlsx', index=False)
+
 
 k = 6  # кол-во кластеров
 
