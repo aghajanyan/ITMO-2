@@ -13,6 +13,7 @@ output = output.sort_values(by=['oktmo', 'year'])
 # преобразование социального риска в шкалу от 0 до 1
 output['sum'] = output['sum'] / 12
 
+"""
 # преобразование половозрастной структуры без учёта гендера (средняя доля)
 avgage = []
 tmp = []
@@ -31,6 +32,18 @@ inputdata = inputdata.drop(columns=['gender'])
 avgage = np.array(avgage)
 features = inputdata.columns
 avgage = pd.DataFrame(avgage, columns=features)
+
+"""
+
+# преобразование половозрастной структуры в одну строку
+male = inputdata[inputdata['gender'] == 'male']
+female = inputdata[inputdata['gender'] == 'female']
+
+male  = male .drop(columns=['name', 'gender'])
+female  = female .drop(columns=['name', 'gender'])
+
+# x - мужчины, y - женщины
+avgage = pd.merge(male, female, how='inner', on=['oktmo', 'year'])
 
 # преобразование в шкалу от 0 до 1
 for col in avgage.columns:
@@ -56,5 +69,5 @@ examples = np.array(examples)
 features = inputdata.columns
 examples = pd.DataFrame(examples, columns=features)
 
-examples = examples.drop(columns=['oktmo', 'name', 'year'])
-examples.to_csv('avgage2-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv', index=False)
+examples = examples.drop(columns=['oktmo', 'year'])
+examples.to_csv('agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv', index=False)
