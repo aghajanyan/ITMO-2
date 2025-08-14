@@ -30,7 +30,7 @@ def MLS(x, y):
 maxrisk = 12.0
 
 # Получение данных
-rawdata = pd.read_csv("avgage2-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv")
+rawdata = pd.read_csv("agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('saldo')]
