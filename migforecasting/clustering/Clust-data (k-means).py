@@ -630,6 +630,10 @@ def conflictassessment(data):
         else:
             a +=2
 
+        # проверка соответствия oktmo
+        if socecoextrem[k, 0] != ageextrem[a, 0] or ageextrem[a, 0] != ageextrem[a + 1, 0]:
+            print('Ошибка!')
+
         while b < len(agestruct):
             female = mean_squared_error(agestruct[b, 4:18], ageextrem[a, 4:18])
             male = mean_squared_error(agestruct[b + 1, 4:18], ageextrem[a + 1, 4:18])
@@ -672,18 +676,20 @@ k = 6  # кол-во кластеров
 
 data = pd.read_csv("datasets/superdataset-24 alltime-clust (IQR)-normbysoul-f.csv")
 
-profile = pd.read_excel('avg profile.xlsx')
-
+profile = pd.read_excel('new examples.xlsx')
+"""
 # нормализация среднего профиля и добавление в сет
 norm = pd.read_csv("datasets/fornorm 24 alltime-clust (IQR)-normbysoul-f.csv")
 for i in range(len(profile)):
-    for j in range(5, profile.shape[1]):
+    for j in range(3, profile.shape[1]):
         profile.iloc[i, j] = profile.iloc[i, j] / norm.iloc[0, j - 3]
+
+profile.to_excel('norm examples.xlsx', index=False)
 
 data = pd.concat([data, profile])
 
 num = data['oktmo'].nunique()
-
+"""
 #normpersoulalldata(data)
 
 data = data.sample(frac=1)  # перетасовка
