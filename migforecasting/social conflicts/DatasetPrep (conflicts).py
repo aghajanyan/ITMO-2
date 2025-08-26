@@ -4,14 +4,21 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 
+"""
+protests = pd.read_csv('Public view RUS.csv')
+events = protests[protests['event_type'] == 'собрание']
+events = events[events['subject_type'] != 'политический протест']
+events = events[events['region'] != 'Москва']
+"""
 
-inputdata = pd.read_csv('agedata.csv')
-output = pd.read_excel('Conflict assessment.xlsx')
+inputdata = pd.read_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict, no output).csv')
+output = pd.read_excel('Conflict assessment 21.xlsx')
 
 output = output.sort_values(by=['oktmo', 'year'])
 
+conflictsnum = 21
 # преобразование социального риска в шкалу от 0 до 1
-output['sum'] = output['sum'] / 12
+output['sum'] = output['sum'] / conflictsnum
 
 """
 # преобразование половозрастной структуры без учёта гендера (средняя доля)
@@ -34,7 +41,7 @@ features = inputdata.columns
 avgage = pd.DataFrame(avgage, columns=features)
 
 """
-
+"""
 # преобразование половозрастной структуры в одну строку
 male = inputdata[inputdata['gender'] == 'male']
 female = inputdata[inputdata['gender'] == 'female']
@@ -45,14 +52,17 @@ female  = female .drop(columns=['name', 'gender'])
 # x - мужчины, y - женщины
 avgage = pd.merge(male, female, how='inner', on=['oktmo', 'year'])
 
+
 # преобразование в шкалу от 0 до 1
 for col in avgage.columns:
     if col != 'oktmo' and col != 'name':
         avgage[col] = avgage[col].astype(float)
         if col != 'year':
             avgage[col] = avgage[col] / avgage[col].max()
+"""
 
-inputdata = avgage
+#inputdata = avgage
+
 inputdata['risk'] = list(output['sum'])
 
 # подготовка входного и выходного результата для модели
@@ -69,5 +79,5 @@ examples = np.array(examples)
 features = inputdata.columns
 examples = pd.DataFrame(examples, columns=features)
 
-examples = examples.drop(columns=['oktmo', 'year'])
-examples.to_csv('agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv', index=False)
+examples = examples.drop(columns=['oktmo', 'year', 'name'])
+examples.to_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21).csv', index=False)
