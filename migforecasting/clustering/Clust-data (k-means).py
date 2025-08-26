@@ -688,8 +688,8 @@ profile.to_excel('norm examples.xlsx', index=False)
 
 data = pd.concat([data, profile])
 
-num = data['oktmo'].nunique()
 """
+num = data['oktmo'].nunique()
 #normpersoulalldata(data)
 
 data = data.sample(frac=1)  # перетасовка

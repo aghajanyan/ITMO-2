@@ -27,13 +27,13 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
-maxrisk = 12.0
+maxrisk = 21.0
 
 # Получение данных
-rawdata = pd.read_csv("agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict).csv")
+rawdata = pd.read_csv("superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21).csv")
 
-#rawdata = rawdata[rawdata.columns.drop('popsize')]
-#rawdata = rawdata[rawdata.columns.drop('saldo')]
+rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
