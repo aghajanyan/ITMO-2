@@ -612,7 +612,7 @@ def conflictassessment(data):
         #risk.append((len(data) - i) / len(data))
 
     a = 0
-    for k in range(len(socecoextrem)):
+    for k in range(1):
         # оценка подобия по социально-экономическим факторам
         sim1 = []
         tmp = 0.0
@@ -656,7 +656,7 @@ def conflictassessment(data):
 
 
         # добавление оценок в финальную таблицу rankings
-        data['risk'] = data['similarity']
+        data['risk'] = risk
         data = data.sort_values(by=['oktmo', 'year'])
         rankings[str(k + 1)] = data['risk']
 
@@ -669,14 +669,15 @@ def conflictassessment(data):
     rankings['year'] = rankings['year'].astype(str)
     rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
     rankings = rankings.sort_values(by=['sum'], ascending=False)
-
+    rankings['oktmo'] = rankings['oktmo'].astype(int)
+    rankings['year'] = rankings['year'].astype(int)
     #цикл каскадной оценки
     for k in range(21):
 
         # найти индекс примера в исходном датасете
         index = 0
         for i in range(len(data)):
-            if data.iloc[i]['year'] == rankings[k]['year'] and data.iloc[i]['oktmo'] == rankings[k]['oktmo']:
+            if data.iloc[i]['year'] == rankings.iloc[k]['year'] and data.iloc[i]['oktmo'] == rankings.iloc[k]['oktmo']:
                 index = i
                 break
 
@@ -714,7 +715,7 @@ def conflictassessment(data):
         risk = tier1 + tier2 + tier3 + tier4
 
         # добавление оценок в финальную таблицу rankings
-        data['risk'] = data['similarity']
+        data['risk'] = risk
         data = data.sort_values(by=['oktmo', 'year'])
         rankings[str(k + 1)] = data['risk']
 
