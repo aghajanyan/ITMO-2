@@ -608,8 +608,8 @@ def conflictassessment(data):
 
     # шкала оценки риска от 1 до 0
     risk = []
-    for i in range(len(data)):
-        risk.append((len(data) - i) / len(data))
+    #for i in range(len(data)):
+        #risk.append((len(data) - i) / len(data))
 
     a = 0
     for k in range(len(socecoextrem)):
@@ -645,7 +645,7 @@ def conflictassessment(data):
         data['similarity'] = sim3
         data = data.sort_values(by='similarity')
 
-        """
+
         # оценка риска на основе топ300
         risk = []
         tier1 = [1] * 100
@@ -653,10 +653,10 @@ def conflictassessment(data):
         tier3 = [0.2] * 100
         tier4 = [0] * (len(data) - 300)
         risk = tier1 + tier2 + tier3 + tier4
-        """
+
 
         # добавление оценок в финальную таблицу rankings
-        data['risk'] = risk
+        data['risk'] = data['similarity']
         data = data.sort_values(by=['oktmo', 'year'])
         rankings[str(k + 1)] = data['risk']
 
@@ -669,7 +669,61 @@ def conflictassessment(data):
     rankings['year'] = rankings['year'].astype(str)
     rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
     rankings = rankings.sort_values(by=['sum'], ascending=False)
-    rankings.to_excel('Conflict assessment.xlsx', index=False)
+
+    #цикл каскадной оценки
+    for k in range(21):
+
+        # найти индекс примера в исходном датасете
+        index = 0
+        for i in range(len(data)):
+            if data.iloc[i]['year'] == rankings[k]['year'] and data.iloc[i]['oktmo'] == rankings[k]['oktmo']:
+                index = i
+                break
+
+        # оценка подобия по социально-экономическим факторам
+        sim1 = []
+        tmp = 0.0
+        for i in range(len(data)):
+            tmp = mean_squared_error(dataarr[i, 6:], dataarr[index, 6:])
+            sim1.append(tmp)
+
+        # оценка подобия по половозрастной структуре
+        sim2 = []
+        female = 0.0
+        male = 0.0
+        popindex = index * 2
+        b = 0
+        while b < len(agestruct):
+            female = mean_squared_error(agestruct[b, 4:18], agestruct[popindex, 4:18])
+            male = mean_squared_error(agestruct[b + 1, 4:18], agestruct[popindex + 1, 4:18])
+            sim2.append(female + male)
+            b += 2
+
+        # совокупный критерий подобия и сортировка
+        sim3 = np.array(sim1) + (np.array(sim2) * 0.5)
+        data['similarity'] = sim3
+        data = data.sort_values(by='similarity')
+
+
+        # оценка риска на основе топ300
+        risk = []
+        tier1 = [1] * 100
+        tier2 = [0.5] * 100
+        tier3 = [0.2] * 100
+        tier4 = [0] * (len(data) - 300)
+        risk = tier1 + tier2 + tier3 + tier4
+
+        # добавление оценок в финальную таблицу rankings
+        data['risk'] = data['similarity']
+        data = data.sort_values(by=['oktmo', 'year'])
+        rankings[str(k + 1)] = data['risk']
+
+        data = data[data.columns.drop('similarity')]
+        data = data[data.columns.drop('risk')]
+        print(k)
+
+
+    rankings.to_excel('Conflict assessment (top300) 42-cascade.xlsx', index=False)
 
 
 k = 6  # кол-во кластеров
