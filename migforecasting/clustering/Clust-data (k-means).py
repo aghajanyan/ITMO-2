@@ -612,7 +612,7 @@ def conflictassessment(data):
         #risk.append((len(data) - i) / len(data))
 
     a = 0
-    for k in range(1):
+    for k in range(len(socecoextrem)):
         # оценка подобия по социально-экономическим факторам
         sim1 = []
         tmp = 0.0
@@ -665,14 +665,16 @@ def conflictassessment(data):
         print(k)
 
     # вычисление суммарной оценки, сортировка и сохранение результата
+    cascaderankings = rankings.copy(deep=True)
     rankings['oktmo'] = rankings['oktmo'].astype(str)
     rankings['year'] = rankings['year'].astype(str)
     rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
     rankings = rankings.sort_values(by=['sum'], ascending=False)
     rankings['oktmo'] = rankings['oktmo'].astype(int)
     rankings['year'] = rankings['year'].astype(int)
+
     #цикл каскадной оценки
-    for k in range(21):
+    for k in range(len(socecoextrem)):
 
         # найти индекс примера в исходном датасете
         index = 0
@@ -717,14 +719,17 @@ def conflictassessment(data):
         # добавление оценок в финальную таблицу rankings
         data['risk'] = risk
         data = data.sort_values(by=['oktmo', 'year'])
-        rankings[str(k + 1)] = data['risk']
+        cascaderankings[str(k + len(socecoextrem) + 1)] = data['risk']
 
         data = data[data.columns.drop('similarity')]
         data = data[data.columns.drop('risk')]
         print(k)
 
-
-    rankings.to_excel('Conflict assessment (top300) 42-cascade.xlsx', index=False)
+    cascaderankings['oktmo'] = cascaderankings['oktmo'].astype(str)
+    cascaderankings['year'] = cascaderankings['year'].astype(str)
+    cascaderankings['sum'] = cascaderankings.sum(axis=1, numeric_only=True)
+    cascaderankings = cascaderankings.sort_values(by=['sum'], ascending=False)
+    cascaderankings.to_excel('Conflict assessment (top300) 42-cascade.xlsx', index=False)
 
 
 k = 6  # кол-во кластеров
