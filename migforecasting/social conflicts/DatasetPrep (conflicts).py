@@ -12,7 +12,21 @@ events = events[events['region'] != 'Москва']
 """
 
 inputdata = pd.read_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict, no output).csv')
-output = pd.read_excel('Conflict assessment 21.xlsx')
+output = pd.read_excel('Conflict assessment (top300) 21.xlsx')
+
+oktmo = np.unique(output['oktmo'])
+
+# социальный риск по годам
+overall = []
+for i in range(9):
+    overall.append(output[output['year'] == 2022 - i]['sum'].sum())
+
+# анализ количества мун. образ. вошедших в топ близких хотя бы один раз
+count = 0
+for i in range(len(oktmo)):
+    b = output[output['oktmo'] == oktmo[i]]['sum'].sum()
+    if b == 0:
+        count+=1
 
 output = output.sort_values(by=['oktmo', 'year'])
 
