@@ -12,10 +12,10 @@ events = events[events['region'] != 'Москва']
 """
 
 inputdata = pd.read_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict, no output).csv')
-output = pd.read_excel('Conflict assessment (top300) 21.xlsx')
+output = pd.read_excel('Conflict assessment (top300) 21 neworder.xlsx')
 
-oktmo = np.unique(output['oktmo'])
-
+#output = output[output['sum'] != 0]
+"""
 # социальный риск по годам
 overall = []
 for i in range(9):
@@ -27,12 +27,12 @@ for i in range(len(oktmo)):
     b = output[output['oktmo'] == oktmo[i]]['sum'].sum()
     if b == 0:
         count+=1
+"""
 
 output = output.sort_values(by=['oktmo', 'year'])
 
-conflictsnum = 21
 # преобразование социального риска в шкалу от 0 до 1
-output['sum'] = output['sum'] / conflictsnum
+output['sum'] = output['sum'] / output['sum'].max()
 
 """
 # преобразование половозрастной структуры без учёта гендера (средняя доля)
@@ -85,7 +85,8 @@ examples = []
 for i in range(len(inputdata) - 1):
     if inputdata.iloc[i]['oktmo'] == inputdata.iloc[i + 1]['oktmo']:
         if inputdata.iloc[i]['year'] + 1 == inputdata.iloc[i + 1]['year']:
-            inputdata.iloc[i, inputdata.shape[1] - 1] = inputdata.iloc[i + 1, inputdata.shape[1] - 1]
+            #inputdata.iloc[i, inputdata.shape[1] - 1] = inputdata.iloc[i + 1, inputdata.shape[1] - 1]
+            inputdata.loc[i, 'risk'] = inputdata.loc[i + 1, 'risk']
             examples.append(inputdata.iloc[i])
 
 
@@ -93,5 +94,7 @@ examples = np.array(examples)
 features = inputdata.columns
 examples = pd.DataFrame(examples, columns=features)
 
+#examples = examples[examples['risk'] != 0]
+
 examples = examples.drop(columns=['oktmo', 'year', 'name'])
-examples.to_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21).csv', index=False)
+examples.to_csv('superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300).csv', index=False)

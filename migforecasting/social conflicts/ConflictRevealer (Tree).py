@@ -27,10 +27,10 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
-maxrisk = 21.0
+maxrisk = 4.5
 
 # Получение данных
-rawdata = pd.read_csv("superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21).csv")
+rawdata = pd.read_csv("superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300).csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -60,9 +60,9 @@ a, b = MLS(testout, predtest)
 # ВЫВОД РЕЗУЛЬТАТОВ
 # графики отклонения реального значения от прогнозируемого
 scale = np.linspace(trainout.min() * maxrisk, trainout.max() * maxrisk, 100)
-plt.scatter(testout * maxrisk, predtest * maxrisk, c='purple', alpha=.3, label='Testing set')
+plt.scatter(testout * maxrisk, predtest * maxrisk, c='black', alpha=.3, label='Testing set')
 plt.plot(scale, scale, c='green', label='Ideal')
-plt.plot(testout * maxrisk, (testout * maxrisk) * a + b, c='red', label='Bias of the model')
+#plt.plot(testout * maxrisk, (testout * maxrisk) * a + b, c='red', label='Bias of the model')
 plt.axhline(0, c='k')
 plt.axvline(0, c='k')
 plt.xlabel('Actual values')
@@ -100,8 +100,8 @@ plt.ylabel("Признак")
 plt.title("Значимость признаков по критерию Джинни")
 plt.show()
 
-print("MAPE (train): ", errortrain)
-print("MAPE (test): ", errortest)
+print("R2 (train): ", errortrain)
+print("R2 (test): ", errortest)
 
 # сохранение модели
 #joblib.dump(model, ".joblib")

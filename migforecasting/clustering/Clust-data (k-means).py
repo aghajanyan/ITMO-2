@@ -299,7 +299,7 @@ def siblingsfinder(data, clusts):
 
     index = 0
     for i in range(len(data)):
-        if data.iloc[i]['year'] == 1 and data.iloc[i]['oktmo'] == 1:
+        if data.iloc[i]['year'] == 2022 and data.iloc[i]['oktmo'] == 68715000:
             index = i
             break
 
@@ -346,6 +346,7 @@ def siblingsfinder(data, clusts):
     data = data.sort_values(by='similarity 3')
 
     data = data.reset_index(drop=True)
+    #data.to_excel("Полтавская for paper.xlsx", index=False)
     #retroanalysis(data)
 
     # наиболее близкие из лучшего кластера
@@ -611,6 +612,12 @@ def conflictassessment(data):
     #for i in range(len(data)):
         #risk.append((len(data) - i) / len(data))
 
+    # шкала оценки риска от 1 до 0 для топ300
+    for i in range(300):
+        risk.append((300 - i) / 300)
+
+    risk = risk + ([0] * (len(data) - 300))
+
     a = 0
     for k in range(len(socecoextrem)):
         # оценка подобия по социально-экономическим факторам
@@ -647,13 +654,14 @@ def conflictassessment(data):
 
 
         # оценка риска на основе топ300
+        """
         risk = []
         tier1 = [1] * 100
         tier2 = [0.5] * 100
         tier3 = [0.2] * 100
         tier4 = [0] * (len(data) - 300)
         risk = tier1 + tier2 + tier3 + tier4
-
+        """
 
         # добавление оценок в финальную таблицу rankings
         data['risk'] = risk
@@ -665,14 +673,14 @@ def conflictassessment(data):
         print(k)
 
     # вычисление суммарной оценки, сортировка и сохранение результата
-    cascaderankings = rankings.copy(deep=True)
+    #cascaderankings = rankings.copy(deep=True)
     rankings['oktmo'] = rankings['oktmo'].astype(str)
     rankings['year'] = rankings['year'].astype(str)
     rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
     rankings = rankings.sort_values(by=['sum'], ascending=False)
-    rankings['oktmo'] = rankings['oktmo'].astype(int)
-    rankings['year'] = rankings['year'].astype(int)
+    rankings.to_excel('Conflict assessment (top300) 21 neworder formodel.xlsx', index=False)
 
+    """
     #цикл каскадной оценки
     for k in range(len(socecoextrem)):
 
@@ -730,7 +738,7 @@ def conflictassessment(data):
     cascaderankings['sum'] = cascaderankings.sum(axis=1, numeric_only=True)
     cascaderankings = cascaderankings.sort_values(by=['sum'], ascending=False)
     cascaderankings.to_excel('Conflict assessment (top300) 42-cascade.xlsx', index=False)
-
+    """
 
 k = 6  # кол-во кластеров
 
