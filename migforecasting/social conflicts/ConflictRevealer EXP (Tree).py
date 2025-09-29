@@ -1,0 +1,79 @@
+import csv
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+
+
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel).csv")
+
+rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('saldo')]
+
+
+resulttest = []
+resulttrain = []
+
+#maxrisk = 4.5
+maxrisk = 3.873
+
+
+signif = []
+n = 3
+for k in range(n):
+    rawdata = rawdata.sample(frac=1) # перетасовка
+
+    # разбиение датасета на входные признаки и выходной результат (сальдо)
+    datasetin = np.array(rawdata[rawdata.columns.drop('risk')])
+    datasetout = np.array(rawdata[['risk']])
+
+    # разбиение на обучающую и тестовую выборку
+    trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
+
+    # модель
+    model = RandomForestRegressor(n_estimators=100, random_state=0)
+    model.fit(trainin, trainout.ravel())
+
+    # вычисление ошибки
+    predtrain = model.predict(trainin)
+    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
+
+    predtest = model.predict(testin)
+    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
+
+    # запись ошибки
+    resulttrain.append(errortrain)
+    resulttest.append(errortest)
+
+    print('Итерация: ' + str(k))
+
+    # вычисление средней значимости признаков
+    important = model.feature_importances_
+    for i, v in enumerate(important):
+        if k == 0:
+            signif.append(v)
+        else:
+            signif[i]+= v
+
+for i in range(len(signif)):
+    signif[i] = signif[i] / n
+
+signif = np.array(signif)
+signif = pd.DataFrame(signif)
+signif.to_excel('feature significance.xlsx')
+
+resulttest = np.array(resulttest)
+resulttrain = np.array(resulttrain)
+
+resulttest = pd.DataFrame(resulttest)
+resulttrain = pd.DataFrame(resulttrain)
+
+resulttest.to_excel('test-data.xlsx')
+resulttrain.to_excel('train-data.xlsx')
