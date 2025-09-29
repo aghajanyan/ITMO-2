@@ -30,10 +30,10 @@ def MLS(x, y):
 #maxrisk = 4.5
 maxrisk = 3.873
 # Получение данных
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel).csv")
+rawdata = pd.read_csv("datasets/avgage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
@@ -61,13 +61,12 @@ a, b = MLS(testout, predtest)
 # графики отклонения реального значения от прогнозируемого
 scale = np.linspace(trainout.min() * maxrisk, trainout.max() * maxrisk, 100)
 plt.scatter(testout * maxrisk, predtest * maxrisk, c='black', alpha=.3, label='Testing set')
-plt.plot(scale, scale, c='green', label='Ideal')
+plt.plot([-1, 4], [-1, 4], ls='--', c='red', label='Ideal')
 #plt.plot(testout * maxrisk, (testout * maxrisk) * a + b, c='red', label='Bias of the model')
-plt.axhline(0, c='k')
-plt.axvline(0, c='k')
+#plt.axhline(-1, c='k')
+#plt.axvline(-1, c='k')
 plt.xlabel('Actual values')
 plt.ylabel('Predictied values')
-plt.title("Social conflict forecating")
 plt.legend()
 plt.show()
 
