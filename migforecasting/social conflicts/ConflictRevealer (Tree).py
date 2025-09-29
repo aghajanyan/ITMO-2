@@ -30,7 +30,7 @@ def MLS(x, y):
 #maxrisk = 4.5
 maxrisk = 3.873
 # Получение данных
-rawdata = pd.read_csv("datasets/avgage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
+rawdata = pd.read_csv("datasets/agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
 #rawdata = rawdata[rawdata.columns.drop('popsize')]
 #rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -91,6 +91,7 @@ rawdata = rawdata[rawdata.columns.drop('risk')]
 important = model.feature_importances_
 
 forplot = pd.DataFrame(data=important, index=rawdata.columns)
+forplot.to_excel('ages.xlsx')
 forplot = forplot.sort_values(by=[0])
 
 plt.barh(forplot.index, forplot[0])

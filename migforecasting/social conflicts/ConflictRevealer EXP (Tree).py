@@ -12,10 +12,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
+rawdata = pd.read_csv("datasets/agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 resulttest = []
 resulttrain = []
@@ -41,10 +41,10 @@ for k in range(n):
 
     # error score (deviation between predicted and real values)
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_error(trainout * maxrisk, predtrain * maxrisk)
+    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_error(testout * maxrisk, predtest * maxrisk)
+    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
 
     # save the error score
     resulttrain.append(errortrain)
