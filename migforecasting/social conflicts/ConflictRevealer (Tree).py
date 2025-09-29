@@ -27,10 +27,10 @@ def MLS(x, y):
     b = (sumy - a * sumx) / n
     return a, b
 
-maxrisk = 4.5
-
+#maxrisk = 4.5
+maxrisk = 3.873
 # Получение данных
-rawdata = pd.read_csv("superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300).csv")
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel).csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -95,9 +95,8 @@ forplot = pd.DataFrame(data=important, index=rawdata.columns)
 forplot = forplot.sort_values(by=[0])
 
 plt.barh(forplot.index, forplot[0])
-plt.xlabel("Уровень значимости")
-plt.ylabel("Признак")
-plt.title("Значимость признаков по критерию Джинни")
+plt.xlabel("Importance score")
+plt.ylabel("Feature")
 plt.show()
 
 print("R2 (train): ", errortrain)

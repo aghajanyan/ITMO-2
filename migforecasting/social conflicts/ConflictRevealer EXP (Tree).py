@@ -41,10 +41,10 @@ for k in range(n):
 
     # error score (deviation between predicted and real values)
     predtrain = model.predict(trainin)
-    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
+    errortrain = mean_absolute_error(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
-    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
+    errortest = mean_absolute_error(testout * maxrisk, predtest * maxrisk)
 
     # save the error score
     resulttrain.append(errortrain)
