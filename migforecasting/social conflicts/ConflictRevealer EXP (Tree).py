@@ -12,11 +12,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel).csv")
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
-
 
 resulttest = []
 resulttrain = []
@@ -24,37 +23,36 @@ resulttrain = []
 #maxrisk = 4.5
 maxrisk = 3.873
 
-
 signif = []
-n = 3
+n = 50
 for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
-    # разбиение датасета на входные признаки и выходной результат (сальдо)
+    # split the dataset into input and output
     datasetin = np.array(rawdata[rawdata.columns.drop('risk')])
     datasetout = np.array(rawdata[['risk']])
 
-    # разбиение на обучающую и тестовую выборку
+    # split the learning set on train-set and test-set
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
-    # модель
+    # the model
     model = RandomForestRegressor(n_estimators=100, random_state=0)
     model.fit(trainin, trainout.ravel())
 
-    # вычисление ошибки
+    # error score (deviation between predicted and real values)
     predtrain = model.predict(trainin)
     errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
     errortest = r2_score(testout * maxrisk, predtest * maxrisk)
 
-    # запись ошибки
+    # save the error score
     resulttrain.append(errortrain)
     resulttest.append(errortest)
 
-    print('Итерация: ' + str(k))
+    print('Iteration: ' + str(k))
 
-    # вычисление средней значимости признаков
+    # cumulative feature importances
     important = model.feature_importances_
     for i, v in enumerate(important):
         if k == 0:
@@ -62,6 +60,7 @@ for k in range(n):
         else:
             signif[i]+= v
 
+# average feature importances
 for i in range(len(signif)):
     signif[i] = signif[i] / n
 
