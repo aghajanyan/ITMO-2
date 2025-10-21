@@ -11,7 +11,7 @@ events = events[events['subject_type'] != 'политический протес
 events = events[events['region'] != 'Москва']
 """
 
-#inputdata = pd.read_csv('datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict, no output).csv')
+inputdata2 = pd.read_csv('datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict, no output).csv')
 inputdata = pd.read_csv('datasets/agedata.csv')
 output = pd.read_excel('Conflict assessment (top300) 21 neworder formodel.xlsx')
 
@@ -61,11 +61,14 @@ avgage = pd.DataFrame(avgage, columns=features)
 male = inputdata[inputdata['gender'] == 'male']
 female = inputdata[inputdata['gender'] == 'female']
 
-male  = male .drop(columns=['name', 'gender'])
-female  = female .drop(columns=['name', 'gender'])
+male  = male.drop(columns=['name', 'gender'])
+female  = female.drop(columns=['name', 'gender'])
 
-# x - мужчины, y - женщины
 avgage = pd.merge(male, female, how='inner', on=['oktmo', 'year'], suffixes=['_male', '_female'])
+
+# соц-эко + демография
+inputdata2  = inputdata2.drop(columns=['name'])
+final = pd.merge(inputdata2, avgage, how='inner', on=['oktmo', 'year'])
 
 """
 # преобразование в шкалу от 0 до 1
@@ -76,7 +79,7 @@ for col in avgage.columns:
             avgage[col] = avgage[col] / avgage[col].max()
 """
 
-inputdata = avgage
+inputdata = final
 
 inputdata['risk'] = list(output['sum'])
 
@@ -101,4 +104,4 @@ examples = pd.DataFrame(examples, columns=features)
 #examples = examples[examples['risk'] != 0]
 
 examples = examples.drop(columns=['oktmo', 'year'])
-examples.to_csv('agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv', index=False)
+examples.to_csv('ecoage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv', index=False)

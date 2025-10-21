@@ -61,7 +61,7 @@ a, b = MLS(testout, predtest)
 # графики отклонения реального значения от прогнозируемого
 scale = np.linspace(trainout.min() * maxrisk, trainout.max() * maxrisk, 100)
 plt.scatter(testout * maxrisk, predtest * maxrisk, c='black', alpha=.3, label='Testing set')
-plt.plot([-1, 4], [-1, 4], ls='--', c='red', label='Ideal')
+plt.plot([0, 4], [0, 4], ls='--', c='red', label='Ideal')
 #plt.plot(testout * maxrisk, (testout * maxrisk) * a + b, c='red', label='Bias of the model')
 #plt.axhline(-1, c='k')
 #plt.axvline(-1, c='k')
