@@ -647,11 +647,14 @@ def conflictassessment(data):
             sim2.append(female + male)
             b += 2
 
+        # нормирование отклонения от 0 до 1 для каждой компоненты
+        sim1 = np.array(sim1)/ np.array(sim1).max()
+        sim2 = np.array(sim2) / np.array(sim2).max()
+
         # совокупный критерий подобия и сортировка
-        sim3 = np.array(sim1) + (np.array(sim2) * 0.5)
+        sim3 = np.array(sim1) + (np.array(sim2) * 1)
         data['similarity'] = sim3
         data = data.sort_values(by='similarity')
-
 
         # оценка риска на основе топ300
         """
@@ -678,7 +681,7 @@ def conflictassessment(data):
     rankings['year'] = rankings['year'].astype(str)
     rankings['sum'] = rankings.sum(axis=1, numeric_only=True)
     rankings = rankings.sort_values(by=['sum'], ascending=False)
-    rankings.to_excel('Conflict assessment (top300) 21 neworder formodel.xlsx', index=False)
+    rankings.to_excel('Conflict assessment (top300) 21 neworder formodel norm11.xlsx', index=False)
 
     """
     #цикл каскадной оценки
