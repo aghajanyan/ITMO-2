@@ -28,12 +28,13 @@ def MLS(x, y):
     return a, b
 
 #maxrisk = 4.5
-maxrisk = 3.873
+#maxrisk = 3.873
+maxrisk = 4.11
 # Получение данных
-rawdata = pd.read_csv("datasets/ecoage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
+rawdata = pd.read_csv("datasets/avgage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2, norm11).csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 rawdata = rawdata.sample(frac=1)  # перетасовка
 
