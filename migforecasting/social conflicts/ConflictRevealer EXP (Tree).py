@@ -12,10 +12,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 
-rawdata = pd.read_csv("datasets/avgage-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2, norm11).csv")
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2, norm11).csv")
 
-#rawdata = rawdata[rawdata.columns.drop('popsize')]
-#rawdata = rawdata[rawdata.columns.drop('saldo')]
+rawdata = rawdata[rawdata.columns.drop('popsize')]
+rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 resulttest = []
 resulttrain = []
