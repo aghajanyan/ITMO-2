@@ -11,8 +11,11 @@ from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRFRegressor
 
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2, norm11).csv")
+
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -21,8 +24,8 @@ resulttest = []
 resulttrain = []
 
 #maxrisk = 4.5
-#maxrisk = 3.873
-maxrisk = 4.11
+maxrisk = 3.873
+#maxrisk = 4.11
 
 signif = []
 n = 50
@@ -37,7 +40,7 @@ for k in range(n):
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
     # the model
-    model = RandomForestRegressor(n_estimators=100, random_state=0)
+    model = XGBRFRegressor(n_estimators=100, random_state=0)
     model.fit(trainin, trainout.ravel())
 
     # error score (deviation between predicted and real values)

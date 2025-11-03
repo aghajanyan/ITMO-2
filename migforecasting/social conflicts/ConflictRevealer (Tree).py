@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRFRegressor
+
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
@@ -28,10 +30,10 @@ def MLS(x, y):
     return a, b
 
 #maxrisk = 4.5
-#maxrisk = 3.873
-maxrisk = 4.11
+maxrisk = 3.873
+#maxrisk = 4.11
 # Получение данных
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2, norm11).csv")
+rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
 rawdata = rawdata[rawdata.columns.drop('popsize')]
 rawdata = rawdata[rawdata.columns.drop('saldo')]
@@ -47,6 +49,7 @@ trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, tes
 
 # модель
 model = RandomForestRegressor(n_estimators=100, random_state=0)
+#model = XGBRFRegressor(n_estimators=100, random_state=0)
 model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
