@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import r2_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
@@ -55,10 +55,10 @@ for k in range(20):
     history = model.fit(trainin, trainout, epochs=100, batch_size=10)
     
     predtrain = model.predict(trainin)
-    errortrain = mean_absolute_error(trainout * maxrisk, predtrain * maxrisk)
+    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
-    errortest = mean_absolute_error(testout * maxrisk, predtest * maxrisk)
+    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)
