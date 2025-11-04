@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
 from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRFRegressor
+from xgboost import XGBRegressor
 
 
 rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
@@ -40,7 +40,7 @@ for k in range(n):
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
     # the model
-    model = XGBRFRegressor(n_estimators=100, random_state=0)
+    model = XGBRegressor(n_estimators=100, random_state=0)
     model.fit(trainin, trainout.ravel())
 
     # error score (deviation between predicted and real values)
