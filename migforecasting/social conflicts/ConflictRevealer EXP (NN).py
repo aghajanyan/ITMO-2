@@ -55,10 +55,10 @@ for k in range(20):
     history = model.fit(trainin, trainout, epochs=100, batch_size=10)
     
     predtrain = model.predict(trainin)
-    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
+    errortrain = mean_squared_error(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
-    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
+    errortest = mean_squared_error(testout * maxrisk, predtest * maxrisk)
 
     resulttrain.append(errortrain)
     resulttest.append(errortest)
