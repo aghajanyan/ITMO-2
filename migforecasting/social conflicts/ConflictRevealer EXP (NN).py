@@ -25,10 +25,10 @@ maxrisk = 3.873
 
 
 # Получение данных
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
+rawdata = pd.read_csv("datasets/agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 resulttest = []
 resulttrain = []
@@ -45,7 +45,7 @@ for k in range(20):
     
     #модель
     model = Sequential()
-    model.add(Dense(128, input_dim=15, activation='relu'))
+    model.add(Dense(128, input_dim=28, activation='relu'))
     model.add(Dense(128, activation='relu'))
     model.add(Dense(128, activation='relu'))
     model.add(Dense(128, activation='relu'))

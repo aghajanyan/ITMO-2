@@ -15,10 +15,10 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 
 
-rawdata = pd.read_csv("datasets/superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
+rawdata = pd.read_csv("datasets/agerow-superdataset-24-alltime-clust (IQR)-normbysoul-f (conflict-21, top300, formodel-2).csv")
 
-rawdata = rawdata[rawdata.columns.drop('popsize')]
-rawdata = rawdata[rawdata.columns.drop('saldo')]
+#rawdata = rawdata[rawdata.columns.drop('popsize')]
+#rawdata = rawdata[rawdata.columns.drop('saldo')]
 
 resulttest = []
 resulttrain = []
@@ -28,7 +28,7 @@ maxrisk = 3.873
 #maxrisk = 4.11
 
 signif = []
-n = 50
+n = 20
 for k in range(n):
     rawdata = rawdata.sample(frac=1) # перетасовка
 
@@ -40,15 +40,15 @@ for k in range(n):
     trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
     # the model
-    model = XGBRegressor(n_estimators=100, random_state=0)
+    model = RandomForestRegressor(n_estimators=100, random_state=0)
     model.fit(trainin, trainout.ravel())
 
     # error score (deviation between predicted and real values)
     predtrain = model.predict(trainin)
-    errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
+    errortrain = mean_squared_error(trainout * maxrisk, predtrain * maxrisk)
 
     predtest = model.predict(testin)
-    errortest = r2_score(testout * maxrisk, predtest * maxrisk)
+    errortest = mean_squared_error(testout * maxrisk, predtest * maxrisk)
 
     # save the error score
     resulttrain.append(errortrain)
