@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
-from xgboost import XGBRFRegressor
+from xgboost import XGBRegressor
 
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
@@ -15,7 +15,27 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 import joblib
+import optuna
+from sklearn.model_selection import cross_val_score
+from functools import partial
 
+def objective(trial, datasetin, datasetout):
+    param = {
+        'max_depth': trial.suggest_int('max_depth', 2, 12),
+        'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.1),
+        'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+        'subsample': trial.suggest_float('subsample', 0.5, 1.0),
+        'colsample_bytree': trial.suggest_float('colsample_bytree', 0.5, 1.0),
+        'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
+        'gamma': trial.suggest_float('gamma', 0, 5),
+    }
+
+    # initializing the XGBoost model
+    model = XGBRegressor(**param)
+
+
+    score = cross_val_score(model, datasetin, datasetout, cv=3).mean()  # calculating score using cross-validation
+    return score
 
 #Наименьшие квадраты для одной переменной
 def MLS(x, y):
@@ -47,9 +67,14 @@ datasetout = np.array(rawdata[['risk']])
 # разбиение на обучающую и тестовую выборку
 trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
+# оптимизация
+study = optuna.create_study(study_name="example_xgboost_study", direction='maximize')
+study.optimize(partial(objective, datasetin=datasetin, datasetout=datasetout), n_trials=200, show_progress_bar=True, n_jobs=-1)
+best_params = study.best_params
+
 # модель
-model = RandomForestRegressor(n_estimators=100, random_state=0)
-#model = XGBRFRegressor(n_estimators=100, random_state=0)
+#model = RandomForestRegressor(n_estimators=100, random_state=0)
+model = XGBRegressor(**best_params)
 model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
