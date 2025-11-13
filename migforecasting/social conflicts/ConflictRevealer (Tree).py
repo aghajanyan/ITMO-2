@@ -17,6 +17,7 @@ import seaborn as sns
 import joblib
 import optuna
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from functools import partial
 
 def objective(trial, datasetin, datasetout):
@@ -32,7 +33,6 @@ def objective(trial, datasetin, datasetout):
 
     # initializing the XGBoost model
     model = XGBRegressor(**param)
-
 
     score = cross_val_score(model, datasetin, datasetout, cv=3).mean()  # calculating score using cross-validation
     return score
@@ -68,14 +68,37 @@ datasetout = np.array(rawdata[['risk']])
 trainin, testin, trainout, testout = train_test_split(datasetin, datasetout, test_size=0.2, random_state=42)
 
 # оптимизация
-study = optuna.create_study(study_name="example_xgboost_study", direction='maximize')
-study.optimize(partial(objective, datasetin=datasetin, datasetout=datasetout), n_trials=200, show_progress_bar=True, n_jobs=-1)
-best_params = study.best_params
+#study = optuna.create_study(study_name="example_xgboost_study", direction='maximize')
+#study.optimize(partial(objective, datasetin=datasetin, datasetout=datasetout), n_trials=200, show_progress_bar=True, n_jobs=-1)
+#best_params = study.best_params
+
+params = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20],
+    'max_features': ['sqrt', 'log2', None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
 
 # модель
-#model = RandomForestRegressor(n_estimators=100, random_state=0)
-model = XGBRegressor(**best_params)
-model.fit(trainin, trainout.ravel())
+model = RandomForestRegressor()
+
+random_search = RandomizedSearchCV(
+    estimator=model,
+    param_distributions=params,
+    n_iter=50,  # Number of random combinations to try
+    cv=5,       # Number of cross-validation folds
+    scoring='r2', # Evaluation metric
+    random_state=42,
+    verbose=10,
+    n_jobs=-1   # Use all available cores
+)
+
+random_search.fit(trainin, trainout.ravel())
+model = random_search.best_estimator_
+
+#model = XGBRegressor(**best_params)
+#model.fit(trainin, trainout.ravel())
 
 predtrain = model.predict(trainin)
 errortrain = r2_score(trainout * maxrisk, predtrain * maxrisk)
